@@ -219,6 +219,7 @@ Public Function CBNDGeneral(TypeFlag As Integer, x As Double, y As Double, rho A
     End If
     
 End Function
+
 '// The  bivariate normal distribution function
 Public Function BND(x As Double, y As Double, rho As Double) As Double
     
@@ -406,6 +407,3 @@ Public Function CBND3(A As Double, b As Double, rho As Double) As Double
         CBND3 = CBND3(A, 0, rho1) + CBND3(b, 0, rho2) - delta
     End If
 End Function
-
-
-

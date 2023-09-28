@@ -6,8 +6,9 @@ Option Compare Text 'Uppercase letters to be equivalent to lowercase letters.
 Option Base 0       'The "Option Base" statment alowws to specify 0 or 1 as the
                              'default first index of arrays.
 
-' Implementation By Espen Gaarder Haug
-' Copyright 2006 Espen Gaarder Haug
+' Programmer Espen Gaarder Haug
+' This code comes with The Complete Guide to Option Pricing Formulas, McGraw-Hill
+' Copyright Espen G. Haug
 
 
 '// Convert rate to countinuous compounding rate
@@ -218,6 +219,7 @@ Public Function CBNDGeneral(TypeFlag As Integer, x As Double, y As Double, rho A
     End If
     
 End Function
+
 '// The  bivariate normal distribution function
 Public Function BND(x As Double, y As Double, rho As Double) As Double
     
@@ -405,6 +407,3 @@ Public Function CBND3(A As Double, b As Double, rho As Double) As Double
         CBND3 = CBND3(A, 0, rho1) + CBND3(b, 0, rho2) - delta
     End If
 End Function
-
-
-
