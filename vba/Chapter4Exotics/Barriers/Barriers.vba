@@ -3,73 +3,52 @@ Option Explicit
 ' Programmer Espen Gaarder Haug
 ' Copyright Espen Gaarder Haug  2006
 
-
-
-
-Public Function ESoftBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, _
-            r As Double, b As Double, v As Double, Optional dS)
+Public Function ESoftBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, r As Double, b As Double, v As Double, Optional dS)
 
     If IsMissing(dS) Then
         dS = 0.0001
     End If
-  
-    
     
     If OutPutFlag = "p" Then 'Value
-            ESoftBarrier = SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v)
+        ESoftBarrier = SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v)
     ElseIf OutPutFlag = "d" Then ' Delta
-            ESoftBarrier = (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v) _
-                 - SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v)) / (2 * dS)
-     ElseIf OutPutFlag = "dddv" Then ' DeltaDVol
-                 ESoftBarrier = 1 / (4 * dS * 0.01) * (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01) - SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01) _
-                - SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01) + SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01)) / 100
-     ElseIf OutPutFlag = "g" Then ' Gamma
-            ESoftBarrier = (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v) _
-            - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v) _
-            + SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v)) / (dS ^ 2)
-      ElseIf OutPutFlag = "gp" Then ' GammaP
-            ESoftBarrier = S / 100 * ESoftBarrier("g", TypeFlag, S + dS, X, L, U, T, r, b, v)
+        ESoftBarrier = (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v) - SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v)) / (2 * dS)
+    ElseIf OutPutFlag = "dddv" Then ' DeltaDVol
+        ESoftBarrier = 1 / (4 * dS * 0.01) * (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01) - SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01) - SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01) + SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "g" Then ' Gamma
+        ESoftBarrier = (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v) - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v) + SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v)) / (dS ^ 2)
+    ElseIf OutPutFlag = "gp" Then ' GammaP
+        ESoftBarrier = S / 100 * ESoftBarrier("g", TypeFlag, S + dS, X, L, U, T, r, b, v)
     ElseIf OutPutFlag = "gv" Then ' DGammaDVol
-             ESoftBarrier = (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01) - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01) + SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01) _
-                - SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01) + 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01) - SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+        ESoftBarrier = (SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01) - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01) + SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01) - SoftBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01) + 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01) - SoftBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
     ElseIf OutPutFlag = "v" Then ' Vega
-            ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01) _
-                - SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01)) / 2
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01) - SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01)) / 2
     ElseIf OutPutFlag = "dvdv" Then ' DVegaDVol/Vomma
-                  ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01) - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v) _
-                        + SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01) - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v) + SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then ' VegaP
-            ESoftBarrier = v / 0.1 * ESoftBarrier("v", TypeFlag, S + dS, X, L, U, T, r, b, v)
+        ESoftBarrier = v / 0.1 * ESoftBarrier("v", TypeFlag, S + dS, X, L, U, T, r, b, v)
     ElseIf OutPutFlag = "r" Then ' Rho
-            ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r + 0.01, b + 0.01, v) _
-            - SoftBarrier(TypeFlag, S, X, L, U, T, r - 0.01, b - 0.01, v)) / 2
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r + 0.01, b + 0.01, v) - SoftBarrier(TypeFlag, S, X, L, U, T, r - 0.01, b - 0.01, v)) / 2
     ElseIf OutPutFlag = "f" Then 'Rho2/Phi
-            ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v) _
-            - SoftBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v)) / 2
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v) - SoftBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v)) / 2
     ElseIf OutPutFlag = "b" Then ' Carry sensitivity
-            ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v) _
-            - SoftBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v)) / 2
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v) - SoftBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v)) / 2
     ElseIf OutPutFlag = "t" Then 'Theta
-            If T <= 1 / 365 Then
-                ESoftBarrier = SoftBarrier(TypeFlag, S, X, L, U, 0.00001, r, b, v) _
-                    - SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v)
-              Else
-                ESoftBarrier = SoftBarrier(TypeFlag, S, X, L, U, T - 1 / 365, r, b, v) _
-                    - SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v)
-                End If
+        If T <= 1 / 365 Then
+            ESoftBarrier = SoftBarrier(TypeFlag, S, X, L, U, 0.00001, r, b, v) - SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v)
+        Else
+            ESoftBarrier = SoftBarrier(TypeFlag, S, X, L, U, T - 1 / 365, r, b, v) - SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v)
+        End If
     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-            ESoftBarrier = (SoftBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v) _
-            - SoftBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v)) / (2 * dS)
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v) - SoftBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dxdx" Then ' Strike Gamma
-            ESoftBarrier = (SoftBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v) _
-            - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v) _
-            + SoftBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v)) / (dS ^ 2)
+        ESoftBarrier = (SoftBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v) - 2 * SoftBarrier(TypeFlag, S, X, L, U, T, r, b, v) + SoftBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v)) / (dS ^ 2)
     End If
+
 End Function
 
-'// Soft barrier options
-Public Function SoftBarrier(TypeFlag As String, S As Double, X As Double, _
-                            L As Double, U As Double, T As Double, r As Double, b As Double, v As Double) As Double
+' Soft barrier options
+Public Function SoftBarrier(TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim mu As Double
     Dim d1 As Double, d2 As Double
@@ -116,8 +95,7 @@ Public Function SoftBarrier(TypeFlag As String, S As Double, X As Double, _
     
 End Function
 
-Public Function ELookBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, t1 As Double, T2 As Double, _
-            r As Double, b As Double, v As Double, Optional dS)
+Public Function ELookBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, t1 As Double, T2 As Double, r As Double, b As Double, v As Double, Optional dS)
 
     Dim CallPutFlag As String
             
@@ -135,60 +113,44 @@ Public Function ELookBarrier(OutPutFlag As String, TypeFlag As String, S As Doub
     End If
       
     If OutPutFlag = "p" Then 'Value
-            ELookBarrier = LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
+        ELookBarrier = LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
     ElseIf OutPutFlag = "d" Then 'Delta
-            ELookBarrier = (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) _
-                         - LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (2 * dS)
+        ELookBarrier = (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) - LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dddv" Then 'DeltaDVol
-            ELookBarrier = 1 / (4 * dS * 0.01) * (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) _
-        - LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) + LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / 100
-     ElseIf OutPutFlag = "g" Then 'Gamma
-            ELookBarrier = (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) _
-            - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) _
-            + LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (dS ^ 2)
+        ELookBarrier = 1 / (4 * dS * 0.01) * (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) - LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) + LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "g" Then 'Gamma
+        ELookBarrier = (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) + LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (dS ^ 2)
     ElseIf OutPutFlag = "gp" Then ' GammaP
-            ELookBarrier = S / 100 * ELookBarrier("g", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
+        ELookBarrier = S / 100 * ELookBarrier("g", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
     ElseIf OutPutFlag = "gv" Then 'DGammaDvol
-            ELookBarrier = (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) + LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) _
-                - LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) + 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01) - LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+        ELookBarrier = (LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) + LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) - LookBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) + 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01) - LookBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
     ElseIf OutPutFlag = "v" Then ' Vega
-            ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) _
-                    - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vp" Then ' VegaP
-            ELookBarrier = v / 0.1 * ELookBarrier("v", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/vomma
-            ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) _
-            + LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
+        ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vp" Then ' VegaP
+        ELookBarrier = v / 0.1 * ELookBarrier("v", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/vomma
+        ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) + LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "r" Then 'Rho
-            ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r + 0.01, b + 0.01, v) _
-            - LookBarrier(TypeFlag, S, X, H, t1, T2, r - 0.01, b - 0.01, v)) / 2
+        ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r + 0.01, b + 0.01, v) - LookBarrier(TypeFlag, S, X, H, t1, T2, r - 0.01, b - 0.01, v)) / 2
     ElseIf OutPutFlag = "f" Then 'Rho2 Phi
-            ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v) _
-            - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v)) / 2
+        ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v) - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v)) / 2
     ElseIf OutPutFlag = "b" Then ' Carry sensitivity
-            ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v) _
-            - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v)) / 2
-      ElseIf OutPutFlag = "t" Then 'Theta
-            If t1 <= 1 / 365 Then
-                ELookBarrier = LookBarrier(TypeFlag, S, X, H, 0.00001, T2 - 1 / 365, r, b, v) _
-                    - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
-              Else
-                    ELookBarrier = LookBarrier(TypeFlag, S, X, H, t1 - 1 / 365, T2 - 1 / 365, r, b, v) _
-                    - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
-            End If
-     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-            ELookBarrier = (LookBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) _
-                - LookBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (2 * dS)
+        ELookBarrier = (LookBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v) - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v)) / 2
+    ElseIf OutPutFlag = "t" Then 'Theta
+        If t1 <= 1 / 365 Then
+            ELookBarrier = LookBarrier(TypeFlag, S, X, H, 0.00001, T2 - 1 / 365, r, b, v) - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
+        Else
+            ELookBarrier = LookBarrier(TypeFlag, S, X, H, t1 - 1 / 365, T2 - 1 / 365, r, b, v) - LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
+        End If
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
+        ELookBarrier = (LookBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) - LookBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
-      
-            ELookBarrier = (LookBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) _
-                - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) _
-                + LookBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (dS ^ 2)
+        ELookBarrier = (LookBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) - 2 * LookBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) + LookBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (dS ^ 2)
     End If
     
 End Function
 
-'// Look-barrier options
+' Look-barrier options
 Public Function LookBarrier(TypeFlag As String, S As Double, X As Double, H As Double, t1 As Double, T2 As Double, r As Double, b As Double, v As Double) As Double
 
     Dim hh As Double
@@ -211,19 +173,13 @@ Public Function LookBarrier(TypeFlag As String, S As Double, X As Double, H As D
         m = Max(hh, k)
     End If
     
-    g1 = (CND(eta * (hh - mu2 * t1) / (v * Sqr(t1))) - Exp(2 * mu2 * hh / v ^ 2) * CND(eta * (-hh - mu2 * t1) / (v * Sqr(t1)))) _
-        - (CND(eta * (m - mu2 * t1) / (v * Sqr(t1))) - Exp(2 * mu2 * hh / v ^ 2) * CND(eta * (m - 2 * hh - mu2 * t1) / (v * Sqr(t1))))
-    g2 = (CND(eta * (hh - mu1 * t1) / (v * Sqr(t1))) - Exp(2 * mu1 * hh / v ^ 2) * CND(eta * (-hh - mu1 * t1) / (v * Sqr(t1)))) _
-        - (CND(eta * (m - mu1 * t1) / (v * Sqr(t1))) - Exp(2 * mu1 * hh / v ^ 2) * CND(eta * (m - 2 * hh - mu1 * t1) / (v * Sqr(t1))))
+    g1 = (CND(eta * (hh - mu2 * t1) / (v * Sqr(t1))) - Exp(2 * mu2 * hh / v ^ 2) * CND(eta * (-hh - mu2 * t1) / (v * Sqr(t1)))) - (CND(eta * (m - mu2 * t1) / (v * Sqr(t1))) - Exp(2 * mu2 * hh / v ^ 2) * CND(eta * (m - 2 * hh - mu2 * t1) / (v * Sqr(t1))))
+    g2 = (CND(eta * (hh - mu1 * t1) / (v * Sqr(t1))) - Exp(2 * mu1 * hh / v ^ 2) * CND(eta * (-hh - mu1 * t1) / (v * Sqr(t1)))) - (CND(eta * (m - mu1 * t1) / (v * Sqr(t1))) - Exp(2 * mu1 * hh / v ^ 2) * CND(eta * (m - 2 * hh - mu1 * t1) / (v * Sqr(t1))))
 
-    part1 = S * Exp((b - r) * T2) * (1 + v ^ 2 / (2 * b)) * (CBND(eta * (m - mu2 * t1) / (v * Sqr(t1)), eta * (-k + mu2 * T2) / (v * Sqr(T2)), -rho) - Exp(2 * mu2 * hh / v ^ 2) _
-        * CBND(eta * (m - 2 * hh - mu2 * t1) / (v * Sqr(t1)), eta * (2 * hh - k + mu2 * T2) / (v * Sqr(T2)), -rho))
-    part2 = -Exp(-r * T2) * X * (CBND(eta * (m - mu1 * t1) / (v * Sqr(t1)), eta * (-k + mu1 * T2) / (v * Sqr(T2)), -rho) _
-        - Exp(2 * mu1 * hh / v ^ 2) * CBND(eta * (m - 2 * hh - mu1 * t1) / (v * Sqr(t1)), eta * (2 * hh - k + mu1 * T2) / (v * Sqr(T2)), -rho))
-    part3 = -Exp(-r * T2) * v ^ 2 / (2 * b) * (S * (S / X) ^ (-2 * b / v ^ 2) * CBND(eta * (m + mu1 * t1) / (v * Sqr(t1)), eta * (-k - mu1 * T2) / (v * Sqr(T2)), -rho) _
-        - H * (H / X) ^ (-2 * b / v ^ 2) * CBND(eta * (m - 2 * hh + mu1 * t1) / (v * Sqr(t1)), eta * (2 * hh - k - mu1 * T2) / (v * Sqr(T2)), -rho))
-    part4 = S * Exp((b - r) * T2) * ((1 + v ^ 2 / (2 * b)) * CND(eta * mu2 * (T2 - t1) / (v * Sqr(T2 - t1))) + Exp(-b * (T2 - t1)) * (1 - v ^ 2 / (2 * b)) _
-        * CND(eta * (-mu1 * (T2 - t1)) / (v * Sqr(T2 - t1)))) * g1 - Exp(-r * T2) * X * g2
+    part1 = S * Exp((b - r) * T2) * (1 + v ^ 2 / (2 * b)) * (CBND(eta * (m - mu2 * t1) / (v * Sqr(t1)), eta * (-k + mu2 * T2) / (v * Sqr(T2)), -rho) - Exp(2 * mu2 * hh / v ^ 2) * CBND(eta * (m - 2 * hh - mu2 * t1) / (v * Sqr(t1)), eta * (2 * hh - k + mu2 * T2) / (v * Sqr(T2)), -rho))
+    part2 = -Exp(-r * T2) * X * (CBND(eta * (m - mu1 * t1) / (v * Sqr(t1)), eta * (-k + mu1 * T2) / (v * Sqr(T2)), -rho) - Exp(2 * mu1 * hh / v ^ 2) * CBND(eta * (m - 2 * hh - mu1 * t1) / (v * Sqr(t1)), eta * (2 * hh - k + mu1 * T2) / (v * Sqr(T2)), -rho))
+    part3 = -Exp(-r * T2) * v ^ 2 / (2 * b) * (S * (S / X) ^ (-2 * b / v ^ 2) * CBND(eta * (m + mu1 * t1) / (v * Sqr(t1)), eta * (-k - mu1 * T2) / (v * Sqr(T2)), -rho) - H * (H / X) ^ (-2 * b / v ^ 2) * CBND(eta * (m - 2 * hh + mu1 * t1) / (v * Sqr(t1)), eta * (2 * hh - k - mu1 * T2) / (v * Sqr(T2)), -rho))
+    part4 = S * Exp((b - r) * T2) * ((1 + v ^ 2 / (2 * b)) * CND(eta * mu2 * (T2 - t1) / (v * Sqr(T2 - t1))) + Exp(-b * (T2 - t1)) * (1 - v ^ 2 / (2 * b)) * CND(eta * (-mu1 * (T2 - t1)) / (v * Sqr(T2 - t1)))) * g1 - Exp(-r * T2) * X * g2
     OutValue = eta * (part1 + part2 + part3 + part4)
 
     If TypeFlag = "cuo" Or TypeFlag = "pdo" Then
@@ -236,80 +192,59 @@ Public Function LookBarrier(TypeFlag As String, S As Double, X As Double, H As D
     
 End Function
 
-
-Public Function EPartialTimeBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, t1 As Double, T2 As Double, _
-            r As Double, b As Double, v As Double, Optional dS)
+Public Function EPartialTimeBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, t1 As Double, T2 As Double, r As Double, b As Double, v As Double, Optional dS)
 
     If IsMissing(dS) Then
         dS = 0.0001
     End If
     
-    If (TypeFlag = "cuoA" And S >= H) Or (TypeFlag = "puoA" And S >= H) _
-        Or (TypeFlag = "cdoA" And S <= H) Or (TypeFlag = "pdoA" And S <= H) Then
-            EPartialTimeBarrier = 0
+    If (TypeFlag = "cuoA" And S >= H) Or (TypeFlag = "puoA" And S >= H) Or (TypeFlag = "cdoA" And S <= H) Or (TypeFlag = "pdoA" And S <= H) Then
+        EPartialTimeBarrier = 0
         Exit Function
     End If
       
     If OutPutFlag = "p" Then 'Value
-            EPartialTimeBarrier = PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
+        EPartialTimeBarrier = PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
     ElseIf OutPutFlag = "d" Then 'Delta
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) _
-                         - PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (2 * dS)
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) - PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dddv" Then 'DeltaDVol
-            EPartialTimeBarrier = 1 / (4 * dS * 0.01) * (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) _
-        - PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) + PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / 100
-     ElseIf OutPutFlag = "g" Then 'Gamma
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) _
-            - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) _
-            + PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (dS ^ 2)
+        EPartialTimeBarrier = 1 / (4 * dS * 0.01) * (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) - PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) + PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "g" Then 'Gamma
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v) - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) + PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v)) / (dS ^ 2)
     ElseIf OutPutFlag = "gp" Then ' GammaP
-            EPartialTimeBarrier = S / 100 * EPartialTimeBarrier("g", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
+        EPartialTimeBarrier = S / 100 * EPartialTimeBarrier("g", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
     ElseIf OutPutFlag = "gv" Then 'DGammaDvol
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) + PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) _
-                - PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) + 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01) - PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v + 0.01) - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) + PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v + 0.01) - PartialTimeBarrier(TypeFlag, S + dS, X, H, t1, T2, r, b, v - 0.01) + 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01) - PartialTimeBarrier(TypeFlag, S - dS, X, H, t1, T2, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
     ElseIf OutPutFlag = "v" Then ' Vega
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) _
-                    - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vp" Then ' VegaP
-            EPartialTimeBarrier = v / 0.1 * EPartialTimeBarrier("v", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/vomma
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) _
-            + PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vp" Then ' VegaP
+        EPartialTimeBarrier = v / 0.1 * EPartialTimeBarrier("v", TypeFlag, S + dS, X, H, t1, T2, r, b, v)
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/vomma
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v + 0.01) - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) + PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "r" Then 'Rho
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r + 0.01, b + 0.01, v) _
-            - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r - 0.01, b - 0.01, v)) / 2
-      ElseIf OutPutFlag = "fr" Then 'Futures option Rho
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r + 0.01, 0, v) _
-            - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r - 0.01, 0, v)) / 2
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r + 0.01, b + 0.01, v) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r - 0.01, b - 0.01, v)) / 2
+    ElseIf OutPutFlag = "fr" Then 'Futures option Rho
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r + 0.01, 0, v) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r - 0.01, 0, v)) / 2
     ElseIf OutPutFlag = "f" Then 'Rho2 Phi
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v) _
-            - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v)) / 2
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v)) / 2
     ElseIf OutPutFlag = "b" Then ' Carry sensitivity
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v) _
-            - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v)) / 2
-      ElseIf OutPutFlag = "t" Then 'Theta
-            If t1 <= 1 / 365 Then
-                EPartialTimeBarrier = PartialTimeBarrier(TypeFlag, S, X, H, 0.00001, T2 - 1 / 365, r, b, v) _
-                    - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
-              Else
-                    EPartialTimeBarrier = PartialTimeBarrier(TypeFlag, S, X, H, t1 - 1 / 365, T2 - 1 / 365, r, b, v) _
-                    - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
-            End If
-     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) _
-                - PartialTimeBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (2 * dS)
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v)) / 2
+    ElseIf OutPutFlag = "t" Then 'Theta
+        If t1 <= 1 / 365 Then
+            EPartialTimeBarrier = PartialTimeBarrier(TypeFlag, S, X, H, 0.00001, T2 - 1 / 365, r, b, v) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
+        Else
+            EPartialTimeBarrier = PartialTimeBarrier(TypeFlag, S, X, H, t1 - 1 / 365, T2 - 1 / 365, r, b, v) - PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v)
+        End If
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) - PartialTimeBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
-      
-            EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) _
-                - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) _
-                + PartialTimeBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (dS ^ 2)
+        EPartialTimeBarrier = (PartialTimeBarrier(TypeFlag, S, X + dS, H, t1, T2, r, b, v) - 2 * PartialTimeBarrier(TypeFlag, S, X, H, t1, T2, r, b, v) + PartialTimeBarrier(TypeFlag, S, X - dS, H, t1, T2, r, b, v)) / (dS ^ 2)
     End If
     
 End Function
 
-'// Partial-time singel asset barrier options
-Public Function PartialTimeBarrier(TypeFlag As String, S As Double, X As Double, H As Double, _
-                t1 As Double, T2 As Double, r As Double, b As Double, v As Double) As Double
+' Partial-time singel asset barrier options
+Public Function PartialTimeBarrier(TypeFlag As String, S As Double, X As Double, H As Double, t1 As Double, T2 As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
     Dim f1 As Double, f2 As Double
@@ -353,28 +288,17 @@ Public Function PartialTimeBarrier(TypeFlag As String, S As Double, X As Double,
     z8 = CBND(-g1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-g3, e3, -rho)
     
     If TypeFlag = "cdoA" Or TypeFlag = "cuoA" Then '// call down-and out and up-and-out type A
-        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(d1, eta * e1, eta * rho) - (H / S) ^ (2 * (mu + 1)) * CBND(f1, eta * e3, eta * rho)) _
-        - X * Exp(-r * T2) * (CBND(d2, eta * e2, eta * rho) - (H / S) ^ (2 * mu) * CBND(f2, eta * e4, eta * rho))
+        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(d1, eta * e1, eta * rho) - (H / S) ^ (2 * (mu + 1)) * CBND(f1, eta * e3, eta * rho)) - X * Exp(-r * T2) * (CBND(d2, eta * e2, eta * rho) - (H / S) ^ (2 * mu) * CBND(f2, eta * e4, eta * rho))
     ElseIf TypeFlag = "cdoB2" And X < H Then  '// call down-and-out type B2
-        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(g1, e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(g3, -e3, -rho)) _
-        - X * Exp(-r * T2) * (CBND(g2, e2, rho) - (H / S) ^ (2 * mu) * CBND(g4, -e4, -rho))
+        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(g1, e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(g3, -e3, -rho)) - X * Exp(-r * T2) * (CBND(g2, e2, rho) - (H / S) ^ (2 * mu) * CBND(g4, -e4, -rho))
     ElseIf TypeFlag = "cdoB2" And X > H Then
         PartialTimeBarrier = PartialTimeBarrier("coB1", S, X, H, t1, T2, r, b, v)
     ElseIf TypeFlag = "cuoB2" And X < H Then  '// call up-and-out type B2
-        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(-g1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-g3, e3, -rho)) _
-        - X * Exp(-r * T2) * (CBND(-g2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(-g4, e4, -rho)) _
-        - S * Exp((b - r) * T2) * (CBND(-d1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(e3, -f1, -rho)) _
-        + X * Exp(-r * T2) * (CBND(-d2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(e4, -f2, -rho))
+        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(-g1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-g3, e3, -rho)) - X * Exp(-r * T2) * (CBND(-g2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(-g4, e4, -rho)) - S * Exp((b - r) * T2) * (CBND(-d1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(e3, -f1, -rho)) + X * Exp(-r * T2) * (CBND(-d2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(e4, -f2, -rho))
     ElseIf TypeFlag = "coB1" And X > H Then  '// call out type B1
-        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(d1, e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(f1, -e3, -rho)) _
-        - X * Exp(-r * T2) * (CBND(d2, e2, rho) - (H / S) ^ (2 * mu) * CBND(f2, -e4, -rho))
+        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(d1, e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(f1, -e3, -rho)) - X * Exp(-r * T2) * (CBND(d2, e2, rho) - (H / S) ^ (2 * mu) * CBND(f2, -e4, -rho))
     ElseIf TypeFlag = "coB1" And X < H Then
-        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(-g1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-g3, e3, -rho)) _
-        - X * Exp(-r * T2) * (CBND(-g2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(-g4, e4, -rho)) _
-        - S * Exp((b - r) * T2) * (CBND(-d1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-f1, e3, -rho)) _
-        + X * Exp(-r * T2) * (CBND(-d2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(-f2, e4, -rho)) _
-        + S * Exp((b - r) * T2) * (CBND(g1, e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(g3, -e3, -rho)) _
-        - X * Exp(-r * T2) * (CBND(g2, e2, rho) - (H / S) ^ (2 * mu) * CBND(g4, -e4, -rho))
+        PartialTimeBarrier = S * Exp((b - r) * T2) * (CBND(-g1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-g3, e3, -rho)) - X * Exp(-r * T2) * (CBND(-g2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(-g4, e4, -rho)) - S * Exp((b - r) * T2) * (CBND(-d1, -e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(-f1, e3, -rho)) + X * Exp(-r * T2) * (CBND(-d2, -e2, rho) - (H / S) ^ (2 * mu) * CBND(-f2, e4, -rho)) + S * Exp((b - r) * T2) * (CBND(g1, e1, rho) - (H / S) ^ (2 * (mu + 1)) * CBND(g3, -e3, -rho)) - X * Exp(-r * T2) * (CBND(g2, e2, rho) - (H / S) ^ (2 * mu) * CBND(g4, -e4, -rho))
     ElseIf TypeFlag = "pdoA" Then  '// put down-and out and up-and-out type A
         PartialTimeBarrier = PartialTimeBarrier("cdoA", S, X, H, t1, T2, r, b, v) - S * Exp((b - r) * T2) * z5 + X * Exp(-r * T2) * z1
     ElseIf TypeFlag = "puoA" Then
@@ -389,14 +313,8 @@ Public Function PartialTimeBarrier(TypeFlag As String, S As Double, X As Double,
     
 End Function
 
-
-
-
-
-
-'// Double barrier options
-Function DoubleBarrier(TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, _
-        r As Double, b As Double, v As Double, delta1 As Double, delta2 As Double) As Double
+' Double barrier options
+Function DoubleBarrier(TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, r As Double, b As Double, v As Double, delta1 As Double, delta2 As Double) As Double
     
     Dim E As Double, F As Double
     Dim Sum1 As Double, Sum2 As Double
@@ -446,11 +364,8 @@ Function DoubleBarrier(TypeFlag As String, S As Double, X As Double, L As Double
     End If
 End Function
 
-
-
-'// Standard barrier options
-Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H As Double, k As Double, T As Double, _
-            r As Double, b As Double, v As Double)
+' Standard barrier options
+Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H As Double, k As Double, T As Double, r As Double, b As Double, v As Double)
 
     'TypeFlag:      The "TypeFlag" gives you 8 different standard barrier options:
     '               1) "cdi"=Down-and-in call,    2) "cui"=Up-and-in call
@@ -503,7 +418,6 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
     f5 = k * Exp(-r * T) * (CND(eta * X2 - eta * v * Sqr(T)) - (H / S) ^ (2 * mu) * CND(eta * y2 - eta * v * Sqr(T)))
     f6 = k * ((H / S) ^ (mu + lambda) * CND(eta * z) + (H / S) ^ (mu - lambda) * CND(eta * z - 2 * eta * lambda * v * Sqr(T)))
     
-    
     If X > H Then
         Select Case TypeFlag
             Case Is = "cdi"      '1a) cdi
@@ -522,7 +436,7 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
                 StandardBarrier = f1 - f2 + f3 - f4 + f6
             Case Is = "puo" '8a) puo
                 StandardBarrier = f2 - f4 + f6
-            End Select
+        End Select
     ElseIf X < H Then
         Select Case TypeFlag
             Case Is = "cdi" '1b) cdi
@@ -545,16 +459,12 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
     End If
 End Function
 
-
-
-Public Function EDoubleBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, _
-            r As Double, b As Double, v As Double, delta1 As Double, delta2 As Double, Optional dS)
+Public Function EDoubleBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, L As Double, U As Double, T As Double, r As Double, b As Double, v As Double, delta1 As Double, delta2 As Double, Optional dS)
 
     If IsMissing(dS) Then
         dS = 0.0001
     End If
-  
-    
+      
     Dim OutInnFlag As String
     Dim CallPutFlag As String
     
@@ -562,76 +472,58 @@ Public Function EDoubleBarrier(OutPutFlag As String, TypeFlag As String, S As Do
     CallPutFlag = Left(TypeFlag, 1)
     
     If OutInnFlag = "o" And (S <= L Or S >= U) Then
-            EDoubleBarrier = 0
+        EDoubleBarrier = 0
         Exit Function
-        ElseIf OutInnFlag = "i" And (S <= L Or S >= U) Then
-            EDoubleBarrier = EGBlackScholes(OutPutFlag, CallPutFlag, S, X, T, r, b, v)
-            Exit Function
+    ElseIf OutInnFlag = "i" And (S <= L Or S >= U) Then
+        EDoubleBarrier = EGBlackScholes(OutPutFlag, CallPutFlag, S, X, T, r, b, v)
+        Exit Function
     End If
     
     If OutPutFlag = "p" Then 'Value
-            EDoubleBarrier = DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2)
+        EDoubleBarrier = DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2)
     ElseIf OutPutFlag = "d" Then ' Delta
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2) _
-                 - DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v, delta1, delta2)) / (2 * dS)
-     ElseIf OutPutFlag = "dddv" Then ' DeltaDVol
-                 EDoubleBarrier = 1 / (4 * dS * 0.01) * (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01, delta1, delta2) _
-                - DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) + DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / 100
-     ElseIf OutPutFlag = "g" Then ' Gamma
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2) _
-            - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2) _
-            + DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v, delta1, delta2)) / (dS ^ 2)
-      ElseIf OutPutFlag = "gp" Then ' GammaP
-            EDoubleBarrier = S / 100 * EDoubleBarrier("g", TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2)
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2) - DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v, delta1, delta2)) / (2 * dS)
+    ElseIf OutPutFlag = "dddv" Then ' DeltaDVol
+        EDoubleBarrier = 1 / (4 * dS * 0.01) * (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) + DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / 100
+    ElseIf OutPutFlag = "g" Then ' Gamma
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2) - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2) + DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v, delta1, delta2)) / (dS ^ 2)
+    ElseIf OutPutFlag = "gp" Then ' GammaP
+        EDoubleBarrier = S / 100 * EDoubleBarrier("g", TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2)
     ElseIf OutPutFlag = "gv" Then ' DGammaDVol
-             EDoubleBarrier = (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01, delta1, delta2) + DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) _
-                - DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01, delta1, delta2) + 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / (2 * 0.01 * dS ^ 2) / 100
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01, delta1, delta2) + DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v + 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S + dS, X, L, U, T, r, b, v - 0.01, delta1, delta2) + 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S - dS, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / (2 * 0.01 * dS ^ 2) / 100
     ElseIf OutPutFlag = "v" Then ' Vega
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01, delta1, delta2) _
-                - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / 2
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / 2
     ElseIf OutPutFlag = "dvdv" Then ' DVegaDVol/Vomma
-                  EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01, delta1, delta2) - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2) _
-                        + DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / 0.01 ^ 2 / 10000
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v + 0.01, delta1, delta2) - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2) + DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v - 0.01, delta1, delta2)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then ' VegaP
-            EDoubleBarrier = v / 0.1 * EDoubleBarrier("v", TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2)
+        EDoubleBarrier = v / 0.1 * EDoubleBarrier("v", TypeFlag, S + dS, X, L, U, T, r, b, v, delta1, delta2)
     ElseIf OutPutFlag = "r" Then ' Rho
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r + 0.01, b + 0.01, v, delta1, delta2) _
-            - DoubleBarrier(TypeFlag, S, X, L, U, T, r - 0.01, b - 0.01, v, delta1, delta2)) / 2
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r + 0.01, b + 0.01, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r - 0.01, b - 0.01, v, delta1, delta2)) / 2
     ElseIf OutPutFlag = "fr" Then ' Futures option Rho
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r + 0.01, 0, v, delta1, delta2) _
-            - DoubleBarrier(TypeFlag, S, X, L, U, T, r - 0.01, 0, v, delta1, delta2)) / 2
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r + 0.01, 0, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r - 0.01, 0, v, delta1, delta2)) / 2
     ElseIf OutPutFlag = "f" Then 'Rho2/Phi
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v, delta1, delta2) _
-            - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v, delta1, delta2)) / 2
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v, delta1, delta2)) / 2
     ElseIf OutPutFlag = "b" Then ' Carry sensitivity
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v, delta1, delta2) _
-            - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v, delta1, delta2)) / 2
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X, L, U, T, r, b + 0.01, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b - 0.01, v, delta1, delta2)) / 2
     ElseIf OutPutFlag = "t" Then 'Theta
-            If T <= 1 / 365 Then
-                EDoubleBarrier = DoubleBarrier(TypeFlag, S, X, L, U, 0.00001, r, b, v, delta1, delta2) _
-                    - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2)
-              Else
-                EDoubleBarrier = DoubleBarrier(TypeFlag, S, X, L, U, T - 1 / 365, r, b, v, delta1, delta2) _
-                    - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2)
-                End If
+        If T <= 1 / 365 Then
+            EDoubleBarrier = DoubleBarrier(TypeFlag, S, X, L, U, 0.00001, r, b, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2)
+        Else
+            EDoubleBarrier = DoubleBarrier(TypeFlag, S, X, L, U, T - 1 / 365, r, b, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2)
+        End If
     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v, delta1, delta2) _
-            - DoubleBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v, delta1, delta2)) / (2 * dS)
+        EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v, delta1, delta2) - DoubleBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v, delta1, delta2)) / (2 * dS)
     ElseIf OutPutFlag = "dxdx" Then ' Strike Gamma
-            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v, delta1, delta2) _
-            - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2) _
-            + DoubleBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v, delta1, delta2)) / (dS ^ 2)
+            EDoubleBarrier = (DoubleBarrier(TypeFlag, S, X + dS, L, U, T, r, b, v, delta1, delta2) - 2 * DoubleBarrier(TypeFlag, S, X, L, U, T, r, b, v, delta1, delta2) + DoubleBarrier(TypeFlag, S, X - dS, L, U, T, r, b, v, delta1, delta2)) / (dS ^ 2)
     End If
+
 End Function
 
-
-Public Function EStandardBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, k As Double, T As Double, _
-            r As Double, b As Double, v As Double, Optional dS)
+Public Function EStandardBarrier(OutPutFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, k As Double, T As Double, r As Double, b As Double, v As Double, Optional dS)
 
     If IsMissing(dS) Then
         dS = 0.0001
-    End If
-    
+    End If    
    
     Dim OutInnFlag As String
     Dim CallPutFlag As String
@@ -639,7 +531,6 @@ Public Function EStandardBarrier(OutPutFlag As String, TypeFlag As String, S As 
     OutInnFlag = Right(TypeFlag, 2)
     CallPutFlag = Left(TypeFlag, 1)
     
-     
     If (OutInnFlag = "do" And S <= H) Or (OutInnFlag = "uo" And S >= H) Then
         If OutPutFlag = "p" Then
             EStandardBarrier = k
@@ -648,73 +539,52 @@ Public Function EStandardBarrier(OutPutFlag As String, TypeFlag As String, S As 
         End If
         Exit Function
     ElseIf (OutInnFlag = "di" And S <= H) Or (OutInnFlag = "ui" And S >= H) Then
-            EStandardBarrier = EGBlackScholes(OutPutFlag, CallPutFlag, S, X, T, r, b, v)
-            Exit Function
+        EStandardBarrier = EGBlackScholes(OutPutFlag, CallPutFlag, S, X, T, r, b, v)
+        Exit Function
     End If
       
-    
     If OutPutFlag = "p" Then 'Value
-            EStandardBarrier = StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v)
+        EStandardBarrier = StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v)
     ElseIf OutPutFlag = "d" Then 'Delta
-            EStandardBarrier = (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v) _
-                         - StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v)) / (2 * dS)
+        EStandardBarrier = (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v) - StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dddv" Then 'DeltaDVol
-            EStandardBarrier = 1 / (4 * dS * 0.01) * (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v + 0.01) - StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v - 0.01) _
-        - StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v + 0.01) + StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v - 0.01)) / 100
-     ElseIf OutPutFlag = "g" Then 'Gamma
-            EStandardBarrier = (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v) _
-            - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v) _
-            + StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v)) / (dS ^ 2)
+        EStandardBarrier = 1 / (4 * dS * 0.01) * (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v + 0.01) - StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v - 0.01) - StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v + 0.01) + StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "g" Then 'Gamma
+        EStandardBarrier = (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v) - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v) + StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v)) / (dS ^ 2)
     ElseIf OutPutFlag = "gp" Then ' GammaP
-            EStandardBarrier = S / 100 * EStandardBarrier("g", TypeFlag, S + dS, X, H, k, T, r, b, v)
+        EStandardBarrier = S / 100 * EStandardBarrier("g", TypeFlag, S + dS, X, H, k, T, r, b, v)
     ElseIf OutPutFlag = "gv" Then 'DGammaDvol
-            EStandardBarrier = (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v + 0.01) - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v + 0.01) + StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v + 0.01) _
-                - StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v - 0.01) + 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v - 0.01) - StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+        EStandardBarrier = (StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v + 0.01) - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v + 0.01) + StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v + 0.01) - StandardBarrier(TypeFlag, S + dS, X, H, k, T, r, b, v - 0.01) + 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v - 0.01) - StandardBarrier(TypeFlag, S - dS, X, H, k, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
     ElseIf OutPutFlag = "v" Then ' Vega
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v + 0.01) _
-                    - StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vp" Then ' VegaP
-            EStandardBarrier = v / 0.1 * EStandardBarrier("v", TypeFlag, S + dS, X, H, k, T, r, b, v)
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/vomma
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v + 0.01) - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v) _
-            + StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v + 0.01) - StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vp" Then ' VegaP
+        EStandardBarrier = v / 0.1 * EStandardBarrier("v", TypeFlag, S + dS, X, H, k, T, r, b, v)
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/vomma
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v + 0.01) - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v) + StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "r" Then 'Rho
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r + 0.01, b + 0.01, v) _
-            - StandardBarrier(TypeFlag, S, X, H, k, T, r - 0.01, b - 0.01, v)) / 2
-      ElseIf OutPutFlag = "fr" Then 'Futures option Rho
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r + 0.01, 0, v) _
-            - StandardBarrier(TypeFlag, S, X, H, k, T, r - 0.01, 0, v)) / 2
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r + 0.01, b + 0.01, v) - StandardBarrier(TypeFlag, S, X, H, k, T, r - 0.01, b - 0.01, v)) / 2
+    ElseIf OutPutFlag = "fr" Then 'Futures option Rho
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r + 0.01, 0, v) - StandardBarrier(TypeFlag, S, X, H, k, T, r - 0.01, 0, v)) / 2
     ElseIf OutPutFlag = "f" Then 'Rho2 Phi
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b - 0.01, v) _
-            - StandardBarrier(TypeFlag, S, X, H, k, T, r, b + 0.01, v)) / 2
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b - 0.01, v) - StandardBarrier(TypeFlag, S, X, H, k, T, r, b + 0.01, v)) / 2
     ElseIf OutPutFlag = "b" Then ' Carry sensitivity
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b + 0.01, v) _
-            - StandardBarrier(TypeFlag, S, X, H, k, T, r, b - 0.01, v)) / 2
-      ElseIf OutPutFlag = "t" Then 'Theta
-            If T <= 1 / 365 Then
-                EStandardBarrier = StandardBarrier(TypeFlag, S, X, H, k, 0.00001, r, b, v) _
-                    - StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v)
-              Else
-                    EStandardBarrier = StandardBarrier(TypeFlag, S, X, H, k, T - 1 / 365, r, b, v) _
-                    - StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v)
-            End If
-     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X + dS, H, k, T, r, b, v) _
-                - StandardBarrier(TypeFlag, S, X - dS, H, k, T, r, b, v)) / (2 * dS)
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X, H, k, T, r, b + 0.01, v) - StandardBarrier(TypeFlag, S, X, H, k, T, r, b - 0.01, v)) / 2
+    ElseIf OutPutFlag = "t" Then 'Theta
+        If T <= 1 / 365 Then
+            EStandardBarrier = StandardBarrier(TypeFlag, S, X, H, k, 0.00001, r, b, v) - StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v)
+        Else
+            EStandardBarrier = StandardBarrier(TypeFlag, S, X, H, k, T - 1 / 365, r, b, v) - StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v)
+        End If
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X + dS, H, k, T, r, b, v) - StandardBarrier(TypeFlag, S, X - dS, H, k, T, r, b, v)) / (2 * dS)
     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
-      
-            EStandardBarrier = (StandardBarrier(TypeFlag, S, X + dS, H, k, T, r, b, v) _
-                - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v) _
-                + StandardBarrier(TypeFlag, S, X - dS, H, k, T, r, b, v)) / (dS ^ 2)
+        EStandardBarrier = (StandardBarrier(TypeFlag, S, X + dS, H, k, T, r, b, v) - 2 * StandardBarrier(TypeFlag, S, X, H, k, T, r, b, v) + StandardBarrier(TypeFlag, S, X - dS, H, k, T, r, b, v)) / (dS ^ 2)
     End If
     
 End Function
 
-    
-
-'// Discrete barrier monitoring adjustment
+' Discrete barrier monitoring adjustment
 Public Function DiscreteAdjustedBarrier(S As Double, H As Double, v As Double, dt As Double) As Double
-
     If H > S Then
         DiscreteAdjustedBarrier = H * Exp(0.5826 * v * Sqr(dt))
     ElseIf H < S Then

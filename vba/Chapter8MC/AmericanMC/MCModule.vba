@@ -4,13 +4,13 @@ Option Compare Text 'Uppercase letters to be equivalent to lowercase letters.
 Function Max(m1 As Double, m2 As Double) As Double
     Max = Application.WorksheetFunction.Max(m1, m2)
 End Function
+
 Function NormInv(n1 As Double, n2 As Double, n3 As Double) As Double
     NormInv = Application.NormInv(n1, n2, n3)
 End Function
 
 ' Monte Carlo plain vanilla American option, Broadie and Glasserman (1997)
-Public Function BroadieGlasserman(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, _
-        b As Double, Sig As Double, m As Integer, Branches As Integer, nSimulations As Integer) As Double
+Public Function BroadieGlasserman(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, Sig As Double, m As Integer, Branches As Integer, nSimulations As Integer) As Double
     
     '  Based on codes supplied by Silvan G.R. Meier
         
@@ -81,7 +81,7 @@ Public Function BroadieGlasserman(CallPutFlag As String, S As Double, X As Doubl
                         Else
                             j = 0
                         End If
-                     ElseIf w(j) = Branches Then
+                    ElseIf w(j) = Branches Then
                         w(j) = 0
                         j = j - 1
                     End If
@@ -94,11 +94,9 @@ Public Function BroadieGlasserman(CallPutFlag As String, S As Double, X As Doubl
     BroadieGlasserman = 0.5 * Max(Max(z * (S - X), 0), Estimators(2)) + 0.5 * Estimators(1)
 End Function
 
-
 ' Monte Carlo plain vanilla American option, Broadie and Glasserman (1997)
-Function BroadieGlassermanOriginal(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, _
-        Del As Double, Sig As Double, d As Integer, b As Integer, nSimulations As Integer) As Double
-        
+Function BroadieGlassermanOriginal(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, Del As Double, Sig As Double, d As Integer, b As Integer, nSimulations As Integer) As Double
+
     Dim Drift As Double, SigSqrdt As Double, Discdt As Double, z As Integer
     Dim i As Integer, j As Integer, i1 As Integer, i2 As Integer, Estimator As Integer, Simulation As Integer
     Dim EstimatorSum As Double, Sum1 As Double, Sum2 As Double

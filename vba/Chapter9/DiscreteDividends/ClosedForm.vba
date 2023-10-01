@@ -38,7 +38,7 @@ Public Function RollGeskeWhaley(S As Double, X As Double, t1 As Double, T2 As Do
     i = HighS * 0.5
     ci = GBlackScholes("c", i, X, T2 - t1, r, r, v)
     
-    '// Search algorithm to find the critical stock price I
+    ' Search algorithm to find the critical stock price I
     While Abs(ci - i - d + X) > epsilon And HighS - LowS > epsilon
         If (ci - i - d + X) < 0 Then
             HighS = i
@@ -57,12 +57,9 @@ Public Function RollGeskeWhaley(S As Double, X As Double, t1 As Double, T2 As Do
 
 End Function
 
-
-
-
-'// The Black-Scholes formula adjusted for discrete dividend yield
+' The Black-Scholes formula adjusted for discrete dividend yield
 Public Function EEuropeanDiscreteDividendYield(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, Dy As Double, n As Integer, v As Double, Optional dS)
+        r As Double, Dy As Double, n As Integer, v As Double, Optional dS)
             
     If IsMissing(dS) Then
         dS = 0.01
@@ -73,50 +70,49 @@ Public Function EEuropeanDiscreteDividendYield(OutPutFlag As String, CallPutFlag
     If OutPutFlag = "p" Then ' Value
         EEuropeanDiscreteDividendYield = GBlackScholes(CallPutFlag, S, X, T, r, r, v)
     ElseIf OutPutFlag = "d" Then 'Delta
-         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v)) / (2 * dS)
+        EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v)) / (2 * dS)
     ElseIf OutPutFlag = "e" Then 'Elasticity
-         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v)) / (2 * dS) * S / GBlackScholes(CallPutFlag, S, X, T, r, r, v)
+        EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v)) / (2 * dS) * S / GBlackScholes(CallPutFlag, S, X, T, r, r, v)
     ElseIf OutPutFlag = "g" Then 'Gamma
         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) - 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) + GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v)) / dS ^ 2
     ElseIf OutPutFlag = "gv" Then 'DGammaDVol
         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v + 0.01) - 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) + GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v + 0.01) _
-      - GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v - 0.01) + 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+            - GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v - 0.01) + 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
    ElseIf OutPutFlag = "gp" Then 'GammaP
         EEuropeanDiscreteDividendYield = S / 100 * (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) - 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) + GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v)) / dS ^ 2
-        ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
+    ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
         EEuropeanDiscreteDividendYield = 1 / (4 * dS * 0.01) * (GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v + 0.01) - GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v - 0.01) _
-        - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v + 0.01) + GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v - 0.01)) / 100
+            - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v + 0.01) + GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v - 0.01)) / 100
     ElseIf OutPutFlag = "v" Then 'Vega
-         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) - GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
+        EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) - GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) - 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) + GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then 'VegaP
-         EEuropeanDiscreteDividendYield = v / 0.1 * (GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) - GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01)) / 2
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
+        EEuropeanDiscreteDividendYield = v / 0.1 * (GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) - GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01)) / 2
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r, r, v + 0.01) - 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) + GBlackScholes(CallPutFlag, S, X, T, r, r, v - 0.01))
     ElseIf OutPutFlag = "t" Then 'Theta
-         If T <= 1 / 365 Then
-                EEuropeanDiscreteDividendYield = GBlackScholes(CallPutFlag, S, X, 0.00001, r, r, v) - GBlackScholes(CallPutFlag, S, X, T, r, r, v)
+        If T <= 1 / 365 Then
+            EEuropeanDiscreteDividendYield = GBlackScholes(CallPutFlag, S, X, 0.00001, r, r, v) - GBlackScholes(CallPutFlag, S, X, T, r, r, v)
         Else
-                EEuropeanDiscreteDividendYield = GBlackScholes(CallPutFlag, S, X, T - 1 / 365, r, r, v) - GBlackScholes(CallPutFlag, S, X, T, r, r, v)
+            EEuropeanDiscreteDividendYield = GBlackScholes(CallPutFlag, S, X, T - 1 / 365, r, r, v) - GBlackScholes(CallPutFlag, S, X, T, r, r, v)
         End If
-     ElseIf OutPutFlag = "r" Then 'Rho
-         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r + 0.01, r + 0.01, v) - GBlackScholes(CallPutFlag, S, X, T, r - 0.01, r - 0.01, v)) / (2)
-         ElseIf OutPutFlag = "r" Then 'Rho
-         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r + 0.01, r + 0.01, v) - GBlackScholes(CallPutFlag, S, X, T, r - 0.01, r - 0.01, v)) / (2)
-      ElseIf OutPutFlag = "s" Then 'Speed
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r + 0.01, r + 0.01, v) - GBlackScholes(CallPutFlag, S, X, T, r - 0.01, r - 0.01, v)) / (2)
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X, T, r + 0.01, r + 0.01, v) - GBlackScholes(CallPutFlag, S, X, T, r - 0.01, r - 0.01, v)) / (2)
+    ElseIf OutPutFlag = "s" Then 'Speed
         EEuropeanDiscreteDividendYield = 1 / dS ^ 3 * (GBlackScholes(CallPutFlag, S + 2 * dS, X, T, r, r, v) - 3 * GBlackScholes(CallPutFlag, S + dS, X, T, r, r, v) _
-                                + 3 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v))
-      ElseIf OutPutFlag = "dx" Then 'Strike Delta
+            + 3 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) - GBlackScholes(CallPutFlag, S - dS, X, T, r, r, v))
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
          EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X + dS, T, r, r, v) - GBlackScholes(CallPutFlag, S, X - dS, T, r, r, v)) / (2 * dS)
-     ElseIf OutPutFlag = "dxdx" Then 'Gamma
+    ElseIf OutPutFlag = "dxdx" Then 'Gamma
         EEuropeanDiscreteDividendYield = (GBlackScholes(CallPutFlag, S, X + dS, T, r, r, v) - 2 * GBlackScholes(CallPutFlag, S, X, T, r, r, v) + GBlackScholes(CallPutFlag, S, X - dS, T, r, r, v)) / dS ^ 2
     End If
 End Function
 
-
-'// American Calls on stocks with known discrete dividend yield, Villiger (2005)
-'// Implementation By Espen Gaarder Haug
+' American Calls on stocks with known discrete dividend yield, Villiger (2005)
+' Implementation By Espen Gaarder Haug
 Public Function DiscreteDividenYieldAnalytic(EurAmeFlag As String, S As Double, X As Double, t1 As Double, T2 As Double, r As Double, Dy As Double, v As Double) As Double
     't1 time to dividend payout
     'T2 time to option expiration
@@ -148,7 +144,7 @@ Public Function DiscreteDividenYieldAnalytic(EurAmeFlag As String, S As Double, 
     i = HighS * 0.5
     ci = GBlackScholes("c", i * (1 - Dy), X, T2 - t1, r, r, v)
     
-    '// Search algorithm to find the critical stock price I
+    ' Search algorithm to find the critical stock price I
     While Abs(ci - i + X) > epsilon And HighS - LowS > epsilon
         If (ci - i + X) < 0 Then
             HighS = i
@@ -167,30 +163,25 @@ Public Function DiscreteDividenYieldAnalytic(EurAmeFlag As String, S As Double, 
     DiscreteDividenYieldAnalytic = S * CND(b1) + Sx * CBND(a1, -b1, -Sqr(t1 / T2)) _
         - X * Exp(-r * T2) * CBND(a2, -b2, -Sqr(t1 / T2)) - X * Exp(-r * t1) * CND(b2)
     
-  End Function
-
-
-
-Public Function BosVandermarkCashDividend(CallPutFlag As String, S As Double, X As Double _
-                , T As Double, r As Double, b As Double, v As Double, Optional Dividends As Object, Optional DividendTimes As Object) As Double
-
-        Dim i As Integer, n As Integer
-        Dim Xn As Double, Xf As Double
-
-        n = Application.Count(Dividends)
-        Xn = 0
-        Xf = 0
-
-        For i = 1 To n
-            Xn = Xn + (T - DividendTimes(i)) / T * Dividends(i) * Exp(-r * DividendTimes(i))
-            Xf = Xf + (DividendTimes(i)) / T * Dividends(i) * Exp(-r * DividendTimes(i))
-        Next
-        
-        BosVandermarkCashDividend = GBlackScholes(CallPutFlag, S - Xn, X + Xf * Exp(r * T), T, r, b, v)
-       
-
 End Function
 
+Public Function BosVandermarkCashDividend(CallPutFlag As String, S As Double, X As Double , T As Double, r As Double, b As Double, v As Double, Optional Dividends As Object, Optional DividendTimes As Object) As Double
+
+    Dim i As Integer, n As Integer
+    Dim Xn As Double, Xf As Double
+
+    n = Application.Count(Dividends)
+    Xn = 0
+    Xf = 0
+
+    For i = 1 To n
+        Xn = Xn + (T - DividendTimes(i)) / T * Dividends(i) * Exp(-r * DividendTimes(i))
+        Xf = Xf + (DividendTimes(i)) / T * Dividends(i) * Exp(-r * DividendTimes(i))
+    Next
+    
+    BosVandermarkCashDividend = GBlackScholes(CallPutFlag, S - Xn, X + Xf * Exp(r * T), T, r, b, v)
+
+End Function
 
 Public Function BosGaiShepVol(S As Double, X As Double, T As Double, r As Double, v As Double, Optional DividendTimes As Object, Optional Dividends As Object)
 
@@ -229,117 +220,112 @@ Public Function BosGaiShepVol(S As Double, X As Double, T As Double, r As Double
     
 End Function
 
-'// Equity forward price with same rate for each cash low or different rate for each cashflow.
+' Equity forward price with same rate for each cash low or different rate for each cashflow.
 Function EquityForwardPrice(TradeDate As Double, ForwardDate As Double, S As Double, r As Double, DividendDates As Object, Dividends As Object, Optional rDividendDates) As Double
         
-        '// Variable description:
-        '// TradeDate: the date the trade is done
-        '// ForwardDate: the date for calculating the forward price
-        '// S: stock price spot
-        '// r: risk-free rate, a continuous compounding zero coupon rate with maturity equal to the forward period
-        '// DividendDates: a single or hole array of the dates the stock payes dividend
-        '// Dividends: cash dividends at each dividend date
-        '// rDividendDates: array of continuous compunding zero coupon rates. One for each dividend date, if not given the
-        '// Function will use the same rate r for all cash flows
+    ' Variable description:
+    ' TradeDate: the date the trade is done
+    ' ForwardDate: the date for calculating the forward price
+    ' S: stock price spot
+    ' r: risk-free rate, a continuous compounding zero coupon rate with maturity equal to the forward period
+    ' DividendDates: a single or hole array of the dates the stock payes dividend
+    ' Dividends: cash dividends at each dividend date
+    ' rDividendDates: array of continuous compunding zero coupon rates. One for each dividend date, if not given the
+    ' Function will use the same rate r for all cash flows
         
-        Dim NoOfDividends As Integer
-        Dim NoOfDividendTimes As Integer
-        Dim i As Integer
+    Dim NoOfDividends As Integer
+    Dim NoOfDividendTimes As Integer
+    Dim i As Integer
         
-        NoOfDividendTimes = Application.Count(DividendDates)
-        NoOfDividends = Application.Count(Dividends)
+    NoOfDividendTimes = Application.Count(DividendDates)
+    NoOfDividends = Application.Count(Dividends)
     
-       For i = 1 To NoOfDividendTimes
-            If DividendDates(i) <= ForwardDate Then
-                If IsMissing(rDividendDates) Then
-                    S = S - Dividends(i) * Exp(-r * (DividendDates(i) - TradeDate) / 365)
-                Else
-                    S = S - Dividends(i) * Exp(-rDividendDates(i) * (DividendDates(i) - TradeDate) / 365)
-                End If
+    For i = 1 To NoOfDividendTimes
+        If DividendDates(i) <= ForwardDate Then
+            If IsMissing(rDividendDates) Then
+                S = S - Dividends(i) * Exp(-r * (DividendDates(i) - TradeDate) / 365)
             Else
-                Exit For
+                S = S - Dividends(i) * Exp(-rDividendDates(i) * (DividendDates(i) - TradeDate) / 365)
             End If
-       Next
+        Else
+            Exit For
+        End If
+    Next
        
-       EquityForwardPrice = S * Exp(r * (ForwardDate - TradeDate) / 365)
+    EquityForwardPrice = S * Exp(r * (ForwardDate - TradeDate) / 365)
 
 End Function
 
-
-'// Equity forward price with same rate for each cash low or different rate for each cashflow.
+' Equity forward price with same rate for each cash low or different rate for each cashflow.
 Function StockMinusNPVDividend(TradeDate As Double, ExpiryDate As Double, S As Double, r As Double, DividendDates As Object, Dividends As Object, Optional rDividendDates) As Double
-        
-        '// Variable description
-        '// S: stock price spot
-        '// r: risk-free rate, a continuous compounding zero coupon rate with maturity equal to the forward period
-        '// DividendDates: a single or whole array of the dates the stock payes dividend
-        '// Dividends: cash dividends at each dividend date
-        '// rDividendDates: array of continuous compunding zero coupon rates. One for each dividend date, if not given the
-        '// function will use the same rate r for all cash flows
-        
-        Dim NoOfDividends As Integer
-        Dim NoOfDividendTimes As Integer
-        Dim i As Integer
-        
-        NoOfDividendTimes = Application.Count(DividendDates)
-        NoOfDividends = Application.Count(Dividends)
+
+    ' Variable description
+    ' S: stock price spot
+    ' r: risk-free rate, a continuous compounding zero coupon rate with maturity equal to the forward period
+    ' DividendDates: a single or whole array of the dates the stock payes dividend
+    ' Dividends: cash dividends at each dividend date
+    ' rDividendDates: array of continuous compunding zero coupon rates. One for each dividend date, if not given the
+    ' function will use the same rate r for all cash flows
+
+    Dim NoOfDividends As Integer
+    Dim NoOfDividendTimes As Integer
+    Dim i As Integer
     
-       For i = 1 To NoOfDividendTimes
-            If DividendDates(i) <= ExpiryDate Then
-                If IsMissing(rDividendDates) Then
-                    S = S - Dividends(i) * Exp(-r * (DividendDates(i) - TradeDate) / 365)
-                Else
-                    S = S - Dividends(i) * Exp(-rDividendDates(i) * (DividendDates(i) - TradeDate) / 365)
-                End If
+    NoOfDividendTimes = Application.Count(DividendDates)
+    NoOfDividends = Application.Count(Dividends)
+    
+    For i = 1 To NoOfDividendTimes
+        If DividendDates(i) <= ExpiryDate Then
+            If IsMissing(rDividendDates) Then
+                S = S - Dividends(i) * Exp(-r * (DividendDates(i) - TradeDate) / 365)
             Else
-                Exit For
+                S = S - Dividends(i) * Exp(-rDividendDates(i) * (DividendDates(i) - TradeDate) / 365)
             End If
-       Next
+        Else
+            Exit For
+        End If
+    Next
        
-       StockMinusNPVDividend = S
+    StockMinusNPVDividend = S
 
 End Function
 
-
-'// Equity forward price with same rate for each cash low or different rate for each cashflow.
+' Equity forward price with same rate for each cash low or different rate for each cashflow.
 Function StockMinusNPVDividend2(ExpiryDate As Double, S As Double, r As Double, DividendDates As Object, Dividends As Object, Optional rDividendDates) As Double
-        
-        '// Variable description
-        '// S: stock price spot
-        '// r: risk-free rate, a continuous compounding zero coupon rate with maturity equal to the forward period
-        '// DividendDates: a single or whole array of the dates the stock payes dividend
-        '// Dividends: cash dividends at each dividend date
-        '// rDividendDates: array of continuous compunding zero coupon rates. One for each dividend date, if not given the
-        '// function will use the same rate r for all cash flows
-        
-        Dim NoOfDividends As Integer
-        Dim NoOfDividendTimes As Integer
-        Dim i As Integer
-        
-        NoOfDividendTimes = Application.Count(DividendDates)
-        NoOfDividends = Application.Count(Dividends)
+
+    ' Variable description
+    ' S: stock price spot
+    ' r: risk-free rate, a continuous compounding zero coupon rate with maturity equal to the forward period
+    ' DividendDates: a single or whole array of the dates the stock payes dividend
+    ' Dividends: cash dividends at each dividend date
+    ' rDividendDates: array of continuous compunding zero coupon rates. One for each dividend date, if not given the
+    ' function will use the same rate r for all cash flows
+
+    Dim NoOfDividends As Integer
+    Dim NoOfDividendTimes As Integer
+    Dim i As Integer
     
-       For i = 1 To NoOfDividendTimes
-            If DividendDates(i) <= ExpiryDate Then
-                If IsMissing(rDividendDates) Then
-                    S = S - Dividends(i) * Exp(-r * DividendDates(i))
-                Else
-                    S = S - Dividends(i) * Exp(-rDividendDates(i) * DividendDates(i))
-                End If
+    NoOfDividendTimes = Application.Count(DividendDates)
+    NoOfDividends = Application.Count(Dividends)
+
+    For i = 1 To NoOfDividendTimes
+        If DividendDates(i) <= ExpiryDate Then
+            If IsMissing(rDividendDates) Then
+                S = S - Dividends(i) * Exp(-r * DividendDates(i))
             Else
-                Exit For
+                S = S - Dividends(i) * Exp(-rDividendDates(i) * DividendDates(i))
             End If
-       Next
-       
-       StockMinusNPVDividend2 = S
+        Else
+            Exit For
+        End If
+    Next
+    
+    StockMinusNPVDividend2 = S
 
 End Function
 
-
-'
- 'Volatility adjusted for discrete dividends European model
-Public Function HaugHaugVol(S As Double, T As Double, r As Double, _
-    Dividends As Variant, DividendTimes As Variant, v As Double) As Double
+'Volatility adjusted for discrete dividends European model
+Public Function HaugHaugVol(S As Double, T As Double, r As Double, Dividends As Variant, DividendTimes As Variant, v As Double) As Double
     
     Dim SumDividends As Double, sumVolatilities As Double
     Dim n As Integer, j As Integer, i As Integer
@@ -350,10 +336,10 @@ Public Function HaugHaugVol(S As Double, T As Double, r As Double, _
     For j = 1 To n + 1
         SumDividends = 0
         For i = j To n
-             SumDividends = SumDividends + Dividends(i) * Exp(-r * DividendTimes(i))
+            SumDividends = SumDividends + Dividends(i) * Exp(-r * DividendTimes(i))
         Next
         If j = 1 Then
-                    sumVolatilities = sumVolatilities + (S * v / (S - SumDividends)) ^ 2 * DividendTimes(j)
+            sumVolatilities = sumVolatilities + (S * v / (S - SumDividends)) ^ 2 * DividendTimes(j)
         ElseIf j < n + 1 Then
             sumVolatilities = sumVolatilities + (S * v / (S - SumDividends)) ^ 2 * (DividendTimes(j) - DividendTimes(j - 1))
         Else
@@ -363,11 +349,8 @@ Public Function HaugHaugVol(S As Double, T As Double, r As Double, _
     HaugHaugVol = Sqr(sumVolatilities / T)
 End Function
 
-
-
-'// The generalized Black and Scholes formula
-Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, b As Double, v As Double) As Double
+' The generalized Black and Scholes formula
+Public Function GBlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim d1 As Double, d2 As Double
     

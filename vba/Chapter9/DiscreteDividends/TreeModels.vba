@@ -6,9 +6,7 @@ Global Const Pi = 3.14159265358979
 ' Programmer Espen Gaarder Haug
 ' Copyright 2006 Espen Gaarder Haug
 
-Public Function CRRBinomial(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, n As Integer) As Double
-                
+Public Function CRRBinomial(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, n As Integer) As Double
 
     Dim OptionValue() As Double
     Dim U As Double, d As Double, P As Double
@@ -20,7 +18,7 @@ Public Function CRRBinomial(AmeEurFlag As String, CallPutFlag As String, S As Do
     'DefinererBinaryVariable
     If CallPutFlag = "c" Then
         z = 1
-        ElseIf CallPutFlag = "p" Then
+    ElseIf CallPutFlag = "p" Then
         z = -1
     End If
     
@@ -31,7 +29,7 @@ Public Function CRRBinomial(AmeEurFlag As String, CallPutFlag As String, S As Do
     Df = Exp(-r * dt)
     
     For i = 0 To n
-         OptionValue(i) = Max(0, z * (S * U ^ i * d ^ (n - i) - X))
+        OptionValue(i) = Max(0, z * (S * U ^ i * d ^ (n - i) - X))
     Next
     
     For j = n - 1 To 0 Step -1:
@@ -39,8 +37,7 @@ Public Function CRRBinomial(AmeEurFlag As String, CallPutFlag As String, S As Do
             If AmeEurFlag = "e" Then
                 OptionValue(i) = (P * OptionValue(i + 1) + (1 - P) * OptionValue(i)) * Df
             ElseIf AmeEurFlag = "a" Then
-                OptionValue(i) = Max((z * (S * U ^ i * d ^ (Abs(i - j)) - X)), _
-                (P * OptionValue(i + 1) + (1 - P) * OptionValue(i)) * Df)
+                OptionValue(i) = Max((z * (S * U ^ i * d ^ (Abs(i - j)) - X)), (P * OptionValue(i + 1) + (1 - P) * OptionValue(i)) * Df)
             End If
         Next
     Next
@@ -48,9 +45,8 @@ Public Function CRRBinomial(AmeEurFlag As String, CallPutFlag As String, S As Do
 End Function
 
 
-Public Function DiscreteDividendYield(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, v As Double, n As Integer, DividendTimes As Object, Dividends As Object) As Variant
-    
+Public Function DiscreteDividendYield(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, v As Double, n As Integer, DividendTimes As Object, Dividends As Object) As Variant
+
     Dim ReturnValue() As Double
     Dim StepsDividend() As Double
     Dim St() As Double
@@ -75,7 +71,7 @@ Public Function DiscreteDividendYield(AmeEurFlag As String, CallPutFlag As Strin
     dt = T / n  '//Size of time step
     Df = Exp(-r * (T / n))  '// Discount factor
     U = Exp(v * Sqr(T / n))
-     d = 1 / U
+    d = 1 / U
     uu = U ^ 2
     P = (Exp(r * dt) - d) / (U - d)  ' // Up probability
 
@@ -112,28 +108,26 @@ Public Function DiscreteDividendYield(AmeEurFlag As String, CallPutFlag As Strin
            End If
         Next i
         
-          If j = 2 Then
-          '// Gamma
-                ReturnValue(2) = ((OptionValue(2) - OptionValue(1)) / (S * U ^ 2 - S) _
-                        - (OptionValue(1) - OptionValue(0)) / (S - S * d ^ 2)) / (0.5 * (S * U ^ 2 - S * d ^ 2))
-          '// Part of theta
-               ReturnValue(3) = OptionValue(1)
-            End If
+        If j = 2 Then
+            '// Gamma
+            ReturnValue(2) = ((OptionValue(2) - OptionValue(1)) / (S * U ^ 2 - S) _
+                - (OptionValue(1) - OptionValue(0)) / (S - S * d ^ 2)) / (0.5 * (S * U ^ 2 - S * d ^ 2))
+            '// Part of theta
+            ReturnValue(3) = OptionValue(1)
+        End If
          
-         If j = 1 Then
-         '// Delta
-               ReturnValue(1) = (OptionValue(1) - OptionValue(0)) / (S * U - S * d)
-            End If
+        If j = 1 Then
+            '// Delta
+            ReturnValue(1) = (OptionValue(1) - OptionValue(0)) / (S * U - S * d)
+        End If
             
     Next j
     
     ReturnValue(0) = OptionValue(0)
     ReturnValue(3) = (ReturnValue(3) - OptionValue(0)) / (2 * dt) / 365 ' // One day theta
-   DiscreteDividendYield = Application.Transpose(ReturnValue())
+    DiscreteDividendYield = Application.Transpose(ReturnValue())
    
 End Function
-
-
 
 'Non recombining binomial model with discrete cash dividends
 Public Function BinomialDiscreteDividends(CallPutFlag As String, AmeEurFlag As String, S As Double, X As Double, T As Double, r As Double, v As Double, n As Integer, Optional CashDividends As Variant, Optional DividendTimes As Variant)
@@ -154,12 +148,12 @@ Public Function BinomialDiscreteDividends(CallPutFlag As String, AmeEurFlag As S
     If IsMissing(DividendTimes) Or IsEmpty(DividendTimes) Then
         NoOfDividends = 0
     Else
-        ' // Counts the number of dividend payments
+        ' Counts the number of dividend payments
         NoOfDividends = Application.Count(DividendTimes)
     End If
             
     If NoOfDividends = 0 Then
-        ' // If the number of dividends is zero use standard binomial model
+        ' If the number of dividends is zero use standard binomial model
         BinomialDiscreteDividends = CRRBinomial(AmeEurFlag, CallPutFlag, S, X, T, r, r, v, n)
         Exit Function
     End If
@@ -198,25 +192,25 @@ Public Function BinomialDiscreteDividends(CallPutFlag As String, AmeEurFlag As S
         StockPriceNode(i) = StockPriceNode(i - 1) * uu
     Next
     
-    '// Calculate option values for all nodes at time step just before dividend payment
+    ' Calculate option values for all nodes at time step just before dividend payment
     For i = 1 To StepsBeforeDividend + 1 Step 1
-        '// Because non recombining the model need to build a new binomial tree from every singel node at this time step
+        ' Because non recombining the model need to build a new binomial tree from every singel node at this time step
         ValueNotExercising = BinomialDiscreteDividends(CallPutFlag, AmeEurFlag, StockPriceNode(i) - DividendAmount, X, T - DividendTimes(1), r, v, n - StepsBeforeDividend, TmpCashDividends, TmpDividendTimes)
-         If AmeEurFlag = "a" Then
+        If AmeEurFlag = "a" Then
             OptionValueNode(i) = Max(ValueNotExercising, Binary * (StockPriceNode(i) - X))
-         ElseIf AmeEurFlag = "e" Then
+        ElseIf AmeEurFlag = "e" Then
             OptionValueNode(i) = ValueNotExercising
         End If
     Next
 
-    '//Option values before dividend payment "standard binomial"
+    ' Option values before dividend payment "standard binomial"
     For j = StepsBeforeDividend To 1 Step -1
         For i = 1 To j + 1 Step 1
             StockPriceNode(i) = d * StockPriceNode(i + 1)
             If AmeEurFlag = "a" Then
                 OptionValueNode(i) = Max((P * OptionValueNode(i + 1) + (1 - P) * OptionValueNode(i)) * Df, Binary * (StockPriceNode(i) - X))
             ElseIf AmeEurFlag = "e" Then
-                    OptionValueNode(i) = (P * OptionValueNode(i + 1) + (1 - P) * OptionValueNode(i)) * Df
+                OptionValueNode(i) = (P * OptionValueNode(i + 1) + (1 - P) * OptionValueNode(i)) * Df
             End If
         Next
     Next

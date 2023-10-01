@@ -39,13 +39,11 @@ Public Function EInterpolation(XVector As Object, YVector As Object, X As Double
     Dim T1 As Double, T2 As Double
     
     X1 = Application.Match(X, XVector)
-        
-        X2 = X1 + 1
+    X2 = X1 + 1
     T1 = Application.Index(XVector, X1)
     T2 = Application.Index(XVector, X2)
     r1 = Application.Index(YVector, X1)
     r2 = Application.Index(YVector, X2)
-   
     
     If InterpolationMethod = 1 Then
         EInterpolation = (r2 - r1) * (X - T1) / (T2 - T1) + r1
@@ -55,7 +53,6 @@ Public Function EInterpolation(XVector As Object, YVector As Object, X As Double
         EInterpolation = CubicInterpolation(XVector, YVector, X)
     End If
 End Function
-
 
 Function CubicSpline(XArray As Variant, YArray As Variant, X As Variant)
     

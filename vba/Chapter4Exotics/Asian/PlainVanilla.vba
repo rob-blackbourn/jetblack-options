@@ -16,7 +16,7 @@ Public Function GBlackScholesNGreeks(OutPutFlag As String, CallPutFlag As String
         dS = 0.01
     End If
     
-    
+
     If OutPutFlag = "p" Then ' Value
         GBlackScholesNGreeks = GBlackScholes(CallPutFlag, S, X, T, r, b, v)
     ElseIf OutPutFlag = "d" Then 'Delta

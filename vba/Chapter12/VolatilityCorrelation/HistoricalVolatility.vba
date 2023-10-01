@@ -6,17 +6,17 @@ Option Base 1       'The "Option Base" statment alowws to specify 0 or 1 as the
                             
 ' Programmer Espen Gaarder Haug, Copyright 2006
 
-'// Correlation coefficient of logarithmic changes between two assets
+' Correlation coefficient of logarithmic changes between two assets
 Public Function HistoricalCorrelation(PricesAsset1 As Object, PricesAsset2 As Object) As Double
     HistoricalCorrelation = Application.Correl(LogChange(PricesAsset1), LogChange(PricesAsset2))
 End Function
                             
- '// Pearson Kurtosis of logarithmic changes of a vector
+' Pearson Kurtosis of logarithmic changes of a vector
 Public Function HistoricalKurtosis(HistoricalData As Object) As Double
     HistoricalKurtosis = Application.Kurt(LogChange(HistoricalData)) + 3
 End Function
 
-'// Skewness of logarithmic changes of a vector
+' Skewness of logarithmic changes of a vector
 Public Function HistoricalSkewness(HistoricalData As Object) As Double
     HistoricalSkewness = Application.Skew(LogChange(HistoricalData))
 End Function
@@ -38,7 +38,7 @@ Public Function HighLowVolatility(HighPrices As Object, LowPrices As Object, Opt
     Dim n As Integer
     
     n = HighPrices.Rows.Count
-     If IsMissing(DataPerYear) Then
+    If IsMissing(DataPerYear) Then
         DataPerYear = 252
     End If
     HighLowVolatility = 1 / (2 * n * Sqr(Log(2))) * Application.sum(LogHighLow(HighPrices, LowPrices)) * Sqr(DataPerYear)
@@ -51,11 +51,10 @@ Public Function HighLowCloseVolatility(HighPrices As Object, LowPrices As Object
     Dim n As Integer
     
     n = HighPrices.Rows.Count
-     If IsMissing(DataPerYear) Then
+    If IsMissing(DataPerYear) Then
         DataPerYear = 252
     End If
-    HighLowCloseVolatility = Sqr(1 / n * 1 / 2 * Application.SumSq(LogHighLow(HighPrices, LowPrices)) _
-    - 1 / n * (2 * Log(2) - 1) * Application.SumSq(LogChange(ClosePrices))) * Sqr(DataPerYear)
+    HighLowCloseVolatility = Sqr(1 / n * 1 / 2 * Application.SumSq(LogHighLow(HighPrices, LowPrices)) - 1 / n * (2 * Log(2) - 1) * Application.SumSq(LogChange(ClosePrices))) * Sqr(DataPerYear)
 
 End Function
 
@@ -73,7 +72,6 @@ Public Function ExponentiallyWeightedVol(PriceVector As Object, Lambda As Double
     End If
     
     ExpVol = Log(PriceVector(2) / PriceVector(1)) ^ 2
-    
     
     If PriceVector.Areas.Count <> 1 Then
         ' Multiple selections not allowed
@@ -126,7 +124,6 @@ End Function
 
 Private Function LogHighLow(HighPrices As Object, LowPrices As Object)
   
-  
     Dim nRow As Integer
     Dim nCol As Integer
     Dim nVec As Integer
@@ -146,7 +143,6 @@ Private Function LogHighLow(HighPrices As Object, LowPrices As Object)
             Next Element
             LogHighLow = Application.Transpose(TmpVec)
         Else
-        
             LogHighLow = CVErr(xlErrValue)
         End If
     End If
@@ -195,9 +191,7 @@ Public Function VolatilityCone(DataVec As Object, VolPeriod As Integer, Optional
     End If
 End Function
 
-
-Public Function ConfidenceIntervalVolatility(alfa As Double, n As Integer, VolatilityEstimate As Double, _
-UpperLower As String)
+Public Function ConfidenceIntervalVolatility(alfa As Double, n As Integer, VolatilityEstimate As Double, UpperLower As String)
 
     'UpperLower     ="L" gives the lower cofidence interval
     '               ="U" gives the upper cofidence interval

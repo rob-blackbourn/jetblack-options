@@ -3,9 +3,8 @@ Option Explicit
 ' Programmer Espen Gaarder Haug
 ' Copyright Espen G. Haug 2006
 
-'//  The generalized Black and Scholes formula
-Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, b As Double, v As Double) As Double
+' The generalized Black and Scholes formula
+Public Function GBlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim d1 As Double, d2 As Double
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -19,9 +18,7 @@ Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
     
 End Function
 
-
-Public Function ImpliedVolGBlackScholes(CallPutFlag As String, S As Double, _
-                X As Double, T As Double, r As Double, b As Double, cm As Double) As Double
+Public Function ImpliedVolGBlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, cm As Double) As Double
 
     Dim vLow As Double, vHigh As Double, vi As Double
     Dim cLow As Double, cHigh As Double, epsilon As Double

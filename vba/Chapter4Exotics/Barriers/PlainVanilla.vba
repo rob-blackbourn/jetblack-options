@@ -9,8 +9,7 @@ Option Base 1       'The "Option Base" statement allows to specify 0 or 1 as the
 ' Copyright Espen Gaarder Haug  2006
 
 
-Public Function BisectionAlgorithm(CallPutFlag As String, S As Double, _
-                X As Double, T As Double, r As Double, b As Double, cm As Double) As Double
+Public Function BisectionAlgorithm(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, cm As Double) As Double
 
     Dim vLow As Double, vHigh As Double, vi As Double
     Dim cLow As Double, cHigh As Double, epsilon As Double
@@ -46,8 +45,7 @@ Public Function BisectionAlgorithm(CallPutFlag As String, S As Double, _
 End Function
 
 '// Black and Scholes (1973) Stock options, on non dividend paying stock
-Public Function BlackScholes(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, v As Double) As Double
+Public Function BlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, v As Double) As Double
                 
     Dim d1 As Double, d2 As Double
     
@@ -60,10 +58,8 @@ Public Function BlackScholes(CallPutFlag As String, S As Double, X _
     End If
 End Function
 
-
-'// Merton (1973) Options on stock indices paying continuous dividend yield q
-Public Function Merton73(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, q As Double, v As Double) As Double
+' Merton (1973) Options on stock indices paying continuous dividend yield q
+Public Function Merton73(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, q As Double, v As Double) As Double
                 
     Dim d1 As Double, d2 As Double
     
@@ -77,9 +73,8 @@ Public Function Merton73(CallPutFlag As String, S As Double, X _
     
 End Function
 
-'// Black (1976) Options on futures/forwards
-Public Function Black76(CallPutFlag As String, F As Double, X _
-                As Double, T As Double, r As Double, v As Double) As Double
+' Black (1976) Options on futures/forwards
+Public Function Black76(CallPutFlag As String, F As Double, X As Double, T As Double, r As Double, v As Double) As Double
                 
     Dim d1 As Double, d2 As Double
     
@@ -93,10 +88,8 @@ Public Function Black76(CallPutFlag As String, F As Double, X _
     
 End Function
 
-
-'// Garman and Kohlhagen (1983) Currency options
-Public Function GarmanKolhagen(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, rf As Double, v As Double) As Double
+' Garman and Kohlhagen (1983) Currency options
+Public Function GarmanKolhagen(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, rf As Double, v As Double) As Double
                 
     Dim d1 As Double, d2 As Double
     
@@ -110,10 +103,8 @@ Public Function GarmanKolhagen(CallPutFlag As String, S As Double, X _
     
 End Function
 
-
-'//  The generalized Black and Scholes formula
-Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, b As Double, v As Double) As Double
+'  The generalized Black and Scholes formula
+Public Function GBlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim d1 As Double, d2 As Double
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -127,167 +118,159 @@ Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
     
 End Function
 
+' This is the generlaized Black-Scholes-Merton formula including all greeeks
+' This function is simply calling all the other functions
+Public Function EGBlackScholes(OutPutFlag As String, Optional CallPutFlag As String, Optional S As Double, Optional X As Double, Optional T As Double, Optional r As Double, Optional b As Double, Optional v As Double, Optional delta As Double, Optional InTheMoneyProb As Double, Optional ThetaDays As Double) As Double
 
-'// This is the generlaized Black-Scholes-Merton formula including all greeeks
-'// This function is simply calling all the other functions
-Public Function EGBlackScholes(OutPutFlag As String, Optional CallPutFlag As String, Optional S As Double, Optional X _
-                As Double, Optional T As Double, Optional r As Double, Optional b As Double, Optional v As Double, Optional delta As Double, Optional InTheMoneyProb As Double, Optional ThetaDays As Double) As Double
-                
-                    Dim output As Double
-                  
-                    output = 0
-                    
-                If OutPutFlag = "p" Then 'Value
-                    EGBlackScholes = GBlackScholes(CallPutFlag, S, X, T, r, b, v)
-                    
-                'DELTA GREEKS
-                 ElseIf OutPutFlag = "d" Then 'Delta
-                    EGBlackScholes = GDelta(CallPutFlag, S, X, T, r, b, v)
-                ElseIf OutPutFlag = "df" Then 'Forward Delta
-                    EGBlackScholes = GForwardDelta(CallPutFlag, S, X, T, r, b, v)
-                ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
-                    EGBlackScholes = GDdeltaDvol(S, X, T, r, b, v) / 100
-                ElseIf OutPutFlag = "dvv" Then 'DDeltaDvolDvol
-                    EGBlackScholes = GDdeltaDvolDvol(S, X, T, r, b, v) / 10000
-                ElseIf OutPutFlag = "dt" Then 'DDeltaDtime/Charm
-                    EGBlackScholes = GDdeltaDtime(CallPutFlag, S, X, T, r, b, v) / 365
-                ElseIf OutPutFlag = "dmx" Then
-                    EGBlackScholes = S ^ 2 / X * Exp((2 * b + v ^ 2) * T)
-                    
-                 ElseIf OutPutFlag = "e" Then ' Elasticity
-                     EGBlackScholes = GElasticity(CallPutFlag, S, X, T, r, b, v)
-         
-                'GAMMA GREEKS
-                ElseIf OutPutFlag = "sg" Then 'SaddleGamma
-                EGBlackScholes = GSaddleGamma(X, T, r, b, v)
-                 ElseIf OutPutFlag = "g" Then 'Gamma
-                    EGBlackScholes = GGamma(S, X, T, r, b, v)
-                 ElseIf OutPutFlag = "s" Then 'DgammaDspot/speed
-                    EGBlackScholes = GDgammaDspot(S, X, T, r, b, v)
-                 ElseIf OutPutFlag = "gv" Then 'DgammaDvol/Zomma
-                    EGBlackScholes = GDgammaDvol(S, X, T, r, b, v) / 100
-                 ElseIf OutPutFlag = "gt" Then 'DgammaDtime
-                    EGBlackScholes = GDgammaDtime(S, X, T, r, b, v) / 365
-                    
-                ElseIf OutPutFlag = "gp" Then 'GammaP
-                    EGBlackScholes = GGammaP(S, X, T, r, b, v)
-                ElseIf OutPutFlag = "gps" Then 'DgammaPDspot
-                    EGBlackScholes = GDgammaPDspot(S, X, T, r, b, v)
-                ElseIf OutPutFlag = "gpv" Then 'DgammaDvol/Zomma
-                    EGBlackScholes = GDgammaPDvol(S, X, T, r, b, v) / 100
-                ElseIf OutPutFlag = "gpt" Then 'DgammaPDtime
-                    EGBlackScholes = GDgammaPDtime(S, X, T, r, b, v) / 365
-              
-                    
-                'VEGA GREEKS
-                 ElseIf OutPutFlag = "v" Then 'Vega
-                    EGBlackScholes = GVega(S, X, T, r, b, v) / 100
-                 ElseIf OutPutFlag = "vt" Then 'DvegaDtime
-                    EGBlackScholes = GDvegaDtime(S, X, T, r, b, v) / 365
-                ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/Vomma
-                    EGBlackScholes = GDvegaDvol(S, X, T, r, b, v) / 10000
-                ElseIf OutPutFlag = "vvv" Then 'DvommaDvol
-                    EGBlackScholes = GDvommaDvol(S, X, T, r, b, v) / 1000000
-                    
-                ElseIf OutPutFlag = "vp" Then 'VegaP
-                    EGBlackScholes = GVegaP(S, X, T, r, b, v)
-                ElseIf OutPutFlag = "vpv" Then 'DvegaPDvol/VommaP
-                    EGBlackScholes = GDvegaPDvol(S, X, T, r, b, v) / 100
-                ElseIf OutPutFlag = "vl" Then 'Vega Leverage
-                    EGBlackScholes = GVegaLeverage(CallPutFlag, S, X, T, r, b, v)
-                
-                'VARIANCE GREEKS
-                ElseIf OutPutFlag = "varvega" Then 'Variance-Vega
-                    EGBlackScholes = GVarianceVega(S, X, T, r, b, v) / 100
-                 ElseIf OutPutFlag = "vardelta" Then 'Variance-delta
-                    EGBlackScholes = GVarianceDelta(S, X, T, r, b, v) / 100
-                 ElseIf OutPutFlag = "varvar" Then 'Variance-vomma
-                    EGBlackScholes = GVarianceVomma(S, X, T, r, b, v) / 10000
-                
-                'THETA GREEKS
-                ElseIf OutPutFlag = "t" Then 'Theta
-                    EGBlackScholes = GTheta(CallPutFlag, S, X, T, r, b, v) / 365
-                ElseIf OutPutFlag = "Dlt" Then 'Drift-less Theta
-                    EGBlackScholes = GThetaDriftLess(S, X, T, r, b, v) / 365
-                  
-                'RATE/CARRY GREEKS
-                ElseIf OutPutFlag = "r" Then 'Rho
-                    EGBlackScholes = GRho(CallPutFlag, S, X, T, r, b, v) / 100
-                 ElseIf OutPutFlag = "fr" Then 'Rho futures option
-                    EGBlackScholes = GRhoFO(CallPutFlag, S, X, T, r, b, v) / 100
-                ElseIf OutPutFlag = "b" Then 'Carry Rho
-                    EGBlackScholes = GCarry(CallPutFlag, S, X, T, r, b, v) / 100
-                ElseIf OutPutFlag = "f" Then 'Phi/Rho2
-                    EGBlackScholes = GPhi(CallPutFlag, S, X, T, r, b, v) / 100
-                
-                'PROB GREEKS
-                ElseIf OutPutFlag = "z" Then 'Zeta/In-the-money risk neutral probability
-                    EGBlackScholes = GInTheMoneyProbability(CallPutFlag, S, X, T, b, v)
-                ElseIf OutPutFlag = "zv" Then 'DzetaDvol
-                    EGBlackScholes = GDzetaDvol(CallPutFlag, S, X, T, r, b, v) / 100
-                ElseIf OutPutFlag = "zt" Then 'DzetaDtime
-                    EGBlackScholes = GDzetaDtime(CallPutFlag, S, X, T, r, b, v) / 365
-                ElseIf OutPutFlag = "bp" Then 'Brak even probability
-                    EGBlackScholes = GBreakEvenProbability(CallPutFlag, S, X, T, r, b, v)
-                 ElseIf OutPutFlag = "dx" Then 'StrikeDelta
-                    EGBlackScholes = GStrikeDelta(CallPutFlag, S, X, T, r, b, v)
-                ElseIf OutPutFlag = "dxdx" Then 'Risk Neutral Density
-                    EGBlackScholes = GRiskNeutralDensity(S, X, T, r, b, v)
-                    
-                'FROM DELTA GREEKS
-                ElseIf OutPutFlag = "gfd" Then 'Gamma from delta
-                    EGBlackScholes = GGammaFromDelta(S, T, r, b, v, delta)
-                  ElseIf OutPutFlag = "gpfd" Then 'GammaP from delta
-                    EGBlackScholes = GGammaPFromDelta(S, T, r, b, v, delta)
-                 ElseIf OutPutFlag = "vfd" Then 'Vega from delta
-                    EGBlackScholes = GVegaFromDelta(S, T, r, b, delta) / 100
-                ElseIf OutPutFlag = "vpfd" Then 'VegaP from delta
-                    EGBlackScholes = GVegaPFromDelta(S, T, r, b, v, delta)
-                 ElseIf OutPutFlag = "xfd" Then 'Strike from delta
-                    EGBlackScholes = GStrikeFromDelta(CallPutFlag, S, T, r, b, v, delta)
-                  ElseIf OutPutFlag = "ipfd" Then 'In-the-money probability from delta
-                    EGBlackScholes = InTheMoneyProbFromDelta(CallPutFlag, S, T, r, b, v, delta)
-                    
-                    
-                 'FROM IN-THE GREEKS
-                 ElseIf OutPutFlag = "xfip" Then 'Strike from in-the-money probability
-                    EGBlackScholes = GStrikeFromInTheMoneyProb(CallPutFlag, S, v, T, b, InTheMoneyProb)
-                ElseIf OutPutFlag = "RNDfip" Then 'Risk Neutral Density from in-the-money probability
-                    EGBlackScholes = GRNDFromInTheMoneyProb(X, T, r, v, InTheMoneyProb)
-                ElseIf OutPutFlag = "dfip" Then 'Strike from in-the-money probability
-                    EGBlackScholes = GDeltaFromInTheMoneyProb(CallPutFlag, S, T, r, b, v, InTheMoneyProb)
-                    
-                    
-                'CALCULATIONS
-                ElseIf OutPutFlag = "d1" Then 'd1
-                    EGBlackScholes = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
-                ElseIf OutPutFlag = "d2" Then 'd2
-                    EGBlackScholes = (Log(S / X) + (b - v ^ 2 / 2) * T) / (v * Sqr(T))
-                ElseIf OutPutFlag = "nd1" Then 'n(d1)
-                    EGBlackScholes = ND((Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T)))
-                ElseIf OutPutFlag = "nd2" Then 'n(d2)
-                    EGBlackScholes = ND((Log(S / X) + (b - v ^ 2 / 2) * T) / (v * Sqr(T)))
-                ElseIf OutPutFlag = "CNDd1" Then 'N(d1)
-                    EGBlackScholes = CND((Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T)))
-                ElseIf OutPutFlag = "CNDd2" Then 'N(d2)
-                    EGBlackScholes = CND((Log(S / X) + (b - v ^ 2 / 2) * T) / (v * Sqr(T)))
-                End If
+    Dim output As Double
+    
+    output = 0
+        
+    If OutPutFlag = "p" Then 'Value
+        EGBlackScholes = GBlackScholes(CallPutFlag, S, X, T, r, b, v)
+        
+    'DELTA GREEKS
+    ElseIf OutPutFlag = "d" Then 'Delta
+        EGBlackScholes = GDelta(CallPutFlag, S, X, T, r, b, v)
+    ElseIf OutPutFlag = "df" Then 'Forward Delta
+        EGBlackScholes = GForwardDelta(CallPutFlag, S, X, T, r, b, v)
+    ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
+        EGBlackScholes = GDdeltaDvol(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "dvv" Then 'DDeltaDvolDvol
+        EGBlackScholes = GDdeltaDvolDvol(S, X, T, r, b, v) / 10000
+    ElseIf OutPutFlag = "dt" Then 'DDeltaDtime/Charm
+        EGBlackScholes = GDdeltaDtime(CallPutFlag, S, X, T, r, b, v) / 365
+    ElseIf OutPutFlag = "dmx" Then
+        EGBlackScholes = S ^ 2 / X * Exp((2 * b + v ^ 2) * T)
+    ElseIf OutPutFlag = "e" Then ' Elasticity
+        EGBlackScholes = GElasticity(CallPutFlag, S, X, T, r, b, v)
+
+    'GAMMA GREEKS
+    ElseIf OutPutFlag = "sg" Then 'SaddleGamma
+        EGBlackScholes = GSaddleGamma(X, T, r, b, v)
+    ElseIf OutPutFlag = "g" Then 'Gamma
+        EGBlackScholes = GGamma(S, X, T, r, b, v)
+    ElseIf OutPutFlag = "s" Then 'DgammaDspot/speed
+        EGBlackScholes = GDgammaDspot(S, X, T, r, b, v)
+    ElseIf OutPutFlag = "gv" Then 'DgammaDvol/Zomma
+        EGBlackScholes = GDgammaDvol(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "gt" Then 'DgammaDtime
+        EGBlackScholes = GDgammaDtime(S, X, T, r, b, v) / 365
+    ElseIf OutPutFlag = "gp" Then 'GammaP
+        EGBlackScholes = GGammaP(S, X, T, r, b, v)
+    ElseIf OutPutFlag = "gps" Then 'DgammaPDspot
+        EGBlackScholes = GDgammaPDspot(S, X, T, r, b, v)
+    ElseIf OutPutFlag = "gpv" Then 'DgammaDvol/Zomma
+        EGBlackScholes = GDgammaPDvol(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "gpt" Then 'DgammaPDtime
+        EGBlackScholes = GDgammaPDtime(S, X, T, r, b, v) / 365
+        
+    'VEGA GREEKS
+    ElseIf OutPutFlag = "v" Then 'Vega
+        EGBlackScholes = GVega(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "vt" Then 'DvegaDtime
+        EGBlackScholes = GDvegaDtime(S, X, T, r, b, v) / 365
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol/Vomma
+        EGBlackScholes = GDvegaDvol(S, X, T, r, b, v) / 10000
+    ElseIf OutPutFlag = "vvv" Then 'DvommaDvol
+        EGBlackScholes = GDvommaDvol(S, X, T, r, b, v) / 1000000
+    ElseIf OutPutFlag = "vp" Then 'VegaP
+        EGBlackScholes = GVegaP(S, X, T, r, b, v)
+    ElseIf OutPutFlag = "vpv" Then 'DvegaPDvol/VommaP
+        EGBlackScholes = GDvegaPDvol(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "vl" Then 'Vega Leverage
+        EGBlackScholes = GVegaLeverage(CallPutFlag, S, X, T, r, b, v)
+    
+    'VARIANCE GREEKS
+    ElseIf OutPutFlag = "varvega" Then 'Variance-Vega
+        EGBlackScholes = GVarianceVega(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "vardelta" Then 'Variance-delta
+        EGBlackScholes = GVarianceDelta(S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "varvar" Then 'Variance-vomma
+        EGBlackScholes = GVarianceVomma(S, X, T, r, b, v) / 10000
+    
+    'THETA GREEKS
+    ElseIf OutPutFlag = "t" Then 'Theta
+        EGBlackScholes = GTheta(CallPutFlag, S, X, T, r, b, v) / 365
+    ElseIf OutPutFlag = "Dlt" Then 'Drift-less Theta
+        EGBlackScholes = GThetaDriftLess(S, X, T, r, b, v) / 365
+        
+    'RATE/CARRY GREEKS
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EGBlackScholes = GRho(CallPutFlag, S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "fr" Then 'Rho futures option
+        EGBlackScholes = GRhoFO(CallPutFlag, S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "b" Then 'Carry Rho
+        EGBlackScholes = GCarry(CallPutFlag, S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "f" Then 'Phi/Rho2
+        EGBlackScholes = GPhi(CallPutFlag, S, X, T, r, b, v) / 100
+    
+    'PROB GREEKS
+    ElseIf OutPutFlag = "z" Then 'Zeta/In-the-money risk neutral probability
+        EGBlackScholes = GInTheMoneyProbability(CallPutFlag, S, X, T, b, v)
+    ElseIf OutPutFlag = "zv" Then 'DzetaDvol
+        EGBlackScholes = GDzetaDvol(CallPutFlag, S, X, T, r, b, v) / 100
+    ElseIf OutPutFlag = "zt" Then 'DzetaDtime
+        EGBlackScholes = GDzetaDtime(CallPutFlag, S, X, T, r, b, v) / 365
+    ElseIf OutPutFlag = "bp" Then 'Brak even probability
+        EGBlackScholes = GBreakEvenProbability(CallPutFlag, S, X, T, r, b, v)
+    ElseIf OutPutFlag = "dx" Then 'StrikeDelta
+        EGBlackScholes = GStrikeDelta(CallPutFlag, S, X, T, r, b, v)
+    ElseIf OutPutFlag = "dxdx" Then 'Risk Neutral Density
+        EGBlackScholes = GRiskNeutralDensity(S, X, T, r, b, v)
+        
+    'FROM DELTA GREEKS
+    ElseIf OutPutFlag = "gfd" Then 'Gamma from delta
+        EGBlackScholes = GGammaFromDelta(S, T, r, b, v, delta)
+    ElseIf OutPutFlag = "gpfd" Then 'GammaP from delta
+        EGBlackScholes = GGammaPFromDelta(S, T, r, b, v, delta)
+    ElseIf OutPutFlag = "vfd" Then 'Vega from delta
+        EGBlackScholes = GVegaFromDelta(S, T, r, b, delta) / 100
+    ElseIf OutPutFlag = "vpfd" Then 'VegaP from delta
+        EGBlackScholes = GVegaPFromDelta(S, T, r, b, v, delta)
+    ElseIf OutPutFlag = "xfd" Then 'Strike from delta
+        EGBlackScholes = GStrikeFromDelta(CallPutFlag, S, T, r, b, v, delta)
+    ElseIf OutPutFlag = "ipfd" Then 'In-the-money probability from delta
+        EGBlackScholes = InTheMoneyProbFromDelta(CallPutFlag, S, T, r, b, v, delta)
+        
+        'FROM IN-THE GREEKS
+    ElseIf OutPutFlag = "xfip" Then 'Strike from in-the-money probability
+        EGBlackScholes = GStrikeFromInTheMoneyProb(CallPutFlag, S, v, T, b, InTheMoneyProb)
+    ElseIf OutPutFlag = "RNDfip" Then 'Risk Neutral Density from in-the-money probability
+        EGBlackScholes = GRNDFromInTheMoneyProb(X, T, r, v, InTheMoneyProb)
+    ElseIf OutPutFlag = "dfip" Then 'Strike from in-the-money probability
+        EGBlackScholes = GDeltaFromInTheMoneyProb(CallPutFlag, S, T, r, b, v, InTheMoneyProb)
+        
+    'CALCULATIONS
+    ElseIf OutPutFlag = "d1" Then 'd1
+        EGBlackScholes = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
+    ElseIf OutPutFlag = "d2" Then 'd2
+        EGBlackScholes = (Log(S / X) + (b - v ^ 2 / 2) * T) / (v * Sqr(T))
+    ElseIf OutPutFlag = "nd1" Then 'n(d1)
+        EGBlackScholes = ND((Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T)))
+    ElseIf OutPutFlag = "nd2" Then 'n(d2)
+        EGBlackScholes = ND((Log(S / X) + (b - v ^ 2 / 2) * T) / (v * Sqr(T)))
+    ElseIf OutPutFlag = "CNDd1" Then 'N(d1)
+        EGBlackScholes = CND((Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T)))
+    ElseIf OutPutFlag = "CNDd2" Then 'N(d2)
+        EGBlackScholes = CND((Log(S / X) + (b - v ^ 2 / 2) * T) / (v * Sqr(T)))
+    End If
 End Function
 
-'// DDeltaDvol also known as vanna
+' DDeltaDvol also known as vanna
 Public Function GDdeltaDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
-Dim d1 As Double, d2 As Double
+    Dim d1 As Double, d2 As Double
 
     d1 = (Log(S / X) + (b + v * v / 2) * T) / (v * Sqr(T))
     d2 = d1 - v * Sqr(T)
     GDdeltaDvol = -Exp((b - r) * T) * d2 / v * ND(d1)
 End Function
 
-'// DDeltaDvolDvol also known as DVannaDvol
+' DDeltaDvolDvol also known as DVannaDvol
 Public Function GDdeltaDvolDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
-Dim d1 As Double, d2 As Double
+    Dim d1 As Double, d2 As Double
 
     d1 = (Log(S / X) + (b + v * v / 2) * T) / (v * Sqr(T))
     d2 = d1 - v * Sqr(T)
@@ -295,46 +278,35 @@ Dim d1 As Double, d2 As Double
 
 End Function
 
-'// Vega from delta
+' Vega from delta
 Public Function GVegaFromDelta(S As Double, T As Double, r As Double, b As Double, delta As Double) As Double
-
-    
     GVegaFromDelta = S * Exp((b - r) * T) * Sqr(T) * ND(CNDEV(Exp((r - b) * T) * Abs(delta)))
-    
 End Function
 
-'// Gamma from delta
+' Gamma from delta
 Public Function GGammaFromDelta(S As Double, T As Double, r As Double, b As Double, v As Double, delta As Double) As Double
-
     GGammaFromDelta = Exp((b - r) * T) * ND(CNDEV(Exp((r - b) * T) * Abs(delta))) / (S * v * Sqr(T))
-    
 End Function
 
-'// Risk Neutral Density from in-the-money probability
+' Risk Neutral Density from in-the-money probability
 Public Function GRNDFromInTheMoneyProb(X As Double, T As Double, r As Double, v As Double, Probability As Double) As Double
-
     GRNDFromInTheMoneyProb = Exp(-r * T) * ND(CNDEV(Probability)) / (X * v * Sqr(T))
-    
 End Function
 
-'// GammaP from delta
+' GammaP from delta
 Public Function GGammaPFromDelta(S As Double, T As Double, r As Double, b As Double, v As Double, delta As Double) As Double
-
     GGammaPFromDelta = S / 100 * GGammaFromDelta(S, T, r, b, v, delta)
-    
 End Function
 
-'// VegaP from delta
+' VegaP from delta
 Public Function GVegaPFromDelta(S As Double, T As Double, r As Double, b As Double, v As Double, delta As Double) As Double
-
     GVegaPFromDelta = v / 10 * GVegaFromDelta(S, T, r, b, delta)
-    
 End Function
 
-'// What asset price that gives maximum DdeltaDvol
+' What asset price that gives maximum DdeltaDvol
 Public Function MaxDdeltaDvolAsset(UpperLowerFlag As String, X As Double, T As Double, b As Double, v As Double) As Double
-    '// UpperLowerFlag"l" gives lower asset level that gives max DdeltaDvol
-    '// UpperLowerFlag"l" gives upper asset level that gives max DdeltaDvol
+    ' UpperLowerFlag"l" gives lower asset level that gives max DdeltaDvol
+    ' UpperLowerFlag"l" gives upper asset level that gives max DdeltaDvol
     
     If UpperLowerFlag = "l" Then
         MaxDdeltaDvolAsset = X * Exp(-b * T - v * Sqr(T) * Sqr(4 + T * v ^ 2) / 2)
@@ -344,11 +316,11 @@ Public Function MaxDdeltaDvolAsset(UpperLowerFlag As String, X As Double, T As D
     
 End Function
 
-'// What strike price that gives maximum DdeltaDvol
+' What strike price that gives maximum DdeltaDvol
 Public Function MaxDdeltaDvolStrike(UpperLowerFlag As String, S As Double, T As Double, b As Double, v As Double) As Double
     
-    '// UpperLowerFlag"l" gives lower strike level that gives max DdeltaDvol
-    '// UpperLowerFlag"l" gives upper strike level that gives max DdeltaDvol
+    ' UpperLowerFlag"l" gives lower strike level that gives max DdeltaDvol
+    ' UpperLowerFlag"l" gives upper strike level that gives max DdeltaDvol
     
     If UpperLowerFlag = "l" Then
         MaxDdeltaDvolStrike = S * Exp(b * T - v * Sqr(T) * Sqr(4 + T * v ^ 2) / 2)
@@ -358,32 +330,23 @@ Public Function MaxDdeltaDvolStrike(UpperLowerFlag As String, S As Double, T As 
     
 End Function
 
-'// What strike price that gives maximum gamma and vega
+' What strike price that gives maximum gamma and vega
 Public Function GMaxGammaVegaatX(S As Double, b As Double, T As Double, v As Double)
-            
-            GMaxGammaVegaatX = S * Exp((b + v * v / 2) * T)
-
+    GMaxGammaVegaatX = S * Exp((b + v * v / 2) * T)
 End Function
 
 '// What asset price that gives maximum gamma
 Public Function GMaxGammaatS(X As Double, b As Double, T As Double, v As Double)
-
-            GMaxGammaatS = X * Exp((-b - 3 * v * v / 2) * T)
-
+    GMaxGammaatS = X * Exp((-b - 3 * v * v / 2) * T)
 End Function
 
-'// What asset price that gives maximum vega
+' What asset price that gives maximum vega
 Public Function GMaxVegaatS(X As Double, b As Double, T As Double, v As Double)
-
-            GMaxVegaatS = X * Exp((-b + v * v / 2) * T)
-            
+    GMaxVegaatS = X * Exp((-b + v * v / 2) * T)
 End Function
 
-
-
-'// Forward delta for the generalized Black and Scholes formula
-Public Function GForwardDelta(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, _
-                b As Double, v As Double) As Double
+' Forward delta for the generalized Black and Scholes formula
+Public Function GForwardDelta(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
                 
     Dim d1 As Double
     
@@ -396,7 +359,7 @@ Public Function GForwardDelta(CallPutFlag As String, S As Double, X As Double, T
     End If
 End Function
 
-'// DZetaDvol for the generalized Black and Scholes formula
+' DZetaDvol for the generalized Black and Scholes formula
 Public Function GDzetaDvol(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
                 
     Dim d1 As Double, d2 As Double
@@ -411,7 +374,7 @@ Public Function GDzetaDvol(CallPutFlag As String, S As Double, X As Double, T As
 
 End Function
 
-'// DZetaDtime for the generalized Black and Scholes formula
+' DZetaDtime for the generalized Black and Scholes formula
 Public Function GDzetaDtime(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
                 
     Dim d1 As Double, d2 As Double
@@ -426,9 +389,8 @@ Public Function GDzetaDtime(CallPutFlag As String, S As Double, X As Double, T A
 
 End Function
 
-'// Delta for the generalized Black and Scholes formula
-Public Function GInTheMoneyProbability(CallPutFlag As String, S As Double, X As Double, T As Double, _
-                b As Double, v As Double) As Double
+' Delta for the generalized Black and Scholes formula
+Public Function GInTheMoneyProbability(CallPutFlag As String, S As Double, X As Double, T As Double, b As Double, v As Double) As Double
                 
     Dim d2 As Double
     
@@ -442,10 +404,9 @@ Public Function GInTheMoneyProbability(CallPutFlag As String, S As Double, X As 
     
 End Function
 
-'// Risk neutral break even probability for the generalized Black and Scholes formula
-Public Function GBreakEvenProbability(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, _
-                b As Double, v As Double) As Double
-                
+' Risk neutral break even probability for the generalized Black and Scholes formula
+Public Function GBreakEvenProbability(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
+
     Dim d2 As Double
     
     If CallPutFlag = "c" Then
@@ -460,105 +421,85 @@ Public Function GBreakEvenProbability(CallPutFlag As String, S As Double, X As D
     
 End Function
 
-
-
-'// Closed form solution to find strike given the in-the-money risk neutral probability
+' Closed form solution to find strike given the in-the-money risk neutral probability
 Public Function GStrikeFromInTheMoneyProb(CallPutFlag As String, S As Double, v As Double, T As Double, b As Double, InTheMoneyProb As Double) As Double
         
     If CallPutFlag = "c" Then
-          GStrikeFromInTheMoneyProb = S * Exp(-CNDEV(InTheMoneyProb) * v * Sqr(T) + (b - v * v / 2) * T)
-        Else
-           GStrikeFromInTheMoneyProb = S * Exp(CNDEV(InTheMoneyProb) * v * Sqr(T) + (b - v * v / 2) * T)
-        End If
+        GStrikeFromInTheMoneyProb = S * Exp(-CNDEV(InTheMoneyProb) * v * Sqr(T) + (b - v * v / 2) * T)
+    Else
+        GStrikeFromInTheMoneyProb = S * Exp(CNDEV(InTheMoneyProb) * v * Sqr(T) + (b - v * v / 2) * T)
+    End If
         
 End Function
-'// Closed form solution to find strike given the delta
+
+' Closed form solution to find strike given the delta
 Public Function GStrikeFromDelta(CallPutFlag As String, S As Double, T As Double, r As Double, b As Double, v As Double, delta As Double) As Double
         
-       If CallPutFlag = "c" Then
-          GStrikeFromDelta = S * Exp(-CNDEV(delta * Exp((r - b) * T)) * v * Sqr(T) + (b + v * v / 2) * T)
-        Else
-            GStrikeFromDelta = S * Exp(CNDEV(-delta * Exp((r - b) * T)) * v * Sqr(T) + (b + v * v / 2) * T)
-        End If
+    If CallPutFlag = "c" Then
+        GStrikeFromDelta = S * Exp(-CNDEV(delta * Exp((r - b) * T)) * v * Sqr(T) + (b + v * v / 2) * T)
+    Else
+        GStrikeFromDelta = S * Exp(CNDEV(-delta * Exp((r - b) * T)) * v * Sqr(T) + (b + v * v / 2) * T)
+    End If
         
 End Function
 
-
-'// Closed form solution to find in-the-money risk-neutral probaility given the delta
+' Closed form solution to find in-the-money risk-neutral probaility given the delta
 Public Function InTheMoneyProbFromDelta(CallPutFlag As String, S As Double, T As Double, r As Double, b As Double, v As Double, delta As Double) As Double
         
-       If CallPutFlag = "c" Then
-          InTheMoneyProbFromDelta = CND(CNDEV(delta / Exp((b - r) * T)) - v * Sqr(T))
-        Else
-            InTheMoneyProbFromDelta = CND(CNDEV(-delta / Exp((b - r) * T)) + v * Sqr(T))
-        End If
+    If CallPutFlag = "c" Then
+        InTheMoneyProbFromDelta = CND(CNDEV(delta / Exp((b - r) * T)) - v * Sqr(T))
+    Else
+        InTheMoneyProbFromDelta = CND(CNDEV(-delta / Exp((b - r) * T)) + v * Sqr(T))
+    End If
         
 End Function
 
-'// Closed form solution to find in-the-money risk-neutral probaility given the delta
+' Closed form solution to find in-the-money risk-neutral probaility given the delta
 Public Function GDeltaFromInTheMoneyProb(CallPutFlag As String, S As Double, T As Double, r As Double, b As Double, v As Double, InTheMoneyProb As Double) As Double
+
+    If CallPutFlag = "c" Then
+        GDeltaFromInTheMoneyProb = CND(CNDEV(InTheMoneyProb * Exp((b - r) * T)) - v * Sqr(T))
+    Else
+        GDeltaFromInTheMoneyProb = -CND(CNDEV(InTheMoneyProb * Exp((b - r) * T)) + v * Sqr(T))
+    End If
         
-       If CallPutFlag = "c" Then
-          GDeltaFromInTheMoneyProb = CND(CNDEV(InTheMoneyProb * Exp((b - r) * T)) - v * Sqr(T))
-        Else
-            GDeltaFromInTheMoneyProb = -CND(CNDEV(InTheMoneyProb * Exp((b - r) * T)) + v * Sqr(T))
-        End If
-        
 End Function
 
-'// MirrorDeltaStrike, delta neutral straddle strike in the BSM formula
-Public Function GDeltaMirrorStrike(S As Double, T As Double, _
-                b As Double, v As Double) As Double
-    
-        GDeltaMirrorStrike = S * Exp((b + v ^ 2 / 2) * T)
-    
+' MirrorDeltaStrike, delta neutral straddle strike in the BSM formula
+Public Function GDeltaMirrorStrike(S As Double, T As Double, b As Double, v As Double) As Double
+    GDeltaMirrorStrike = S * Exp((b + v ^ 2 / 2) * T)
 End Function
 
-
-'// MirrorProbabilityStrike, probability neutral straddle strike in the BSM formula
-Public Function GProbabilityMirrorStrike(S As Double, T As Double, _
-                b As Double, v As Double) As Double
-    
-        GProbabilityMirrorStrike = S * Exp((b - v ^ 2 / 2) * T)
-    
+' MirrorProbabilityStrike, probability neutral straddle strike in the BSM formula
+Public Function GProbabilityMirrorStrike(S As Double, T As Double, b As Double, v As Double) As Double
+    GProbabilityMirrorStrike = S * Exp((b - v ^ 2 / 2) * T)
 End Function
 
-'// MirrorDeltaStrike, general delta symmmetric strike in the BSM formula
-Public Function GDeltaMirrorCallPutStrike(S As Double, X As Double, T As Double, _
-                b As Double, v As Double) As Double
-    
-        GDeltaMirrorCallPutStrike = S ^ 2 / X * Exp((2 * b + v ^ 2) * T)
-    
+' MirrorDeltaStrike, general delta symmmetric strike in the BSM formula
+Public Function GDeltaMirrorCallPutStrike(S As Double, X As Double, T As Double, b As Double, v As Double) As Double
+    GDeltaMirrorCallPutStrike = S ^ 2 / X * Exp((2 * b + v ^ 2) * T)
 End Function
 
-
-'// Gamma for the generalized Black and Scholes formula
+' Gamma for the generalized Black and Scholes formula
 Public Function GGamma(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
     Dim d1 As Double
-    
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
     GGamma = Exp((b - r) * T) * ND(d1) / (S * v * Sqr(T))
 End Function
 
-'// SaddleGamma for the generalized Black and Scholes formula
+' SaddleGamma for the generalized Black and Scholes formula
 Public Function GSaddleGamma(X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
     GSaddleGamma = Sqr(Exp(1) / Application.Pi()) * Sqr((2 * b - r) / v ^ 2 + 1) / X
-    
 End Function
 
-
-'// GammaP for the generalized Black and Scholes formula
+' GammaP for the generalized Black and Scholes formula
 Public Function GGammaP(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
     GGammaP = S * GGamma(S, X, T, r, b, v) / 100
-    
 End Function
 
-'// Delta for the generalized Black and Scholes formula
+' Delta for the generalized Black and Scholes formula
 Public Function GDelta(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
+
     Dim d1 As Double
     
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -567,10 +508,10 @@ Public Function GDelta(CallPutFlag As String, S As Double, X As Double, T As Dou
     Else
         GDelta = -Exp((b - r) * T) * CND(-d1)
     End If
-    
+
 End Function
 
-'// StrikeDelta for the generalized Black and Scholes formula
+' StrikeDelta for the generalized Black and Scholes formula
 Public Function GStrikeDelta(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d2 As Double
@@ -587,13 +528,10 @@ End Function
 
 '// Elasticity for the generalized Black and Scholes formula
 Public Function GElasticity(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
-        GElasticity = GDelta(CallPutFlag, S, X, T, r, b, v) * S / GBlackScholes(CallPutFlag, S, X, T, r, b, v)
-    
+    GElasticity = GDelta(CallPutFlag, S, X, T, r, b, v) * S / GBlackScholes(CallPutFlag, S, X, T, r, b, v)
 End Function
 
-
-'// DgammaDvol/Zomma for the generalized Black and Scholes formula
+' DgammaDvol/Zomma for the generalized Black and Scholes formula
 Public Function GDgammaDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -604,7 +542,7 @@ Public Function GDgammaDvol(S As Double, X As Double, T As Double, r As Double, 
 
 End Function
 
-'// DgammaPDvol for the generalized Black and Scholes formula
+' DgammaPDvol for the generalized Black and Scholes formula
 Public Function GDgammaPDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -615,7 +553,7 @@ Public Function GDgammaPDvol(S As Double, X As Double, T As Double, r As Double,
 
 End Function
 
-'// DgammaDspot/Speed for the generalized Black and Scholes formula
+' DgammaDspot/Speed for the generalized Black and Scholes formula
 Public Function GDgammaDspot(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -626,7 +564,7 @@ Public Function GDgammaDspot(S As Double, X As Double, T As Double, r As Double,
 
 End Function
 
-'// DgammaPDspot/SpeedP for the generalized Black and Scholes formula
+' DgammaPDspot/SpeedP for the generalized Black and Scholes formula
 Public Function GDgammaPDspot(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -637,7 +575,7 @@ Public Function GDgammaPDspot(S As Double, X As Double, T As Double, r As Double
 
 End Function
 
-'// Risk Neutral Denisty for the generalized Black and Scholes formula
+' Risk Neutral Denisty for the generalized Black and Scholes formula
 Public Function GRiskNeutralDensity(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d2 As Double
@@ -647,7 +585,7 @@ Public Function GRiskNeutralDensity(S As Double, X As Double, T As Double, r As 
 
 End Function
 
-'// Volatility estimate confidence interval
+' Volatility estimate confidence interval
 Function GConfidenceIntervalVolatility(Alfa As Double, n As Integer, VolatilityEstimate As Double, UpperLower As String)
     'UpperLower     ="L" gives the lower cofidence interval
     '               ="U" gives the upper cofidence interval
@@ -660,8 +598,7 @@ Function GConfidenceIntervalVolatility(Alfa As Double, n As Integer, VolatilityE
 
 End Function
 
-
-'// Theta for the generalized Black and Scholes formula
+' Theta for the generalized Black and Scholes formula
 Public Function GTheta(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -677,8 +614,7 @@ Public Function GTheta(CallPutFlag As String, S As Double, X As Double, T As Dou
 
 End Function
 
-
-'// Drift-less Theta for the generalized Black and Scholes formula
+' Drift-less Theta for the generalized Black and Scholes formula
 Public Function GThetaDriftLess(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -688,7 +624,7 @@ Public Function GThetaDriftLess(S As Double, X As Double, T As Double, r As Doub
     
 End Function
 
-'// Variance-vega for the generalized Black and Scholes formula
+' Variance-vega for the generalized Black and Scholes formula
 Public Function GVarianceVega(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -698,7 +634,7 @@ Public Function GVarianceVega(S As Double, X As Double, T As Double, r As Double
 
 End Function
 
-'// Variance-vomma for the generalized Black and Scholes formula
+' Variance-vomma for the generalized Black and Scholes formula
 Public Function GVarianceVomma(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -709,7 +645,7 @@ Public Function GVarianceVomma(S As Double, X As Double, T As Double, r As Doubl
 
 End Function
 
-'// Variance-delta for the generalized Black and Scholes formula
+' Variance-delta for the generalized Black and Scholes formula
 Public Function GVarianceDelta(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -720,7 +656,7 @@ Public Function GVarianceDelta(S As Double, X As Double, T As Double, r As Doubl
 
 End Function
 
-'// Vega for the generalized Black and Scholes formula
+' Vega for the generalized Black and Scholes formula
 Public Function GVega(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -730,15 +666,12 @@ Public Function GVega(S As Double, X As Double, T As Double, r As Double, b As D
 
 End Function
 
-'// VegaP for the generalized Black and Scholes formula
+' VegaP for the generalized Black and Scholes formula
 Public Function GVegaP(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-
     GVegaP = v / 10 * GVega(S, X, T, r, b, v)
-
 End Function
 
-
-'// DdeltaDtime/Charm for the generalized Black and Scholes formula
+' DdeltaDtime/Charm for the generalized Black and Scholes formula
 Public Function GDdeltaDtime(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -747,15 +680,14 @@ Public Function GDdeltaDtime(CallPutFlag As String, S As Double, X As Double, T 
     d2 = d1 - v * Sqr(T)
     
     If CallPutFlag = "c" Then
-          GDdeltaDtime = -Exp((b - r) * T) * (ND(d1) * (b / (v * Sqr(T)) - d2 / (2 * T)) + (b - r) * CND(d1))
+        GDdeltaDtime = -Exp((b - r) * T) * (ND(d1) * (b / (v * Sqr(T)) - d2 / (2 * T)) + (b - r) * CND(d1))
     ElseIf CallPutFlag = "p" Then
         GDdeltaDtime = -Exp((b - r) * T) * (ND(d1) * (b / (v * Sqr(T)) - d2 / (2 * T)) - (b - r) * CND(-d1))
-   End If
+    End If
     
 End Function
 
-
-'// Profitt/Loss STD for the generalized Black and Scholes formula
+' Profitt/Loss STD for the generalized Black and Scholes formula
 Public Function GProfitLossSTD(TypeFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, NHedges As Integer) As Double
     
     If TypeFlag = "a" Then ' in dollars
@@ -766,7 +698,7 @@ Public Function GProfitLossSTD(TypeFlag As String, CallPutFlag As String, S As D
 
 End Function
 
-'// DvegaDvol/Vomma for the generalized Black and Scholes formula
+' DvegaDvol/Vomma for the generalized Black and Scholes formula
 Public Function GDvegaDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -777,7 +709,7 @@ Public Function GDvegaDvol(S As Double, X As Double, T As Double, r As Double, b
 
 End Function
 
-'// DvegaPDvol/VommaP for the generalized Black and Scholes formula
+' DvegaPDvol/VommaP for the generalized Black and Scholes formula
 Public Function GDvegaPDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -788,7 +720,7 @@ Public Function GDvegaPDvol(S As Double, X As Double, T As Double, r As Double, 
 
 End Function
 
-'// DvegaDtime for the generalized Black and Scholes formula
+' DvegaDtime for the generalized Black and Scholes formula
 Public Function GDvegaDtime(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -799,7 +731,7 @@ Public Function GDvegaDtime(S As Double, X As Double, T As Double, r As Double, 
 
 End Function
 
-'// DVommaDVol for the generalized Black and Scholes formula
+' DVommaDVol for the generalized Black and Scholes formula
 Public Function GDvommaDvol(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -810,9 +742,7 @@ Public Function GDvommaDvol(S As Double, X As Double, T As Double, r As Double, 
 
 End Function
 
-
-
-'// GGammaDtime for the generalized Black and Scholes formula
+' GGammaDtime for the generalized Black and Scholes formula
 Public Function GDgammaDtime(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -823,7 +753,7 @@ Public Function GDgammaDtime(S As Double, X As Double, T As Double, r As Double,
 
 End Function
 
-'// GGammaPDtime for the generalized Black and Scholes formula
+' GGammaPDtime for the generalized Black and Scholes formula
 Public Function GDgammaPDtime(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double, d2 As Double
@@ -834,17 +764,12 @@ Public Function GDgammaPDtime(S As Double, X As Double, T As Double, r As Double
 
 End Function
 
-
-
-'// Vega for the generalized Black and Scholes formula
+' Vega for the generalized Black and Scholes formula
 Public Function GVegaLeverage(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
     GVegaLeverage = GVega(S, X, T, r, b, v) * v / GBlackScholes(CallPutFlag, S, X, T, r, b, v)
-
 End Function
 
-
-'// Rho for the generalized Black and Scholes formula for all options except futures
+' Rho for the generalized Black and Scholes formula for all options except futures
 Public Function GRho(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
    Dim d1 As Double, d2 As Double
@@ -852,22 +777,19 @@ Public Function GRho(CallPutFlag As String, S As Double, X As Double, T As Doubl
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
     d2 = d1 - v * Sqr(T)
     If CallPutFlag = "c" Then
-            GRho = T * X * Exp(-r * T) * CND(d2)
+        GRho = T * X * Exp(-r * T) * CND(d2)
     ElseIf CallPutFlag = "p" Then
-            GRho = -T * X * Exp(-r * T) * CND(-d2)
+        GRho = -T * X * Exp(-r * T) * CND(-d2)
     End If
 
 End Function
 
-
-'// Rho for the generalized Black and Scholes formula for Futures option
+' Rho for the generalized Black and Scholes formula for Futures option
 Public Function GRhoFO(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
-    
-            GRhoFO = -T * GBlackScholes(CallPutFlag, S, X, T, r, 0, v)
-   
+    GRhoFO = -T * GBlackScholes(CallPutFlag, S, X, T, r, 0, v)
 End Function
 
-'// Rho2/Phi for the generalized Black and Scholes formula
+' Rho2/Phi for the generalized Black and Scholes formula
 Public Function GPhi(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -881,7 +803,7 @@ Public Function GPhi(CallPutFlag As String, S As Double, X As Double, T As Doubl
     
 End Function
 
-'// Carry rho sensitivity for the generalized Black and Scholes formula
+' Carry rho sensitivity for the generalized Black and Scholes formula
 Public Function GCarry(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     Dim d1 As Double
@@ -891,7 +813,7 @@ Public Function GCarry(CallPutFlag As String, S As Double, X As Double, T As Dou
         GCarry = T * S * Exp((b - r) * T) * CND(d1)
     ElseIf CallPutFlag = "p" Then
         GCarry = -T * S * Exp((b - r) * T) * CND(-d1)
-        End If
+    End If
 
 End Function
 

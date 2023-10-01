@@ -1,11 +1,9 @@
-
 Global Const Pi = 3.14159265358979
 Option Explicit     'Requirs that all variables to be declared explicitly.
 
 'Implementation Espen Gaarder Haug, Copyright 2006
 
-Public Function GBlackScholesImpVolBisection(CallPutFlag As String, S As Double, _
-                x As Double, T As Double, r As Double, b As Double, cm As Double) As Double
+Public Function GBlackScholesImpVolBisection(CallPutFlag As String, S As Double, x As Double, T As Double, r As Double, b As Double, cm As Double) As Double
 
     Dim vLow As Double, vHigh As Double, vi As Double
     Dim cLow As Double, cHigh As Double, epsilon As Double
@@ -34,9 +32,7 @@ Public Function GBlackScholesImpVolBisection(CallPutFlag As String, S As Double,
     
 End Function
 
-
-Public Function GImpliedVolatilityNR(CallPutFlag As String, S As Double, x _
-As Double, T As Double, r As Double, b As Double, cm As Double, epsilon As Double)
+Public Function GImpliedVolatilityNR(CallPutFlag As String, S As Double, x As Double, T As Double, r As Double, b As Double, cm As Double, epsilon As Double)
 
     Dim vi As Double, ci As Double
     Dim vegai As Double
@@ -57,6 +53,3 @@ As Double, T As Double, r As Double, b As Double, cm As Double, epsilon As Doubl
 
     If Abs(cm - ci) < epsilon Then GImpliedVolatilityNR = vi Else GImpliedVolatilityNR = "NA"
 End Function
-
-
-

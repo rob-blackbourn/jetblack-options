@@ -4,9 +4,8 @@ Option Explicit
 ' Copyright 2006 Espen Gaarder Haug
 
 
-Public Function BinomialBridgeBarrier(CallPutFlag As String, S As Double, X As Double, H As Double, Rebate As Double, T As Double, _
-                r As Double, b As Double, v As Double, n As Integer) As Double
-                
+Public Function BinomialBridgeBarrier(CallPutFlag As String, S As Double, X As Double, H As Double, Rebate As Double, T As Double, r As Double, b As Double, v As Double, n As Integer) As Double
+
     Dim OptionValue As Double
     Dim u As Double, d As Double, p As Double
     Dim dt As Double
@@ -18,7 +17,7 @@ Public Function BinomialBridgeBarrier(CallPutFlag As String, S As Double, X As D
     
     If CallPutFlag = "c" Then
         z = 1
-        ElseIf CallPutFlag = "p" Then
+    ElseIf CallPutFlag = "p" Then
         z = -1
     End If
     
@@ -28,45 +27,39 @@ Public Function BinomialBridgeBarrier(CallPutFlag As String, S As Double, X As D
     d = Exp((b - v ^ 2 / 2) * dt - v * Sqr(dt))
     p = 0.5
     
-    
     OptionValue = 0
     PathProb = 0
 
     For i = 0 To n
-            St = S * u ^ i * d ^ (n - i)
-          If S > H Then
-          '//Probability of hitting  barrier below
-                If St <= H Then
-                      BarrierHitProb = 1
-                Else
-                        BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(H / S) * Log(H / St)))
-                     
-                End If
-            ElseIf S < H Then
-            '// Probability of hitting the barrier above
-                If St >= H Then
-                    BarrierHitProb = 1
-                Else
-                    BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(S / H) * Log(St / H)))
-                   
-                End If
+        St = S * u ^ i * d ^ (n - i)
+        If S > H Then
+            ' Probability of hitting  barrier below
+            If St <= H Then
+                BarrierHitProb = 1
+            Else
+                BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(H / S) * Log(H / St)))
             End If
+        ElseIf S < H Then
+            ' Probability of hitting the barrier above
+            If St >= H Then
+                BarrierHitProb = 1
+            Else
+                BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(S / H) * Log(St / H)))
+            End If
+        End If
     
-            PathProb = Application.Combin(n, i) * p ^ i * (1 - p) ^ (n - i)
-            OptionValue = OptionValue + (1 - BarrierHitProb) * PathProb * Max(0, z * (St - X))
-           
-            RebateValue = RebateValue + BarrierHitProb * Rebate * PathProb
+        PathProb = Application.Combin(n, i) * p ^ i * (1 - p) ^ (n - i)
+        OptionValue = OptionValue + (1 - BarrierHitProb) * PathProb * Max(0, z * (St - X))
+        
+        RebateValue = RebateValue + BarrierHitProb * Rebate * PathProb
     Next
     
-            BinomialBridgeBarrier = (OptionValue + RebateValue) * Exp(-r * T)
+    BinomialBridgeBarrier = (OptionValue + RebateValue) * Exp(-r * T)
 
 End Function
 
-
-
-'// European and American barrier options in binomial trees
-Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, T As Double, _
-                r As Double, b As Double, v As Double, n As Integer) As Double
+/ European and American barrier options in binomial trees
+Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As Double, X As Double, H As Double, T As Double, r As Double, b As Double, v As Double, n As Integer) As Double
 
     Dim AssetPrice As Double
     Dim OptionValue() As Double
@@ -75,7 +68,7 @@ Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As D
     Dim i As Integer, j As Integer
     Dim phi As Integer, z As Integer
     
-     For i = 1 To 100
+    For i = 1 To 100
         If n < Int((i ^ 2 * v ^ 2 * T) / (Log(S / H)) ^ 2) Then
             n = Int((i ^ 2 * v ^ 2 * T) / (Log(S / H)) ^ 2)
             Exit For
@@ -86,12 +79,12 @@ Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As D
     
     If TypeFlag = "cuo" Or TypeFlag = "cdo" Then
         z = 1
-        ElseIf TypeFlag = "puo" Or TypeFlag = "pdo" Then
+    ElseIf TypeFlag = "puo" Or TypeFlag = "pdo" Then
         z = -1
     End If
     If TypeFlag = "cuo" Or TypeFlag = "puo" Then
         phi = 1
-        ElseIf TypeFlag = "cdo" Or TypeFlag = "pdo" Then
+    ElseIf TypeFlag = "cdo" Or TypeFlag = "pdo" Then
         phi = -1
     End If
     
@@ -102,7 +95,7 @@ Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As D
     Df = Exp(-r * dt)
     
     For i = 0 To n
-         OptionValue(i) = Max(0, z * (S * u ^ i * d ^ (n - i) - X))
+        OptionValue(i) = Max(0, z * (S * u ^ i * d ^ (n - i) - X))
     Next
     
     For j = n - 1 To 0 Step -1:
@@ -113,8 +106,7 @@ Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As D
                 If AmeEurFlag = "e" And AssetPrice < H Then
                     OptionValue(i) = (p * OptionValue(i + 1) + (1 - p) * OptionValue(i)) * Df
                 ElseIf AmeEurFlag = "a" And AssetPrice < H Then
-                    OptionValue(i) = Max((z * (AssetPrice - X)), _
-                    (p * OptionValue(i + 1) + (1 - p) * OptionValue(i)) * Df)
+                    OptionValue(i) = Max((z * (AssetPrice - X)), (p * OptionValue(i + 1) + (1 - p) * OptionValue(i)) * Df)
                 ElseIf AssetPrice >= H Then
                     OptionValue(i) = 0
                 End If
@@ -122,8 +114,7 @@ Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As D
                 If AmeEurFlag = "e" And AssetPrice > H Then
                     OptionValue(i) = (p * OptionValue(i + 1) + (1 - p) * OptionValue(i)) * Df
                 ElseIf AmeEurFlag = "a" And AssetPrice > H Then
-                    OptionValue(i) = Max((z * (AssetPrice - X)), _
-                    (p * OptionValue(i + 1) + (1 - p) * OptionValue(i)) * Df)
+                    OptionValue(i) = Max((z * (AssetPrice - X)), (p * OptionValue(i + 1) + (1 - p) * OptionValue(i)) * Df)
                 ElseIf AssetPrice <= H Then
                     OptionValue(i) = 0
                 End If
@@ -133,29 +124,24 @@ Public Function BarrierBinomial(AmeEurFlag As String, TypeFlag As String, S As D
     BarrierBinomial = OptionValue(0)
 End Function
 
+Public Function AmericanKnockInBarriers(TypeFlag As String, S As Double, X As Double, H As Double, T As Double, r As Double, b As Double, v As Double, n As Integer)
 
-Public Function AmericanKnockInBarriers(TypeFlag As String, S As Double, X As Double, _
-        H As Double, T As Double, r As Double, b As Double, v As Double, n As Integer)
+    Dim CallPutFlag As String
             
-            Dim CallPutFlag As String
+    CallPutFlag = Left(TypeFlag, 1)
             
-            CallPutFlag = Left(TypeFlag, 1)
-            
-           If H <= X Then
-                AmericanKnockInBarriers = (S / H) ^ (1 - 2 * b / v ^ 2) _
-                * TrinomialTree("p", "a", CallPutFlag, H ^ 2 / S, X, T, r, b, v, n)
-           ElseIf H <= Max(X, r / (r - b) * X) Then
-                AmericanKnockInBarriers = (S / H) ^ (1 - 2 * b / v ^ 2) _
-                * (TrinomialTree("p", "a", CallPutFlag, H ^ 2 / S, X, T, r, b, v, n) _
-                    - GBlackScholes(CallPutFlag, H ^ 2 / S, X, T, r, b, v)) _
-                    + StandardBarrier(TypeFlag, S, X, H, 0, T, r, b, v)
-                    
-           End If
+    If H <= X Then
+        AmericanKnockInBarriers = (S / H) ^ (1 - 2 * b / v ^ 2) * TrinomialTree("p", "a", CallPutFlag, H ^ 2 / S, X, T, r, b, v, n)
+    ElseIf H <= Max(X, r / (r - b) * X) Then
+        AmericanKnockInBarriers = (S / H) ^ (1 - 2 * b / v ^ 2) _
+            * (TrinomialTree("p", "a", CallPutFlag, H ^ 2 / S, X, T, r, b, v, n) _
+            - GBlackScholes(CallPutFlag, H ^ 2 / S, X, T, r, b, v)) _
+            + StandardBarrier(TypeFlag, S, X, H, 0, T, r, b, v)
+    End If
             
 End Function
 
-Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, b As Double, v As Double) As Double
+Public Function GBlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim d1 As Double, d2 As Double
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -168,8 +154,7 @@ Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
     End If
 End Function
 
-Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H As Double, K As Double, T As Double, _
-            r As Double, b As Double, v As Double)
+Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H As Double, K As Double, T As Double, r As Double, b As Double, v As Double)
 
     'TypeFlag:      The "TypeFlag" gives you 8 different standard barrier options:
     '               1) "cdi"=Down-and-in call,    2) "cui"=Up-and-in call
@@ -222,7 +207,6 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
     f5 = K * Exp(-r * T) * (CND(eta * X2 - eta * v * Sqr(T)) - (H / S) ^ (2 * mu) * CND(eta * y2 - eta * v * Sqr(T)))
     f6 = K * ((H / S) ^ (mu + lambda) * CND(eta * z) + (H / S) ^ (mu - lambda) * CND(eta * z - 2 * eta * lambda * v * Sqr(T)))
     
-    
     If X > H Then
         Select Case TypeFlag
             Case Is = "cdi"      '1a) cdi
@@ -241,7 +225,7 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
                 StandardBarrier = f1 - f2 + f3 - f4 + f6
             Case Is = "puo" '8a) puo
                 StandardBarrier = f2 - f4 + f6
-            End Select
+        End Select
     ElseIf X < H Then
         Select Case TypeFlag
             Case Is = "cdi" '1b) cdi
@@ -264,7 +248,7 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
     End If
 End Function
 
- '// Discrete barrier monitoring adjustment
+' Discrete barrier monitoring adjustment
 Public Function DiscreteAdjustedBarrier(S As Double, H As Double, v As Double, dt As Double) As Double
 
     If H > S Then
@@ -274,11 +258,8 @@ Public Function DiscreteAdjustedBarrier(S As Double, H As Double, v As Double, d
     End If
 End Function
 
-
-
-'// Trinomial tree Derman Egner typen
-Public Function TrinomialTreeBarrierDerman(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, H As Double, T As Double, _
-                r As Double, b As Double, v As Double, n As Integer) As Double
+' Trinomial tree Derman Egner typen
+Public Function TrinomialTreeBarrierDerman(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, H As Double, T As Double, r As Double, b As Double, v As Double, n As Integer) As Double
                 
     Dim OptionValue() As Double
     Dim dt As Double, u As Double, d As Double
@@ -287,13 +268,11 @@ Public Function TrinomialTreeBarrierDerman(AmeEurFlag As String, CallPutFlag As 
     Dim Df As Double
     Dim Si1 As Double, Si2 As Double
     
-    
     ReDim OptionValue(0 To n * 2 + 1)
-   
     
     If CallPutFlag = "c" Then
         z = 1
-        ElseIf CallPutFlag = "p" Then
+    ElseIf CallPutFlag = "p" Then
         z = -1
     End If
     
@@ -311,32 +290,31 @@ Public Function TrinomialTreeBarrierDerman(AmeEurFlag As String, CallPutFlag As 
         Si2 = Si1 * d
         
         OptionValue(i) = Max(0, z * (Si1 - X))
-       If Si1 <= H Then
-                    OptionValue(i) = 0
+        If Si1 <= H Then
+            OptionValue(i) = 0
         ElseIf Si1 > H And Si2 <= H And i - 1 > 0 Then
-                OptionValue(i) = (Si1 - H) / (Si1 - Si2) * (OptionValue(i) - 0)
+            OptionValue(i) = (Si1 - H) / (Si1 - Si2) * (OptionValue(i) - 0)
         End If
-        
     Next
     
     For j = n - 1 To 0 Step -1
         For i = 0 To j * 2
         
-                Si1 = S * u ^ Max(i - j, 0) * d ^ Max(j * 2 - j - i, 0)
-                Si2 = Si1 * d
-                
-                OptionValue(i) = (pu * OptionValue(i + 2) + pm * OptionValue(i + 1) + pd * OptionValue(i)) * Df
-                
-                If AmeEurFlag = "a" Then
-                        OptionValue(i) = Max((z * (Si1 - X)), OptionValue(i))
-                End If
-                        
-           
-                If Si1 <= H Then
-                        OptionValue(i) = 0
-                ElseIf Si1 > H And Si2 <= H And i - 1 > 0 Then  ' //Derman  barrier correction
-                       OptionValue(i) = (Si1 - H) / (Si1 - Si2) * (OptionValue(i) - 0)
-                End If
+            Si1 = S * u ^ Max(i - j, 0) * d ^ Max(j * 2 - j - i, 0)
+            Si2 = Si1 * d
+            
+            OptionValue(i) = (pu * OptionValue(i + 2) + pm * OptionValue(i + 1) + pd * OptionValue(i)) * Df
+            
+            If AmeEurFlag = "a" Then
+                OptionValue(i) = Max((z * (Si1 - X)), OptionValue(i))
+            End If
+                    
+        
+            If Si1 <= H Then
+                OptionValue(i) = 0
+            ElseIf Si1 > H And Si2 <= H And i - 1 > 0 Then  '  Derman  barrier correction
+                OptionValue(i) = (Si1 - H) / (Si1 - Si2) * (OptionValue(i) - 0)
+            End If
         Next
     Next
     TrinomialTreeBarrierDerman = OptionValue(0)

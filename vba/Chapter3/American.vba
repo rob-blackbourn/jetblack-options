@@ -3,8 +3,7 @@ Option Explicit
 ' Programmer Espen Gaarder Haug
 ' Copyright Espen G. Haug 2006
 
-Public Function PerpetualOption(CallPutFlag As String, S As Double, X _
-                As Double, r As Double, b As Double, v As Double) As Double
+Public Function PerpetualOption(CallPutFlag As String, S As Double, X As Double, r As Double, b As Double, v As Double) As Double
 
     Dim y1 As Double, y2 As Double, h As Double
     
@@ -19,8 +18,7 @@ Public Function PerpetualOption(CallPutFlag As String, S As Double, X _
 End Function
 
 
-Public Function EBSAmericanApprox2002(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, Optional dS)
+Public Function EBSAmericanApprox2002(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, Optional dS)
             
     If IsMissing(dS) Then
         dS = 0.01
@@ -36,52 +34,48 @@ Public Function EBSAmericanApprox2002(OutPutFlag As String, CallPutFlag As Strin
     ElseIf OutPutFlag = "g" Then 'Gamma
         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v)) / dS ^ 2
     ElseIf OutPutFlag = "gv" Then 'DGammaDVol
-        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) + BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v + 0.01) _
-      - BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v - 0.01) + 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01) - BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
-       ElseIf OutPutFlag = "gp" Then 'GammaP
+        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) + BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v - 0.01) + 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01) - BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+    ElseIf OutPutFlag = "gp" Then 'GammaP
         EBSAmericanApprox2002 = S / 100 * (BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v)) / dS ^ 2
-     ElseIf OutPutFlag = "tg" Then 'time Gamma
+    ElseIf OutPutFlag = "tg" Then 'time Gamma
         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T + 1 / 365, r, b, v) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox2002(CallPutFlag, S, X, T - 1 / 365, r, b, v)) / (1 / 365) ^ 2
-     ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
-        EBSAmericanApprox2002 = 1 / (4 * dS * 0.01) * (BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v - 0.01) _
-        - BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v + 0.01) + BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
+        EBSAmericanApprox2002 = 1 / (4 * dS * 0.01) * (BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v - 0.01) - BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v + 0.01) + BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / 100
     ElseIf OutPutFlag = "v" Then 'Vega
-         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
+        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then 'VegaP
-         EBSAmericanApprox2002 = v / 0.1 * (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
+        EBSAmericanApprox2002 = v / 0.1 * (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v - 0.01))
     ElseIf OutPutFlag = "t" Then 'Theta
          If T <= 1 / 365 Then
-                EBSAmericanApprox2002 = BSAmericanApprox2002(CallPutFlag, S, X, 0.00001, r, b, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v)
+            EBSAmericanApprox2002 = BSAmericanApprox2002(CallPutFlag, S, X, 0.00001, r, b, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v)
         Else
-                EBSAmericanApprox2002 = BSAmericanApprox2002(CallPutFlag, S, X, T - 1 / 365, r, b, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v)
+            EBSAmericanApprox2002 = BSAmericanApprox2002(CallPutFlag, S, X, T - 1 / 365, r, b, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v)
         End If
-     ElseIf OutPutFlag = "r" Then 'Rho
-         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)) / (2)
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "fr" Then 'Futures options rho
-         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r + 0.01, b, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r - 0.01, b, v)) / (2)
-     ElseIf OutPutFlag = "f" Then 'Rho2
-         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b - 0.01, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b + 0.01, v)) / (2)
+        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r + 0.01, b, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r - 0.01, b, v)) / (2)
+    ElseIf OutPutFlag = "f" Then 'Rho2
+        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b - 0.01, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b + 0.01, v)) / (2)
     ElseIf OutPutFlag = "b" Then 'Carry
         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X, T, r, b + 0.01, v) - BSAmericanApprox2002(CallPutFlag, S, X, T, r, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "s" Then 'Speed
-        EBSAmericanApprox2002 = 1 / dS ^ 3 * (BSAmericanApprox2002(CallPutFlag, S + 2 * dS, X, T, r, b, v) - 3 * BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v) _
-                                + 3 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) - BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v))
-     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X + dS, T, r, b, v) - BSAmericanApprox2002(CallPutFlag, S, X - dS, T, r, b, v)) / (2 * dS)
-     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
+        EBSAmericanApprox2002 = 1 / dS ^ 3 * (BSAmericanApprox2002(CallPutFlag, S + 2 * dS, X, T, r, b, v) - 3 * BSAmericanApprox2002(CallPutFlag, S + dS, X, T, r, b, v) + 3 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) - BSAmericanApprox2002(CallPutFlag, S - dS, X, T, r, b, v))
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
+        EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X + dS, T, r, b, v) - BSAmericanApprox2002(CallPutFlag, S, X - dS, T, r, b, v)) / (2 * dS)
+    ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
         EBSAmericanApprox2002 = (BSAmericanApprox2002(CallPutFlag, S, X + dS, T, r, b, v) - 2 * BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox2002(CallPutFlag, S, X - dS, T, r, b, v)) / dS ^ 2
     ElseIf OutPutFlag = "di" Then 'Difference in value between BS Approx and Black-Scholes Merton value
         EBSAmericanApprox2002 = BSAmericanApprox2002(CallPutFlag, S, X, T, r, b, v) - GBlackScholes(CallPutFlag, S, X, T, r, b, v)
     End If
+
 End Function
 
-
-
-'// The Bjerksund and Stensland (2002) American approximation
+' The Bjerksund and Stensland (2002) American approximation
 Public Function BSAmericanApprox2002(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     If CallPutFlag = "c" Then
         BSAmericanApprox2002 = BSAmericanCallApprox2002(S, X, T, r, b, v)
@@ -90,7 +84,7 @@ Public Function BSAmericanApprox2002(CallPutFlag As String, S As Double, X As Do
     End If
 End Function
 
-'// The Bjerksund and Stensland (1993) American approximation
+' The Bjerksund and Stensland (1993) American approximation
 Public Function BSAmericanApprox(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     If CallPutFlag = "c" Then
         BSAmericanApprox = BSAmericanCallApprox(S, X, T, r, b, v)
@@ -106,7 +100,7 @@ Public Function BSAmericanCallApprox(S As Double, X As Double, T As Double, r As
     Dim Alpha As Double, Beta As Double
     
     If b >= r Then '// Never optimal to exersice before maturity
-            BSAmericanCallApprox = GBlackScholes("c", S, X, T, r, b, v)
+        BSAmericanCallApprox = GBlackScholes("c", S, X, T, r, b, v)
     Else
         Beta = (1 / 2 - b / v ^ 2) + Sqr((b / v ^ 2 - 1 / 2) ^ 2 + 2 * r / v ^ 2)
         BInfinity = Beta / (Beta - 1) * X
@@ -159,8 +153,8 @@ Public Function BSAmericanCallApprox2002(S As Double, X As Double, T As Double, 
         End If
     End If
 End Function
-Private Function phi(S As Double, T As Double, gamma As Double, h As Double, i As Double, _
-        r As Double, b As Double, v As Double) As Double
+
+Private Function phi(S As Double, T As Double, gamma As Double, h As Double, i As Double, r As Double, b As Double, v As Double) As Double
 
     Dim lambda As Double, kappa As Double
     Dim d As Double
@@ -172,8 +166,7 @@ Private Function phi(S As Double, T As Double, gamma As Double, h As Double, i A
 End Function
 
 ' Muligens forskjellig fra phi i Bjerksun Stensland 1993
-Private Function phi2(S As Double, T2 As Double, gamma As Double, h As Double, i As Double, _
-         r As Double, b As Double, v As Double) As Double
+Private Function phi2(S As Double, T2 As Double, gamma As Double, h As Double, i As Double, r As Double, b As Double, v As Double) As Double
 
     Dim lambda As Double, kappa As Double
     Dim d As Double, d2 As Double
@@ -208,15 +201,12 @@ Public Function ksi(S As Double, T2 As Double, gamma As Double, h As Double, I2 
     lambda = -r + gamma * b + 0.5 * gamma * (gamma - 1) * v ^ 2
     kappa = 2 * b / (v ^ 2) + (2 * gamma - 1)
     
-    ksi = Exp(lambda * T2) * S ^ gamma * (CBND(-e1, -f1, rho) - (I2 / S) ^ kappa * CBND(-e2, -f2, rho) _
-            - (I1 / S) ^ kappa * CBND(-e3, -f3, -rho) + (I1 / I2) ^ kappa * CBND(-e4, -f4, -rho))
-
+    ksi = Exp(lambda * T2) * S ^ gamma * (CBND(-e1, -f1, rho) - (I2 / S) ^ kappa * CBND(-e2, -f2, rho) - (I1 / S) ^ kappa * CBND(-e3, -f3, -rho) + (I1 / I2) ^ kappa * CBND(-e4, -f4, -rho))
 
 End Function
 
 
-Public Function EBSAmericanApprox(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, Optional dS)
+Public Function EBSAmericanApprox(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, Optional dS)
             
     If IsMissing(dS) Then
         dS = 0.01
@@ -232,57 +222,52 @@ Public Function EBSAmericanApprox(OutPutFlag As String, CallPutFlag As String, S
     ElseIf OutPutFlag = "g" Then 'Gamma
         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v)) / dS ^ 2
     ElseIf OutPutFlag = "gv" Then 'DGammaDVol
-        EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) + BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) _
-      - BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) + 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01) - BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
-       ElseIf OutPutFlag = "gp" Then 'GammaP
+        EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) + BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) - BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) + 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01) - BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+    ElseIf OutPutFlag = "gp" Then 'GammaP
         EBSAmericanApprox = S / 100 * (BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v)) / dS ^ 2
-     ElseIf OutPutFlag = "tg" Then 'time Gamma
+    ElseIf OutPutFlag = "tg" Then 'time Gamma
         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T + 1 / 365, r, b, v) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox(CallPutFlag, S, X, T - 1 / 365, r, b, v)) / (1 / 365) ^ 2
-     ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
-        EBSAmericanApprox = 1 / (4 * dS * 0.01) * (BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) _
-        - BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) + BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
+        EBSAmericanApprox = 1 / (4 * dS * 0.01) * (BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) - BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) + BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / 100
     ElseIf OutPutFlag = "v" Then 'Vega
          EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
+    ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then 'VegaP
-         EBSAmericanApprox = v / 0.1 * (BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
+        EBSAmericanApprox = v / 0.1 * (BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01))
     ElseIf OutPutFlag = "t" Then 'Theta
-         If T <= 1 / 365 Then
-                EBSAmericanApprox = BSAmericanApprox(CallPutFlag, S, X, 0.00001, r, b, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v)
+        If T <= 1 / 365 Then
+            EBSAmericanApprox = BSAmericanApprox(CallPutFlag, S, X, 0.00001, r, b, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v)
         Else
-                EBSAmericanApprox = BSAmericanApprox(CallPutFlag, S, X, T - 1 / 365, r, b, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v)
+            EBSAmericanApprox = BSAmericanApprox(CallPutFlag, S, X, T - 1 / 365, r, b, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b, v)
         End If
-     ElseIf OutPutFlag = "r" Then 'Rho
-         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) - BSAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)) / (2)
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) - BSAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "fr" Then 'Futures options rho
-         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b, v) - BSAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b, v)) / (2)
-     ElseIf OutPutFlag = "f" Then 'Rho2
-         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r, b - 0.01, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b + 0.01, v)) / (2)
+        EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b, v) - BSAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b, v)) / (2)
+    ElseIf OutPutFlag = "f" Then 'Rho2
+        EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r, b - 0.01, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b + 0.01, v)) / (2)
     ElseIf OutPutFlag = "b" Then 'Carry
         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X, T, r, b + 0.01, v) - BSAmericanApprox(CallPutFlag, S, X, T, r, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "s" Then 'Speed
-        EBSAmericanApprox = 1 / dS ^ 3 * (BSAmericanApprox(CallPutFlag, S + 2 * dS, X, T, r, b, v) - 3 * BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) _
-                                + 3 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) - BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v))
-     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X + dS, T, r, b, v) - BSAmericanApprox(CallPutFlag, S, X - dS, T, r, b, v)) / (2 * dS)
-     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
+        EBSAmericanApprox = 1 / dS ^ 3 * (BSAmericanApprox(CallPutFlag, S + 2 * dS, X, T, r, b, v) - 3 * BSAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) + 3 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) - BSAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v))
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
+        EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X + dS, T, r, b, v) - BSAmericanApprox(CallPutFlag, S, X - dS, T, r, b, v)) / (2 * dS)
+    ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
         EBSAmericanApprox = (BSAmericanApprox(CallPutFlag, S, X + dS, T, r, b, v) - 2 * BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BSAmericanApprox(CallPutFlag, S, X - dS, T, r, b, v)) / dS ^ 2
     ElseIf OutPutFlag = "di" Then 'Difference in value between BS Approx and Black-Scholes Merton value
         EBSAmericanApprox = BSAmericanApprox(CallPutFlag, S, X, T, r, b, v) - GBlackScholes(CallPutFlag, S, X, T, r, b, v)
-   ElseIf OutPutFlag = "BSIVol" Then 'Equivalent Black-Scholes-Merton implied volatility
-       CallPutFlag = "p"
-       If S >= S * Exp(b * T) Then CallPutFlag = "c"
+    ElseIf OutPutFlag = "BSIVol" Then 'Equivalent Black-Scholes-Merton implied volatility
+        CallPutFlag = "p"
+        If S >= S * Exp(b * T) Then CallPutFlag = "c"
         EBSAmericanApprox = ImpliedVolGBlackScholes(CallPutFlag, S, X, T, r, b, BSAmericanApprox(CallPutFlag, S, X, T, r, b, v))
     End If
+
 End Function
 
-
-
-Public Function EPerpetualOption(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, _
-                r As Double, b As Double, v As Double, Optional dS)
+Public Function EPerpetualOption(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, r As Double, b As Double, v As Double, Optional dS)
             
     If IsMissing(dS) Then
         dS = 0.01
@@ -298,23 +283,21 @@ Public Function EPerpetualOption(OutPutFlag As String, CallPutFlag As String, S 
     ElseIf OutPutFlag = "g" Then 'Gamma
         EPerpetualOption = (PerpetualOption(CallPutFlag, S + dS, X, r, b, v) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v) + PerpetualOption(CallPutFlag, S - dS, X, r, b, v)) / dS ^ 2
     ElseIf OutPutFlag = "gv" Then 'DGammaDVol
-        EPerpetualOption = (PerpetualOption(CallPutFlag, S + dS, X, r, b, v + 0.01) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) + PerpetualOption(CallPutFlag, S - dS, X, r, b, v + 0.01) _
-      - PerpetualOption(CallPutFlag, S + dS, X, r, b, v - 0.01) + 2 * PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01) - PerpetualOption(CallPutFlag, S - dS, X, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
-       ElseIf OutPutFlag = "gp" Then 'GammaP
+        EPerpetualOption = (PerpetualOption(CallPutFlag, S + dS, X, r, b, v + 0.01) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) + PerpetualOption(CallPutFlag, S - dS, X, r, b, v + 0.01) - PerpetualOption(CallPutFlag, S + dS, X, r, b, v - 0.01) + 2 * PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01) - PerpetualOption(CallPutFlag, S - dS, X, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+    ElseIf OutPutFlag = "gp" Then 'GammaP
         EPerpetualOption = S / 100 * (PerpetualOption(CallPutFlag, S + dS, X, r, b, v) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v) + PerpetualOption(CallPutFlag, S - dS, X, r, b, v)) / dS ^ 2
-     ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
-        EPerpetualOption = 1 / (4 * dS * 0.01) * (PerpetualOption(CallPutFlag, S + dS, X, r, b, v + 0.01) - PerpetualOption(CallPutFlag, S + dS, X, r, b, v - 0.01) _
-        - PerpetualOption(CallPutFlag, S - dS, X, r, b, v + 0.01) + PerpetualOption(CallPutFlag, S - dS, X, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
+        EPerpetualOption = 1 / (4 * dS * 0.01) * (PerpetualOption(CallPutFlag, S + dS, X, r, b, v + 0.01) - PerpetualOption(CallPutFlag, S + dS, X, r, b, v - 0.01) - PerpetualOption(CallPutFlag, S - dS, X, r, b, v + 0.01) + PerpetualOption(CallPutFlag, S - dS, X, r, b, v - 0.01)) / 100
     ElseIf OutPutFlag = "v" Then 'Vega
-         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) - PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
+        EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) - PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v) + PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then 'VegaP
          EPerpetualOption = v / 0.1 * (PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) - PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r, b, v + 0.01) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v) + PerpetualOption(CallPutFlag, S, X, r, b, v - 0.01))
-     ElseIf OutPutFlag = "r" Then 'Rho
-         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r + 0.01, b + 0.01, v) - PerpetualOption(CallPutFlag, S, X, r - 0.01, b - 0.01, v)) / (2)
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r + 0.01, b + 0.01, v) - PerpetualOption(CallPutFlag, S, X, r - 0.01, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "fr" Then 'Futures options rho
          EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r + 0.01, b, v) - PerpetualOption(CallPutFlag, S, X, r - 0.01, b, v)) / (2)
      ElseIf OutPutFlag = "f" Then 'Rho2
@@ -322,17 +305,16 @@ Public Function EPerpetualOption(OutPutFlag As String, CallPutFlag As String, S 
     ElseIf OutPutFlag = "b" Then 'Carry
         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X, r, b + 0.01, v) - PerpetualOption(CallPutFlag, S, X, r, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "s" Then 'Speed
-        EPerpetualOption = 1 / dS ^ 3 * (PerpetualOption(CallPutFlag, S + 2 * dS, X, r, b, v) - 3 * PerpetualOption(CallPutFlag, S + dS, X, r, b, v) _
-                                + 3 * PerpetualOption(CallPutFlag, S, X, r, b, v) - PerpetualOption(CallPutFlag, S - dS, X, r, b, v))
+        EPerpetualOption = 1 / dS ^ 3 * (PerpetualOption(CallPutFlag, S + 2 * dS, X, r, b, v) - 3 * PerpetualOption(CallPutFlag, S + dS, X, r, b, v) + 3 * PerpetualOption(CallPutFlag, S, X, r, b, v) - PerpetualOption(CallPutFlag, S - dS, X, r, b, v))
     ElseIf OutPutFlag = "dx" Then 'Strike Delta
-         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X + dS, r, b, v) - PerpetualOption(CallPutFlag, S, X - dS, r, b, v)) / (2 * dS)
-     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
+        EPerpetualOption = (PerpetualOption(CallPutFlag, S, X + dS, r, b, v) - PerpetualOption(CallPutFlag, S, X - dS, r, b, v)) / (2 * dS)
+    ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
         EPerpetualOption = (PerpetualOption(CallPutFlag, S, X + dS, r, b, v) - 2 * PerpetualOption(CallPutFlag, S, X, r, b, v) + PerpetualOption(CallPutFlag, S, X - dS, r, b, v)) / dS ^ 2
     End If
+
 End Function
 
-
-'// The Barone-Adesi and Whaley (1987) American approximation
+' The Barone-Adesi and Whaley (1987) American approximation
 Public Function BAWAmericanApprox(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     If CallPutFlag = "c" Then
         BAWAmericanApprox = BAWAmericanCallApprox(S, X, T, r, b, v)
@@ -341,7 +323,7 @@ Public Function BAWAmericanApprox(CallPutFlag As String, S As Double, X As Doubl
     End If
 End Function
 
-'// American call
+' American call
 Private Function BAWAmericanCallApprox(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim Sk As Double, N As Double, k As Double
@@ -364,7 +346,7 @@ Private Function BAWAmericanCallApprox(S As Double, X As Double, T As Double, r 
     End If
 End Function
 
-'// Newton Raphson algorithm to solve for the critical commodity price for a Call
+' Newton Raphson algorithm to solve for the critical commodity price for a Call
 Private Function Kc(X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim N As Double, m As Double
@@ -374,7 +356,7 @@ Private Function Kc(X As Double, T As Double, r As Double, b As Double, v As Dou
     Dim LHS As Double, RHS As Double
     Dim bi As Double, E As Double
     
-    '// Calculation of seed value, Si
+    ' Calculation of seed value, Si
     N = 2 * b / v ^ 2
     m = 2 * r / v ^ 2
     q2u = (-(N - 1) + Sqr((N - 1) ^ 2 + 4 * m)) / 2
@@ -389,7 +371,7 @@ Private Function Kc(X As Double, T As Double, r As Double, b As Double, v As Dou
     RHS = GBlackScholes("c", Si, X, T, r, b, v) + (1 - Exp((b - r) * T) * CND(d1)) * Si / Q2
     bi = Exp((b - r) * T) * CND(d1) * (1 - 1 / Q2) + (1 - Exp((b - r) * T) * CND(d1) / (v * Sqr(T))) / Q2
     E = 0.000001
-    '// Newton Raphson algorithm for finding critical price Si
+    ' Newton Raphson algorithm for finding critical price Si
     While Abs(LHS - RHS) / X > E
         Si = (X + RHS - bi * Si) / (1 - bi)
         d1 = (Log(Si / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -399,7 +381,8 @@ Private Function Kc(X As Double, T As Double, r As Double, b As Double, v As Dou
     Wend
         Kc = Si
 End Function
-'// American put
+
+' American put
 Private Function BAWAmericanPutApprox(S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim Sk As Double, N As Double, k As Double
@@ -419,7 +402,7 @@ Private Function BAWAmericanPutApprox(S As Double, X As Double, T As Double, r A
     End If
 End Function
 
-'// Newton Raphson algorithm to solve for the critical commodity price for a Put
+' Newton Raphson algorithm to solve for the critical commodity price for a Put
 Private Function Kp(X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
    
@@ -438,7 +421,6 @@ Private Function Kp(X As Double, T As Double, r As Double, b As Double, v As Dou
     h1 = (b * T - 2 * v * Sqr(T)) * X / (X - su)
     Si = su + (X - su) * Exp(h1)
 
-    
     k = 2 * r / (v ^ 2 * (1 - Exp(-r * T)))
     d1 = (Log(Si / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
     Q1 = (-(N - 1) - Sqr((N - 1) ^ 2 + 4 * k)) / 2
@@ -446,7 +428,7 @@ Private Function Kp(X As Double, T As Double, r As Double, b As Double, v As Dou
     RHS = GBlackScholes("p", Si, X, T, r, b, v) - (1 - Exp((b - r) * T) * CND(-d1)) * Si / Q1
     bi = -Exp((b - r) * T) * CND(-d1) * (1 - 1 / Q1) - (1 + Exp((b - r) * T) * ND(-d1) / (v * Sqr(T))) / Q1
     E = 0.000001
-    '// Newton Raphson algorithm for finding critical price Si
+    ' Newton Raphson algorithm for finding critical price Si
     While Abs(LHS - RHS) / X > E
         Si = (X - RHS + bi * Si) / (1 + bi)
         d1 = (Log(Si / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -457,15 +439,12 @@ Private Function Kp(X As Double, T As Double, r As Double, b As Double, v As Dou
     Kp = Si
 End Function
 
-
-Public Function EBAWAmericanApprox(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, Optional dS)
+Public Function EBAWAmericanApprox(OutPutFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, Optional dS)
             
     If IsMissing(dS) Then
         dS = 0.01
     End If
-    
-    
+        
     If OutPutFlag = "p" Then ' Value
         EBAWAmericanApprox = BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v)
     ElseIf OutPutFlag = "d" Then 'Delta
@@ -475,46 +454,43 @@ Public Function EBAWAmericanApprox(OutPutFlag As String, CallPutFlag As String, 
     ElseIf OutPutFlag = "g" Then 'Gamma
         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v)) / dS ^ 2
     ElseIf OutPutFlag = "gv" Then 'DGammaDVol
-        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) + BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) _
-      - BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) + 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01) - BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
+        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) + BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) + 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01) - BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / (2 * 0.01 * dS ^ 2) / 100
     ElseIf OutPutFlag = "gp" Then 'GammaP
         EBAWAmericanApprox = S / 100 * (BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v)) / dS ^ 2
-     ElseIf OutPutFlag = "tg" Then 'time Gamma
+    ElseIf OutPutFlag = "tg" Then 'time Gamma
         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T + 1 / 365, r, b, v) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BAWAmericanApprox(CallPutFlag, S, X, T - 1 / 365, r, b, v)) / (1 / 365) ^ 2
-     ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
-        EBAWAmericanApprox = 1 / (4 * dS * 0.01) * (BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) _
-        - BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) + BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / 100
+    ElseIf OutPutFlag = "dddv" Then 'DDeltaDvol
+        EBAWAmericanApprox = 1 / (4 * dS * 0.01) * (BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v - 0.01) - BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v + 0.01) + BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v - 0.01)) / 100
     ElseIf OutPutFlag = "v" Then 'Vega
-         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
+        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "vv" Then 'DvegaDvol/vomma
         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 0.01 ^ 2 / 10000
     ElseIf OutPutFlag = "vp" Then 'VegaP
-         EBAWAmericanApprox = v / 0.1 * (BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
-     ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
+        EBAWAmericanApprox = v / 0.1 * (BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01)) / 2
+    ElseIf OutPutFlag = "dvdv" Then 'DvegaDvol
         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v + 0.01) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v - 0.01))
     ElseIf OutPutFlag = "t" Then 'Theta
-         If T <= 1 / 365 Then
-                EBAWAmericanApprox = BAWAmericanApprox(CallPutFlag, S, X, 0.00001, r, b, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v)
+        If T <= 1 / 365 Then
+            EBAWAmericanApprox = BAWAmericanApprox(CallPutFlag, S, X, 0.00001, r, b, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v)
         Else
-                EBAWAmericanApprox = BAWAmericanApprox(CallPutFlag, S, X, T - 1 / 365, r, b, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v)
+            EBAWAmericanApprox = BAWAmericanApprox(CallPutFlag, S, X, T - 1 / 365, r, b, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v)
         End If
-     ElseIf OutPutFlag = "r" Then 'Rho
-         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)) / (2)
+    ElseIf OutPutFlag = "r" Then 'Rho
+        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "fr" Then 'Futures options rho
-         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b, v)) / (2)
-     ElseIf OutPutFlag = "f" Then 'Rho2
-         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b - 0.01, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b + 0.01, v)) / (2)
+        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r + 0.01, b, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r - 0.01, b, v)) / (2)
+    ElseIf OutPutFlag = "f" Then 'Rho2
+        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b - 0.01, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b + 0.01, v)) / (2)
     ElseIf OutPutFlag = "b" Then 'Carry
         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X, T, r, b + 0.01, v) - BAWAmericanApprox(CallPutFlag, S, X, T, r, b - 0.01, v)) / (2)
     ElseIf OutPutFlag = "s" Then 'Speed
-        EBAWAmericanApprox = 1 / dS ^ 3 * (BAWAmericanApprox(CallPutFlag, S + 2 * dS, X, T, r, b, v) - 3 * BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) _
-                                + 3 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) - BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v))
-       ElseIf OutPutFlag = "dx" Then 'Strike Delta
-         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X + dS, T, r, b, v) - BAWAmericanApprox(CallPutFlag, S, X - dS, T, r, b, v)) / (2 * dS)
-     ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
+        EBAWAmericanApprox = 1 / dS ^ 3 * (BAWAmericanApprox(CallPutFlag, S + 2 * dS, X, T, r, b, v) - 3 * BAWAmericanApprox(CallPutFlag, S + dS, X, T, r, b, v) + 3 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) - BAWAmericanApprox(CallPutFlag, S - dS, X, T, r, b, v))
+    ElseIf OutPutFlag = "dx" Then 'Strike Delta
+        EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X + dS, T, r, b, v) - BAWAmericanApprox(CallPutFlag, S, X - dS, T, r, b, v)) / (2 * dS)
+    ElseIf OutPutFlag = "dxdx" Then 'Strike Gamma
         EBAWAmericanApprox = (BAWAmericanApprox(CallPutFlag, S, X + dS, T, r, b, v) - 2 * BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) + BAWAmericanApprox(CallPutFlag, S, X - dS, T, r, b, v)) / dS ^ 2
-      ElseIf OutPutFlag = "di" Then 'Difference in value between BS Approx and Black-Scholes Merton value
+    ElseIf OutPutFlag = "di" Then 'Difference in value between BS Approx and Black-Scholes Merton value
         EBAWAmericanApprox = BAWAmericanApprox(CallPutFlag, S, X, T, r, b, v) - GBlackScholes(CallPutFlag, S, X, T, r, b, v)
     End If
-End Function
 
+End Function

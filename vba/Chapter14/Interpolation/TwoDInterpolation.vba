@@ -8,8 +8,7 @@ Option Base 0      'The "Option Base" statment alowws to specify 0 or 1 as the
 ' Programmer Espen Gaarder Haug
 ' Copyright 2006, Espen Gaarder Haug
 
-Public Function TwoDimensionalInterpolation(Strike As Double, Maturity As Double, _
-   Strikes As Object, Expieries As Object, VolatilityMatrix As Object) As Double
+Public Function TwoDimensionalInterpolation(Strike As Double, Maturity As Double, Strikes As Object, Expieries As Object, VolatilityMatrix As Object) As Double
    
     Dim Bond1 As Double, Bond2 As Double
     Dim Option1 As Double, Option2 As Double
@@ -33,7 +32,6 @@ Public Function TwoDimensionalInterpolation(Strike As Double, Maturity As Double
     Vb2o2 = Application.Index(VolatilityMatrix, TO2, TB2)
     
     TwoDimensionalInterpolation = Vb1o1 + (Strike - Bond1) * (Vb2o1 - Vb1o1) / _
-    (Bond2 - Bond1) + (Maturity - Option1) * ((Bond2 - Strike) / (Bond2 - Bond1) * (Vb1o2 - Vb1o1) / (Option2 - Option1) + (Strike - Bond1) / (Bond2 - Bond1) * (Vb2o2 - Vb2o1) / (Option2 - Option1))
+        (Bond2 - Bond1) + (Maturity - Option1) * ((Bond2 - Strike) / (Bond2 - Bond1) * (Vb1o2 - Vb1o1) / (Option2 - Option1) + (Strike - Bond1) / (Bond2 - Bond1) * (Vb2o2 - Vb2o1) / (Option2 - Option1))
 
-    
 End Function

@@ -5,16 +5,11 @@ Option Explicit
 ' Programmer Espen Gaarder Haug
 ' Copyright 2006 Espen Gaarder Haug
 
-
 Private Function Max(X As Double, y As Double) As Double
-    
     Max = Application.Max(X, y)
-
 End Function
 
-
-Public Function ImplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, _
-                                                                v As Double, N As Integer, M As Integer) As Double
+Public Function ImplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, N As Integer, M As Integer) As Double
 
     Dim p() As Variant, CT() As Variant, C As Variant
     Dim dS As Double, dt As Double
@@ -24,7 +19,7 @@ Public Function ImplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As St
     z = 1
     If CallPutFlag = "p" Then z = -1
    
-   '// Makes sure current asset price falls at grid point
+   ' Makes sure current asset price falls at grid point
     dS = 2 * S / M
     SGridPt = S / dS
     M = Int(X / dS) * 2
@@ -33,9 +28,8 @@ Public Function ImplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As St
     ReDim CT(0 To M)
     ReDim p(0 To M, 0 To M)
     
-    
     For j = 0 To M
-        CT(j) = Max(0, z * (j * dS - X)) '//Option value at maturity
+        CT(j) = Max(0, z * (j * dS - X)) ' Option value at maturity
         For i = 0 To M
             p(j, i) = 0
         Next
@@ -49,19 +43,20 @@ Public Function ImplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As St
     Next
     
     p(M, M) = 1
-   C = Application.MMult(Application.MInverse(p()), Application.Transpose(CT()))
-   For j = N - 1 To 1 Step -1
+    C = Application.MMult(Application.MInverse(p()), Application.Transpose(CT()))
+    For j = N - 1 To 1 Step -1
         C = Application.MMult(Application.MInverse(p()), C)
         
         If AmeEurFlag = "a" Then '//American option
             For i = 1 To M
                 C(i, 1) = Max(CDbl(C(i, 1)), z * ((i - 1) * dS - X))
-             Next
+            Next
         End If
     Next
     
     ImplicitFiniteDifference = C(SGridPt + 1, 1)
 End Function
+
 ' Standard Explicite Difference for call option constant volatility
 Public Function ExplicitFiniteDifferenceLnS(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, N As Integer, M As Integer) As Double
 
@@ -104,8 +99,7 @@ Public Function ExplicitFiniteDifferenceLnS(AmeEurFlag As String, CallPutFlag As
     
 End Function
 
-Public Function ExplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                                                            r As Double, b As Double, v As Double, M As Integer) As Double
+Public Function ExplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, M As Integer) As Double
 
     Dim C() As Double, St() As Double
     Dim dt As Double, dS As Double
@@ -129,19 +123,19 @@ Public Function ExplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As St
     Df = 1 / (1 + r * dt)
     
     For i = 0 To M
-         St(i) = i * dS ' // Asset price at maturity
-         C(N, i) = Max(0, z * (St(i) - X)) '// Option value at maturity
+        St(i) = i * dS ' // Asset price at maturity
+        C(N, i) = Max(0, z * (St(i) - X)) '// Option value at maturity
     Next
     For j = N - 1 To 0 Step -1
         For i = 1 To M - 1
-        pu = 0.5 * (v ^ 2 * i ^ 2 + b * i) * dt
-        pm = 1 - v ^ 2 * i ^ 2 * dt
-        pd = 0.5 * (v ^ 2 * i ^ 2 - b * i) * dt
-        
-        C(j, i) = Df * (pu * C(j + 1, i + 1) + pm * C(j + 1, i) + pd * C(j + 1, i - 1))
-        If AmeEurFlag = "a" Then
-            C(j, i) = Max(z * (St(i) - X), C(j, i))
-        End If
+            pu = 0.5 * (v ^ 2 * i ^ 2 + b * i) * dt
+            pm = 1 - v ^ 2 * i ^ 2 * dt
+            pd = 0.5 * (v ^ 2 * i ^ 2 - b * i) * dt
+            
+            C(j, i) = Df * (pu * C(j + 1, i + 1) + pm * C(j + 1, i) + pd * C(j + 1, i - 1))
+            If AmeEurFlag = "a" Then
+                C(j, i) = Max(z * (St(i) - X), C(j, i))
+            End If
         Next
         If z = 1 Then '//Call option
             C(j, 0) = 0
@@ -155,9 +149,7 @@ Public Function ExplicitFiniteDifference(AmeEurFlag As String, CallPutFlag As St
     
 End Function
 
-Public Function CrankNickolson(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, _
-            N As Integer, M As Integer) As Double
-
+Public Function CrankNickolson(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, N As Integer, M As Integer) As Double
 
     Dim C() As Double, St() As Double, p() As Double, pmd() As Double
     Dim dt As Double, dx As Double
@@ -194,17 +186,16 @@ Public Function CrankNickolson(AmeEurFlag As String, CallPutFlag As String, S As
             pmd(i) = pm - pu * pd / pmd(i - 1)
         Next
         
-        
         For i = M - 2 To 1 Step -1
             C(1, i) = (p(i) - pu * C(1, i + 1)) / pmd(i)
         Next
         
-            For i = 0 To M
-                C(0, i) = C(1, i)
-                If AmeEurFlag = "a" Then
-                    C(0, i) = Max(C(1, i), z * (St(i) - X))
-                 End If
-            Next
+        For i = 0 To M
+            C(0, i) = C(1, i)
+            If AmeEurFlag = "a" Then
+                C(0, i) = Max(C(1, i), z * (St(i) - X))
+            End If
+        Next
        
     Next
     

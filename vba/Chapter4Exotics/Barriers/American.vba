@@ -3,8 +3,7 @@ Option Explicit
 ' Programmer Espen Gaarder Haug
 ' Copyright Espen Gaarder Haug  2006
 
-
-'// The Bjerksund and Stensland (2002) American approximation
+' The Bjerksund and Stensland (2002) American approximation
 Public Function BSAmericanApprox2002(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
     
     If CallPutFlag = "c" Then
@@ -24,7 +23,7 @@ Public Function BSAmericanCallApprox2002(S As Double, X As Double, T As Double, 
     t1 = 1 / 2 * (Sqr(5) - 1) * T
     
     If b >= r Then  '// Never optimal to exersice before maturity
-            BSAmericanCallApprox2002 = GBlackScholes("c", S, X, T, r, b, v)
+        BSAmericanCallApprox2002 = GBlackScholes("c", S, X, T, r, b, v)
     Else
         
         Beta = (1 / 2 - b / v ^ 2) + Sqr((b / v ^ 2 - 1 / 2) ^ 2 + 2 * r / v ^ 2)
@@ -52,8 +51,7 @@ Public Function BSAmericanCallApprox2002(S As Double, X As Double, T As Double, 
     End If
 End Function
 
-Private Function phi(S As Double, T As Double, gamma As Double, H As Double, i As Double, _
-        r As Double, b As Double, v As Double) As Double
+Private Function phi(S As Double, T As Double, gamma As Double, H As Double, i As Double, r As Double, b As Double, v As Double) As Double
 
     Dim lambda As Double, kappa As Double
     Dim d As Double
@@ -64,7 +62,6 @@ Private Function phi(S As Double, T As Double, gamma As Double, H As Double, i A
     phi = Exp(lambda) * S ^ gamma * (CND(d) - (i / S) ^ kappa * CND(d - 2 * Log(i / S) / (v * Sqr(T))))
 
 End Function
-
 
 Public Function ksi(S As Double, T2 As Double, gamma As Double, H As Double, I2 As Double, I1 As Double, t1 As Double, r As Double, b As Double, v As Double) As Double
 
@@ -86,9 +83,7 @@ Public Function ksi(S As Double, T2 As Double, gamma As Double, H As Double, I2 
     lambda = -r + gamma * b + 0.5 * gamma * (gamma - 1) * v ^ 2
     kappa = 2 * b / (v ^ 2) + (2 * gamma - 1)
     
-    ksi = Exp(lambda * T2) * S ^ gamma * (CBND(-e1, -f1, rho) - (I2 / S) ^ kappa * CBND(-e2, -f2, rho) _
-            - (I1 / S) ^ kappa * CBND(-e3, -f3, -rho) + (I1 / I2) ^ kappa * CBND(-e4, -f4, -rho))
-
+    ksi = Exp(lambda * T2) * S ^ gamma * (CBND(-e1, -f1, rho) - (I2 / S) ^ kappa * CBND(-e2, -f2, rho) - (I1 / S) ^ kappa * CBND(-e3, -f3, -rho) + (I1 / I2) ^ kappa * CBND(-e4, -f4, -rho))
 
 End Function
 

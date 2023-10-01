@@ -42,8 +42,7 @@ Function CND(X As Double) As Double
 End Function
 
 
-Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
-                As Double, T As Double, r As Double, b As Double, v As Double) As Double
+Public Function GBlackScholes(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double) As Double
 
     Dim d1 As Double, d2 As Double
     d1 = (Log(S / X) + (b + v ^ 2 / 2) * T) / (v * Sqr(T))
@@ -56,8 +55,7 @@ Public Function GBlackScholes(CallPutFlag As String, S As Double, X _
     End If
 End Function
 
-Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H As Double, K As Double, T As Double, _
-            r As Double, b As Double, v As Double)
+Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H As Double, K As Double, T As Double, r As Double, b As Double, v As Double)
 
     'TypeFlag:      The "TypeFlag" gives you 8 different standard barrier options:
     '               1) "cdi"=Down-and-in call,    2) "cui"=Up-and-in call
@@ -129,7 +127,7 @@ Public Function StandardBarrier(TypeFlag As String, S As Double, X As Double, H 
                 StandardBarrier = f1 - f2 + f3 - f4 + f6
             Case Is = "puo" '8a) puo
                 StandardBarrier = f2 - f4 + f6
-            End Select
+        End Select
     ElseIf X < H Then
         Select Case TypeFlag
             Case Is = "cdi" '1b) cdi

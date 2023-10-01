@@ -7,12 +7,12 @@ Option Compare Text 'Uppercase letters to be equivalent to lowercase letters.
 
 
 Public Function Max(X, y)
-            Max = Application.Max(X, y)
+    Max = Application.Max(X, y)
 End Function
-'// Monte Carlo window barrier option using Brownian bridge probability
-Public Function MonteCarloStandardBarrier(CallPutFlag As String, S As Double, X As Double, H As Double, T As Double, _
-                r As Double, b As Double, v As Double, nSimulations As Long) As Double
-            
+
+' Monte Carlo window barrier option using Brownian bridge probability
+Public Function MonteCarloStandardBarrier(CallPutFlag As String, S As Double, X As Double, H As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
+
     Dim ST As Double, sum As Double
     Dim Drift As Double, vSqrdt   As Double, BarrierHitProb As Double
     Dim i As Long, z As Integer
@@ -27,37 +27,34 @@ Public Function MonteCarloStandardBarrier(CallPutFlag As String, S As Double, X 
     End If
 
     For i = 0 To nSimulations
-            ST = S * Exp(Drift + vSqrdt * Application.NormInv(Rnd(), 0, 1))
+        ST = S * Exp(Drift + vSqrdt * Application.NormInv(Rnd(), 0, 1))
             
-            If S > H Then
-          '//Probability of hitting  barrier below
-                If ST <= H Then
-                      BarrierHitProb = 1
-                Else
-                        BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(H / S) * Log(H / ST)))
-                     
-                End If
-            ElseIf S < H Then
-            '// Probability of hitting the barrier above
-                If ST >= H Then
-                    BarrierHitProb = 1
-                Else
-                    BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(S / H) * Log(ST / H)))
-                   
-                End If
+        If S > H Then
+            ' Probability of hitting  barrier below
+            If ST <= H Then
+                BarrierHitProb = 1
+            Else
+                BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(H / S) * Log(H / ST)))
             End If
-            sum = sum + (1 - BarrierHitProb) * Max(z * (ST - X), 0)
+        ElseIf S < H Then
+            '// Probability of hitting the barrier above
+            If ST >= H Then
+                BarrierHitProb = 1
+            Else
+                BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(S / H) * Log(ST / H)))
+            End If
+        End If
+
+        sum = sum + (1 - BarrierHitProb) * Max(z * (ST - X), 0)
     Next
 
     MonteCarloStandardBarrier = Exp(-r * T) * (sum / nSimulations)
 
 End Function
 
+' Monte Carlo window barrier option using Brownian bridge probability
+Public Function MonteCarloWindowBarrier(CallPutFlag As String, S As Double, X As Double, H As Double, t1 As Double, t2 As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
 
-'// Monte Carlo window barrier option using Brownian bridge probability
-Public Function MonteCarloWindowBarrier(CallPutFlag As String, S As Double, X As Double, H As Double, t1 As Double, t2 As Double, T As Double, _
-                r As Double, b As Double, v As Double, nSimulations As Long) As Double
-            
     Dim St1 As Double, St2 As Double, ST As Double
     Dim sum As Double, BarrierHitProb As Double
     Dim Drift1 As Double, Drift2 As Double, Drift3 As Double
@@ -78,39 +75,37 @@ Public Function MonteCarloWindowBarrier(CallPutFlag As String, S As Double, X As
     End If
 
     For i = 0 To nSimulations
-            St1 = S * Exp(Drift1 + vSqrdt1 * Application.NormInv(Rnd(), 0, 1))
-            St2 = St1 * Exp(Drift2 + vSqrdt2 * Application.NormInv(Rnd(), 0, 1))
-            ST = St2 * Exp(Drift3 + vSqrdt3 * Application.NormInv(Rnd(), 0, 1))
+        St1 = S * Exp(Drift1 + vSqrdt1 * Application.NormInv(Rnd(), 0, 1))
+        St2 = St1 * Exp(Drift2 + vSqrdt2 * Application.NormInv(Rnd(), 0, 1))
+        ST = St2 * Exp(Drift3 + vSqrdt3 * Application.NormInv(Rnd(), 0, 1))
             
-            If S > H Then
-          '//Probability of hitting  barrier below
-                If St2 <= H Or St1 <= H Then
-                      BarrierHitProb = 1
-                Else
-                        BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(H / St1) * Log(H / St2)))
-                     
-                End If
-            ElseIf S < H Then
-            '// Probability of hitting the barrier above
-                If St2 >= H Or St1 >= H Then
-                    BarrierHitProb = 1
-                Else
-                    BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(St1 / H) * Log(St2 / H)))
-                   
-                End If
+        If S > H Then
+            '//Probability of hitting  barrier below
+            If St2 <= H Or St1 <= H Then
+                BarrierHitProb = 1
+            Else
+                BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(H / St1) * Log(H / St2)))
             End If
-            
-            sum = sum + (1 - BarrierHitProb) * Max(z * (ST - X), 0)
+        ElseIf S < H Then
+            ' Probability of hitting the barrier above
+            If St2 >= H Or St1 >= H Then
+                BarrierHitProb = 1
+            Else
+                BarrierHitProb = Exp(-2 / (v ^ 2 * T) * Abs(Log(St1 / H) * Log(St2 / H)))
+            End If
+        End If
+        
+        sum = sum + (1 - BarrierHitProb) * Max(z * (ST - X), 0)
     Next
 
     MonteCarloWindowBarrier = Exp(-r * T) * (sum / nSimulations)
 
 End Function
 
-Public Function MonteCarloTripleAsset(CallPutFlag As String, S1 As Double, S2 As Double, _
-S3 As Double, X As Double, T As Double, r As Double, b1 As Double, b2 As Double, _
-b3 As Double, v1 As Double, v2 As Double, v3 As Double, rho12 As Double, _
-rho13 As Double, rho23 As Double, nSimulations As Long) As Double
+        Public Function MonteCarloTripleAsset(CallPutFlag As String, S1 As Double, S2 As Double, _
+        S3 As Double, X As Double, T As Double, r As Double, b1 As Double, b2 As Double, _
+        b3 As Double, v1 As Double, v2 As Double, v3 As Double, rho12 As Double, _
+        rho13 As Double, rho23 As Double, nSimulations As Long) As Double
 
     Dim dt As Double, St1 As Double, St2 As Double, St3 As Double
     Dim i As Long, z As Integer
@@ -119,63 +114,6 @@ rho13 As Double, rho23 As Double, nSimulations As Long) As Double
     Dim v1Sqrdt As Double, v2Sqrdt As Double, v3Sqrdt As Double
     Dim Epsilon1 As Double, Epsilon2 As Double, Epsilon3 As Double
     Dim alpha2 As Double, alpha3 As Double
-
- 
-    z = 1
-    If CallPutFlag = "p" Then
-        z = -1
-    End If
-    
-    Drift1 = (b1 - v1 * v1 / 2) * T
-    Drift2 = (b2 - v2 * v2 / 2) * T
-    Drift3 = (b2 - v3 * v3 / 2) * T
-    v1Sqrdt = v1 * Sqr(T)
-    v2Sqrdt = v2 * Sqr(T)
-    v3Sqrdt = v3 * Sqr(T)
-      g = Sqr((1 - rho13 ^ 2) / (1 - rho12 ^ 2 - rho23 ^ 2 _
-        - rho13 ^ 2 + 2 * rho12 * rho13 * rho23))
-    
-    sum = 0
-
-    For i = 1 To nSimulations
-       
-        St1 = S1
-        St2 = S2
-        St3 = S3
-       
-        Epsilon1 = Application.NormInv(Rnd(), 0, 1)
-        Epsilon2 = Application.NormInv(Rnd(), 0, 1)
-        Epsilon3 = Application.NormInv(Rnd(), 0, 1)
-        alpha2 = rho12 * Epsilon1 + Epsilon2 * Sqr(1 - rho12 ^ 2)
-        alpha3 = Epsilon3 / g + (rho23 - rho13 * rho12) * Epsilon2 _
-        + rho13 * Epsilon1 * Sqr(1 / (1 - rho12 ^ 2))
-           
-        St1 = St1 * Math.Exp(Drift1 + v1Sqrdt * Epsilon1)
-        St2 = St2 * Math.Exp(Drift2 + v2Sqrdt * alpha2)
-        St3 = St3 * Math.Exp(Drift3 + v3Sqrdt * alpha3)
-            
-        sum = sum + Application.Max(z * (St1 - St2 - X), z * (St3 - St2 - X), 0)
-    Next
-
-    MonteCarloTripleAsset = Exp(-r * T) * sum / nSimulations
-    
-End Function
-
-
-Public Function QuasiMonteCarloTripleAsset(CallPutFlag As String, S1 As Double, S2 As Double, S3 As Double, _
-                 X As Double, T As Double, r As Double, b1 As Double, b2 As Double, _
-                 b3 As Double, v1 As Double, v2 As Double, v3 As Double, _
-                 rho12 As Double, rho13 As Double, rho23 As Double, _
-                      nSimulations As Long) As Double
-
-    Dim dt As Double, St1 As Double, St2 As Double, St3 As Double
-    Dim i As Long, z As Integer
-    Dim sum As Double, g As Double
-    Dim Drift1 As Double, Drift2 As Double, Drift3 As Double
-    Dim v1Sqrdt As Double, v2Sqrdt As Double, v3Sqrdt As Double
-    Dim Epsilon1 As Double, Epsilon2 As Double
-    Dim alpha2 As Double, alpha3 As Double
-
  
     z = 1
     If CallPutFlag = "p" Then
@@ -189,8 +127,57 @@ Public Function QuasiMonteCarloTripleAsset(CallPutFlag As String, S1 As Double, 
     v2Sqrdt = v2 * Sqr(T)
     v3Sqrdt = v3 * Sqr(T)
     g = Sqr((1 - rho13 ^ 2) / (1 - rho12 ^ 2 - rho23 ^ 2 - rho13 ^ 2 + 2 * rho12 * rho13 * rho23))
-        
+    sum = 0
+
+    For i = 1 To nSimulations
+       
+        St1 = S1
+        St2 = S2
+        St3 = S3
+       
+        Epsilon1 = Application.NormInv(Rnd(), 0, 1)
+        Epsilon2 = Application.NormInv(Rnd(), 0, 1)
+        Epsilon3 = Application.NormInv(Rnd(), 0, 1)
+        alpha2 = rho12 * Epsilon1 + Epsilon2 * Sqr(1 - rho12 ^ 2)
+        alpha3 = Epsilon3 / g + (rho23 - rho13 * rho12) * Epsilon2 + rho13 * Epsilon1 * Sqr(1 / (1 - rho12 ^ 2))
+
+        St1 = St1 * Math.Exp(Drift1 + v1Sqrdt * Epsilon1)
+        St2 = St2 * Math.Exp(Drift2 + v2Sqrdt * alpha2)
+        St3 = St3 * Math.Exp(Drift3 + v3Sqrdt * alpha3)
+            
+        sum = sum + Application.Max(z * (St1 - St2 - X), z * (St3 - St2 - X), 0)
+    Next
+
+    MonteCarloTripleAsset = Exp(-r * T) * sum / nSimulations
     
+End Function
+
+Public Function QuasiMonteCarloTripleAsset(CallPutFlag As String, S1 As Double, S2 As Double, S3 As Double, _
+        X As Double, T As Double, r As Double, b1 As Double, b2 As Double, _
+        b3 As Double, v1 As Double, v2 As Double, v3 As Double, _
+        rho12 As Double, rho13 As Double, rho23 As Double, _
+        nSimulations As Long) As Double
+
+    Dim dt As Double, St1 As Double, St2 As Double, St3 As Double
+    Dim i As Long, z As Integer
+    Dim sum As Double, g As Double
+    Dim Drift1 As Double, Drift2 As Double, Drift3 As Double
+    Dim v1Sqrdt As Double, v2Sqrdt As Double, v3Sqrdt As Double
+    Dim Epsilon1 As Double, Epsilon2 As Double
+    Dim alpha2 As Double, alpha3 As Double
+ 
+    z = 1
+    If CallPutFlag = "p" Then
+        z = -1
+    End If
+    
+    Drift1 = (b1 - v1 * v1 / 2) * T
+    Drift2 = (b2 - v2 * v2 / 2) * T
+    Drift3 = (b2 - v3 * v3 / 2) * T
+    v1Sqrdt = v1 * Sqr(T)
+    v2Sqrdt = v2 * Sqr(T)
+    v3Sqrdt = v3 * Sqr(T)
+    g = Sqr((1 - rho13 ^ 2) / (1 - rho12 ^ 2 - rho23 ^ 2 - rho13 ^ 2 + 2 * rho12 * rho13 * rho23))
     sum = 0
 
     For i = 1 To nSimulations
@@ -208,39 +195,33 @@ Public Function QuasiMonteCarloTripleAsset(CallPutFlag As String, S1 As Double, 
         St2 = St2 * Math.Exp(Drift2 + v2Sqrdt * alpha2)
         St3 = St3 * Math.Exp(Drift3 + v3Sqrdt * alpha3)
             
-         sum = sum + Application.Max(z * (St1 - St2 - X), z * (St3 - St2 - X), 0)
+        sum = sum + Application.Max(z * (St1 - St2 - X), z * (St3 - St2 - X), 0)
     Next
 
     QuasiMonteCarloTripleAsset = Exp(-r * T) * sum / nSimulations
     
 End Function
 
-
-
-
-'// Company can force exersise if price MovingDaysN days in a row is above Barrier
-Public Function CallableWarrantNDays(CallPutFlag As String, S As Double, X As Double, _
-H As Double, T As Double, r As Double, b As Double, _
-v As Double, DaysPerYear As Integer, _
-nSimulations As Long, MovingDaysN As Integer) As Double
+' Company can force exersise if price MovingDaysN days in a row is above Barrier
+Public Function CallableWarrantNDays(CallPutFlag As String, S As Double, X As Double, H As Double, T As Double, r As Double, b As Double, v As Double, DaysPerYear As Integer, nSimulations As Long, MovingDaysN As Integer) As Double
 
     Dim i As Long, j As Long
     Dim n As Long, Counter As Long
     Dim z As Integer
     
-     Dim dt As Double, ST As Double, sum As Double, Drift As Double, vSqrt As Double
-     Dim BarrierHitProb As Double
+    Dim dt As Double, ST As Double, sum As Double, Drift As Double, vSqrt As Double
+    Dim BarrierHitProb As Double
      
     z = 1
-     If CallPutFlag = "p" Then
-         z = -1
-     End If
+    If CallPutFlag = "p" Then
+        z = -1
+    End If
         
-     n = DaysPerYear * T
-     dt = T / n
-     Drift = (b - v * v * 0.5) * dt
-     vSqrt = v * Sqr(dt)
-     sum = 0
+    n = DaysPerYear * T
+    dt = T / n
+    Drift = (b - v * v * 0.5) * dt
+    vSqrt = v * Sqr(dt)
+    sum = 0
     
     For j = 1 To nSimulations
         BarrierHitProb = 0
@@ -269,7 +250,7 @@ nSimulations As Long, MovingDaysN As Integer) As Double
               BarrierHitProb = 1
               Exit For
            End If
-       Next
+        Next
        
         sum = sum + Exp(-r * T) * (1 - BarrierHitProb) * Max(z * (ST - X), 0)
    Next
@@ -277,15 +258,12 @@ nSimulations As Long, MovingDaysN As Integer) As Double
    CallableWarrantNDays = sum / nSimulations
 End Function
                         
-       '// Monte Carlo plain vanilla European option using Antithetic variance reduction
-Public Function MonteCarloStandardOptionAntithetic(CallPutFlag As String, S As Double, _
-X As Double, T As Double, r As Double, b As Double, _
-v As Double, nSimulations As Long) As Double
+' Monte Carlo plain vanilla European option using Antithetic variance reduction
+Public Function MonteCarloStandardOptionAntithetic(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
             
     Dim St1 As Double, St2 As Double, Epsilon As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double
     Dim i As Long, j As Long, z As Integer
-
     
     Drift = (b - v ^ 2 / 2) * T
     vSqrdt = v * Sqr(T)
@@ -297,9 +275,9 @@ v As Double, nSimulations As Long) As Double
     End If
 
     For i = 1 To nSimulations
-            Epsilon = Application.NormInv(Rnd(), 0, 1)
-            St1 = S * Exp(Drift + vSqrdt * Epsilon)
-            St2 = S * Exp(Drift + vSqrdt * (-Epsilon))
+        Epsilon = Application.NormInv(Rnd(), 0, 1)
+        St1 = S * Exp(Drift + vSqrdt * Epsilon)
+        St2 = S * Exp(Drift + vSqrdt * (-Epsilon))
            
         sum = sum + (Max(z * (St1 - X), 0) + Max(z * (St2 - X), 0)) / 2
     Next
@@ -320,7 +298,7 @@ Public Function BoxMuller2(x1 As Double, x2 As Double) As Variant
     If x1 = 0 Then
         BoxMuller2(x1, x2) = BoxMuller(x2, x1)
     Else
-     '/ Using tan(Pi*x2) instead of cos and sin increases the speed by 30%
+        ' Using tan(Pi*x2) instead of cos and sin increases the speed by 30%
         T = Tan(Pi * x2)
         L = Sqr(-2 * Log(x1))
       
@@ -348,13 +326,12 @@ Function Halton(n, b)
     Wend
     Halton = H
 End Function
-Public Function StandardMCUsingBoxMuller(CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, nSimulations As Long) As Double
-            
+
+Public Function StandardMCUsingBoxMuller(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
+
     Dim ST As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double
     Dim i As Long, z As Integer
-   
     
     Drift = (b - v ^ 2 / 2) * T
     vSqrdt = v * Sqr(T)
@@ -366,17 +343,15 @@ Public Function StandardMCUsingBoxMuller(CallPutFlag As String, S As Double, X A
     End If
 
     For i = 1 To nSimulations
-           ST = S * Exp(Drift + vSqrdt * BoxMuller(Halton(i, 3), Halton(i, 5)))
-           
+        ST = S * Exp(Drift + vSqrdt * BoxMuller(Halton(i, 3), Halton(i, 5)))
         sum = sum + Max(z * (ST - X), 0)
     Next
 
     StandardMCUsingBoxMuller = Exp(-r * T) * sum / nSimulations
 
 End Function
-Public Function HaltonMonteCarloStandardOption(CallPutFlag As String, S As Double, _
-    X As Double, T As Double, r As Double, b As Double, _
-    v As Double, nSimulations As Long) As Double
+
+Public Function HaltonMonteCarloStandardOption(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
             
     Dim ST As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double
@@ -393,8 +368,7 @@ Public Function HaltonMonteCarloStandardOption(CallPutFlag As String, S As Doubl
     End If
 
     For i = 1 To nSimulations
-           ST = S * Exp(Drift + vSqrdt * BoxMuller(Halton(i, 3), Halton(i, 5)))
-           
+        ST = S * Exp(Drift + vSqrdt * BoxMuller(Halton(i, 3), Halton(i, 5)))
         sum = sum + Max(z * (ST - X), 0)
     Next
 
@@ -402,15 +376,13 @@ Public Function HaltonMonteCarloStandardOption(CallPutFlag As String, S As Doubl
 
 End Function
 
-Public Function StandardMCWithGreeks(OutputFlag As String, CallPutFlag As String, S As Double, _
-X As Double, T As Double, r As Double, b As Double, _
-v As Double, nSimulations As Long) As Variant
+Public Function StandardMCWithGreeks(OutputFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Variant
             
     Dim ST As Double, Output() As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double, DeltaSum As Double, GammaSum As Double
     Dim i As Long, z As Integer
    
-   ReDim Output(0 To 4) As Double
+    ReDim Output(0 To 4) As Double
     
     Drift = (b - v ^ 2 / 2) * T
     vSqrdt = v * Sqr(T)
@@ -429,22 +401,22 @@ v As Double, nSimulations As Long) As Variant
         If Abs(ST - X) < 2 Then GammaSum = GammaSum + 1
     Next
     
-    '// Option value:
+    ' Option value:
     Output(0) = Exp(-r * T) * sum / nSimulations
-     '// Delta:
+    ' Delta:
     Output(1) = z * Exp(-r * T) * DeltaSum / (nSimulations * S)
-    '// Gamma:
+    ' Gamma:
     Output(2) = Exp(-r * T) * (X / S) ^ 2 * GammaSum / (4 * nSimulations)
-    '// Theta:
+    ' Theta:
     Output(3) = (r * Output(0) - b * S * Output(1) - 0.5 * v ^ 2 * S ^ 2 * Output(2)) / 365
-      '// Vega:
+    ' Vega:
     Output(4) = Output(2) * v * S ^ 2 * T / 100
     
     StandardMCWithGreeks = Application.Transpose(Output())
 
 End Function
 
-'// Monte Carlo plain vanilla European option
+' Monte Carlo plain vanilla European option
 Public Function SuperIQMC(CallPutFlag As String, S As Double, _
     X As Double, T As Double, r As Double, b As Double, _
     v As Double, nSimulations As Long) As Double
@@ -478,12 +450,9 @@ Public Function SuperIQMC(CallPutFlag As String, S As Double, _
     
 End Function
 
+' Monte Carlo plain vanilla European option
+Public Function IQMC(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
 
-
-'// Monte Carlo plain vanilla European option
-Public Function IQMC(CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, nSimulations As Long) As Double
-            
     Dim ST As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double
     Dim i As Long, z As Integer
@@ -513,24 +482,9 @@ Public Function IQMC(CallPutFlag As String, S As Double, X As Double, T As Doubl
     
 End Function
 
+' Monte Carlo plain vanilla European option
+Public Function MonteCarloStandardOption(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-'// Monte Carlo plain vanilla European option
-Public Function MonteCarloStandardOption(CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, nSimulations As Long) As Double
-            
     Dim ST As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double
     Dim i As Long, z As Integer
@@ -545,7 +499,7 @@ Public Function MonteCarloStandardOption(CallPutFlag As String, S As Double, X A
     End If
 
     For i = 1 To nSimulations
-            ST = S * Exp(Drift + vSqrdt * Application.NormInv(Rnd(), 0, 1))
+        ST = S * Exp(Drift + vSqrdt * Application.NormInv(Rnd(), 0, 1))
         sum = sum + Max(z * (ST - X), 0)
     Next
 
@@ -553,17 +507,13 @@ Public Function MonteCarloStandardOption(CallPutFlag As String, S As Double, X A
 
 End Function
 
+' Monte Carlo plain vanilla European option
+Public Function MonteCarloStandardOptionBoxMuller(CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, nSimulations As Long) As Double
 
-
-'// Monte Carlo plain vanilla European option
-Public Function MonteCarloStandardOptionBoxMuller(CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, nSimulations As Long) As Double
-            
     Dim St1 As Double, St2 As Double
     Dim sum As Double, Drift As Double, vSqrdt As Double
     Dim i As Long, z As Integer
     Dim StdRand As Variant
-   
 
     Drift = (b - v ^ 2 / 2) * T
     vSqrdt = v * Sqr(T)
@@ -575,9 +525,9 @@ Public Function MonteCarloStandardOptionBoxMuller(CallPutFlag As String, S As Do
     End If
 
     For i = 1 To nSimulations
-            StdRand = BoxMuller2(Rnd(), Rnd())
-            St1 = S * Exp(Drift + vSqrdt * StdRand(1))
-            St2 = S * Exp(Drift + vSqrdt * StdRand(2))
+        StdRand = BoxMuller2(Rnd(), Rnd())
+        St1 = S * Exp(Drift + vSqrdt * StdRand(1))
+        St2 = S * Exp(Drift + vSqrdt * StdRand(2))
         sum = sum + Max(z * (St1 - X), 0) + Max(z * (St2 - X), 0)
     Next
 
@@ -585,13 +535,12 @@ Public Function MonteCarloStandardOptionBoxMuller(CallPutFlag As String, S As Do
 
 End Function
 
-
-'// Monte Carlo plain vanilla European option
+' Monte Carlo plain vanilla European option
 Public Function MonteCarloMeanReverting(CallPutFlag As String, S As Double, _
-X As Double, T As Double, r As Double, b As Double, v As Double, _
-kappa As Double, theta As Double, beta As Double, _
-nSteps As Long, nSimulations As Long) As Double
-            
+        X As Double, T As Double, r As Double, b As Double, v As Double, _
+        kappa As Double, theta As Double, beta As Double, _
+        nSteps As Long, nSimulations As Long) As Double
+
     Dim dt As Double, ST As Double
     Dim sum As Double
     Dim i As Long, j As Long, z As Integer
@@ -605,10 +554,9 @@ nSteps As Long, nSimulations As Long) As Double
     End If
    
     For i = 1 To nSimulations
-     ST = S
+        ST = S
         For j = 0 To nSteps
-            ST = ST + kappa * (theta - ST) * dt _
-            + v * ST ^ beta * v * Sqr(dt) * Application.NormInv(Rnd(), 0, 1)
+            ST = ST + kappa * (theta - ST) * dt + v * ST ^ beta * v * Sqr(dt) * Application.NormInv(Rnd(), 0, 1)
         Next
         sum = sum + Max(z * (ST - X), 0)
         
@@ -618,17 +566,11 @@ nSteps As Long, nSimulations As Long) As Double
 
 End Function
 
-
-
-
-
-
-                        
-'// Monte Carlo two asset Asian spread option
+' Monte Carlo two asset Asian spread option
 Public Function MonteCarloAsianSpreadOption(CallPutFlag As String, S1 As Double, S2 As Double, _
-                X As Double, T As Double, r As Double, b1 As Double, b2 As Double, v1 As Double, v2 As Double, rho As Double, _
-                nSteps As Long, nSimulations As Long) As Double
-            
+        X As Double, T As Double, r As Double, b1 As Double, b2 As Double, v1 As Double, v2 As Double, rho As Double, _
+        nSteps As Long, nSimulations As Long) As Double
+
     Dim dt As Double, St1 As Double, St2 As Double
     Dim i As Long, j As Long, z As Integer
     Dim sum As Double, Drift1 As Double, Drift2 As Double
@@ -669,12 +611,10 @@ Public Function MonteCarloAsianSpreadOption(CallPutFlag As String, S1 As Double,
     
 End Function
 
-
-
-'// Monte Carlo two asset Asian spread option
+' Monte Carlo two asset Asian spread option
 Public Function MC2Asset(CallPutFlag As String, S1 As Double, S2 As Double, _
-                x1 As Double, x2 As Double, T As Double, r As Double, b1 As Double, b2 As Double, v1 As Double, v2 As Double, rho As Double, _
-                nSimulations As Long) As Double
+        x1 As Double, x2 As Double, T As Double, r As Double, b1 As Double, b2 As Double, v1 As Double, v2 As Double, rho As Double, _
+        nSimulations As Long) As Double
             
     Dim dt As Double, St1 As Double, St2 As Double
     Dim i As Long, j As Long, z As Integer
@@ -695,22 +635,21 @@ Public Function MC2Asset(CallPutFlag As String, S1 As Double, S2 As Double, _
 
     For i = 1 To nSimulations
        
-            Epsilon1 = Application.NormInv(Rnd(), 0, 1)
-            Epsilon2 = rho * Epsilon1 + Application.NormInv(Rnd(), 0, 1) * Sqr(1 - rho ^ 2)
-            St1 = S1 * Exp(Drift1 + v1Sqrdt * Epsilon1)
-            St2 = S2 * Exp(Drift2 + v2Sqrdt * Epsilon2)
+        Epsilon1 = Application.NormInv(Rnd(), 0, 1)
+        Epsilon2 = rho * Epsilon1 + Application.NormInv(Rnd(), 0, 1) * Sqr(1 - rho ^ 2)
+        St1 = S1 * Exp(Drift1 + v1Sqrdt * Epsilon1)
+        St2 = S2 * Exp(Drift2 + v2Sqrdt * Epsilon2)
 
-            If St1 > x1 Then
-                sum = sum + Max(z * (St2 - x2), 0)
-            End If
+        If St1 > x1 Then
+            sum = sum + Max(z * (St2 - x2), 0)
+        End If
     Next
 
     MC2Asset = Exp(-r * T) * sum / nSimulations
     
 End Function
 
-
-'// IQ-MC two asset correlation option
+' IQ-MC two asset correlation option
 Public Function IQMC2Asset(CallPutFlag As String, S1 As Double, S2 As Double, _
         x1 As Double, x2 As Double, T As Double, r As Double, b1 As Double, _
         b2 As Double, v1 As Double, v2 As Double, rho As Double, _

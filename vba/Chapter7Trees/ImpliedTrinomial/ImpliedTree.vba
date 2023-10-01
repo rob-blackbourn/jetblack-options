@@ -9,18 +9,15 @@ Option Base 0       'The "Option Base" statement allows to specify 0 or 1 as the
                
                
 Public Function Max(X, y)
-            Max = Application.Max(X, y)
+    Max = Application.Max(X, y)
 End Function
 
 Public Function Min(X, y)
-            Min = Application.Min(X, y)
+    Min = Application.Min(X, y)
 End Function
 
-
-'// Trinomial tree
-Public Function TrinomialTree(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, n As Integer) As Double
-                
+' Trinomial tree
+Public Function TrinomialTree(AmeEurFlag As String, CallPutFlag As String, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, n As Integer) As Double
 
     Dim OptionValue() As Double
     Dim dt As Double, u As Double, d As Double
@@ -32,7 +29,7 @@ Public Function TrinomialTree(AmeEurFlag As String, CallPutFlag As String, S As 
     
     If CallPutFlag = "c" Then
         z = 1
-        ElseIf CallPutFlag = "p" Then
+    ElseIf CallPutFlag = "p" Then
         z = -1
     End If
     
@@ -54,7 +51,7 @@ Public Function TrinomialTree(AmeEurFlag As String, CallPutFlag As String, S As 
                 OptionValue(i) = (pu * OptionValue(i + 2) + pm * OptionValue(i + 1) + pd * OptionValue(i)) * Df
             ElseIf AmeEurFlag = "a" Then
                 OptionValue(i) = Max((z * (S * u ^ Max(i - j, 0) * d ^ Max(j - i, 0) - X)), _
-                (pu * OptionValue(i + 2) + pm * OptionValue(i + 1) + pd * OptionValue(i)) * Df)
+                    (pu * OptionValue(i + 2) + pm * OptionValue(i + 1) + pd * OptionValue(i)) * Df)
             End If
         Next
     Next
@@ -62,12 +59,9 @@ Public Function TrinomialTree(AmeEurFlag As String, CallPutFlag As String, S As 
     
 End Function
 
+' Implied trinomial tree
+Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STATEi As Integer, S As Double, X As Double, T As Double, r As Double, b As Double, v As Double, Skew As Double, nSteps As Integer)
 
-
-'// Implied trinomial tree
-Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STATEi As Integer, S As Double, X As Double, T As Double, _
-                r As Double, b As Double, v As Double, Skew As Double, nSteps As Integer)
-                
     Dim ArrowDebreu() As Double
     Dim LocalVolatility() As Double
     Dim UpProbability() As Double
@@ -118,7 +112,7 @@ Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STA
                 qi = (Fi - pi * (Si2 - Si1) - Si1) / (Si - Si1)
             End If
             
-            '// Replacing negative probabilities
+            ' Replacing negative probabilities
             If pi < 0 Or pi > 1 Or qi < 0 Or qi > 1 Then
                 If Fi > Si1 And Fi < Si2 Then
                     pi = 1 / 2 * ((Fi - Si1) / (Si2 - Si1) + (Fi - Si) / (Si2 - Si))
@@ -128,14 +122,14 @@ Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STA
                     qi = 1 / 2 * ((Si2 - Fi) / (Si2 - Si) + (Si1 - Fi) / (Si1 - Si))
                 End If
             End If
-                DownProbability(n, i) = qi
-                UpProbability(n, i) = pi
-            '// Calculating local volatilities
-                Fo = pi * Si2 + qi * Si + (1 - pi - qi) * Si1
-                LocalVolatility(n, i) = Sqr((pi * (Si2 - Fo) ^ 2 + (1 - pi - qi) * _
-                (Si1 - Fo) ^ 2 + qi * (Si - Fo) ^ 2) / (Fo ^ 2 * dt))
+            DownProbability(n, i) = qi
+            UpProbability(n, i) = pi
+            ' Calculating local volatilities
+            Fo = pi * Si2 + qi * Si + (1 - pi - qi) * Si1
+            LocalVolatility(n, i) = Sqr((pi * (Si2 - Fo) ^ 2 + (1 - pi - qi) * _
+            (Si1 - Fo) ^ 2 + qi * (Si - Fo) ^ 2) / (Fo ^ 2 * dt))
 
-            '// Calculating Arrow-Debreu prices
+            ' Calculating Arrow-Debreu prices
             If n = 0 Then
                 ArrowDebreu(n + 1, i) = qi * ArrowDebreu(n, i) * Df
                 ArrowDebreu(n + 1, i + 1) = (1 - pi - qi) * ArrowDebreu(n, i) * Df
@@ -144,21 +138,21 @@ Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STA
                 ArrowDebreu(n + 1, i) = qi * ArrowDebreu(n, i) * Df
             ElseIf n > 0 And i = n * 2 Then
                 ArrowDebreu(n + 1, i) = UpProbability(n, i - 2) * ArrowDebreu(n, i - 2) * Df _
-                                + (1 - UpProbability(n, i - 1) - DownProbability(n, i - 1)) * ArrowDebreu(n, i - 1) * Df _
-                                + qi * ArrowDebreu(n, i) * Df
+                    + (1 - UpProbability(n, i - 1) - DownProbability(n, i - 1)) * ArrowDebreu(n, i - 1) * Df _
+                    + qi * ArrowDebreu(n, i) * Df
                 ArrowDebreu(n + 1, i + 1) = UpProbability(n, i - 1) * ArrowDebreu(n, i - 1) * Df + (1 - pi - qi) * ArrowDebreu(n, i) * Df
                 ArrowDebreu(n + 1, i + 2) = pi * ArrowDebreu(n, i) * Df
             ElseIf n > 0 And i = 1 Then
                 ArrowDebreu(n + 1, i) = (1 - UpProbability(n, i - 1) - DownProbability(n, i - 1)) * ArrowDebreu(n, i - 1) * Df _
-                                + qi * ArrowDebreu(n, i) * Df
+                    + qi * ArrowDebreu(n, i) * Df
             Else
-            ArrowDebreu(n + 1, i) = UpProbability(n, i - 2) * ArrowDebreu(n, i - 2) * Df _
-                                + (1 - UpProbability(n, i - 1) - DownProbability(n, i - 1)) * ArrowDebreu(n, i - 1) * Df _
-                                + qi * ArrowDebreu(n, i) * Df
-        End If
+                ArrowDebreu(n + 1, i) = UpProbability(n, i - 2) * ArrowDebreu(n, i - 2) * Df _
+                    + (1 - UpProbability(n, i - 1) - DownProbability(n, i - 1)) * ArrowDebreu(n, i - 1) * Df _
+                    + qi * ArrowDebreu(n, i) * Df
+            End If
         Next
     Next
-        
+
     If ReturnFlag = "DPM" Then
         ImpliedTrinomialTree = Application.Transpose(DownProbability)
     ElseIf ReturnFlag = "UPM" Then
@@ -166,7 +160,7 @@ Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STA
     ElseIf ReturnFlag = "DPni" Then
         ImpliedTrinomialTree = (DownProbability(STEPn, STATEi))
     ElseIf ReturnFlag = "UPni" Then
-      ImpliedTrinomialTree = (UpProbability(STEPn, STATEi))
+        ImpliedTrinomialTree = (UpProbability(STEPn, STATEi))
     ElseIf ReturnFlag = "ADM" Then
         ImpliedTrinomialTree = Application.Transpose(ArrowDebreu)
     ElseIf ReturnFlag = "LVM" Then
@@ -176,21 +170,21 @@ Public Function ImpliedTrinomialTree(ReturnFlag As String, STEPn As Integer, STA
     ElseIf ReturnFlag = "ADni" Then
         ImpliedTrinomialTree = (ArrowDebreu(STEPn, STATEi))
     Else
-    
-    '// Calculation of option price using the implied trinomial tree
+        ' Calculation of option price using the implied trinomial tree
         If ReturnFlag = "c" Then
             z = 1
         ElseIf ReturnFlag = "p" Then
             z = -1
         End If
         For i = 0 To (2 * nSteps)
-                OptionValueNode(i) = Max(0, z * (S * u ^ Max(i - nSteps, 0) * d ^ Max(nSteps - i, 0) - X))
+            OptionValueNode(i) = Max(0, z * (S * u ^ Max(i - nSteps, 0) * d ^ Max(nSteps - i, 0) - X))
         Next
-         For n = nSteps - 1 To 0 Step -1
+        For n = nSteps - 1 To 0 Step -1
             For i = 0 To (n * 2)
                 OptionValueNode(i) = (UpProbability(n, i) * OptionValueNode(i + 2) + (1 - UpProbability(n, i) - DownProbability(n, i)) * OptionValueNode(i + 1) + DownProbability(n, i) * OptionValueNode(i)) * Df
             Next
         Next
         ImpliedTrinomialTree = OptionValueNode(0)
     End If
+
 End Function
