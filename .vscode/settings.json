@@ -1,5 +1,12 @@
 {
     "[vb]": {
         "editor.tabSize": 4
-    }
+    },
+    "cSpell.words": [
+        "CNDEV",
+        "Garman",
+        "Kohlhagen",
+        "Kolhagen",
+        "Kolhhagen"
+    ]
 }
