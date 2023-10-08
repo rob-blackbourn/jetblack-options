@@ -3,10 +3,17 @@
         "editor.tabSize": 4
     },
     "cSpell.words": [
+        "Bjerksund",
         "CNDEV",
         "Garman",
         "Kohlhagen",
         "Kolhagen",
-        "Kolhhagen"
-    ]
+        "Kolhhagen",
+        "Stensland"
+    ],
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

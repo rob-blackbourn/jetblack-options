@@ -3,7 +3,7 @@
 from math import exp, log, pi, sqrt
 from typing import Literal, Optional
 
-from .distributions import CND, ND, CNDEV
+from .distributions import CND, ND, CNDEV, CHIINV
 
 # The generalized Black and Scholes formula
 def GBlackScholes(
@@ -231,15 +231,6 @@ def GDdeltaDtime(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r
         raise ValueError("invalid call put flag")
 
 
-# Elasticity for the generalized Black and Scholes formula
-def GElasticity(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, b: float, v: float) -> float:
-
-    return (
-        GDelta(CallPutFlag, S, X, T, r, b, v) * S /
-        GBlackScholes(CallPutFlag, S, X, T, r, b, v)
-    )
-
-
 # SaddleGamma for the generalized Black and Scholes formula
 def GSaddleGamma(X: float, T: float, r: float, b: float, v: float)-> float:
     return sqrt(exp(1) / pi) * sqrt((2 * b - r) / v ** 2 + 1) / X
@@ -445,18 +436,6 @@ def GPhi(CallPutFlag: Literal['c', 'p'], S: float, x: float, T: float, r: float,
         return -T * S * exp((b - r) * T) * CND(d1)
     elif CallPutFlag == "p":
         return T * S * exp((b - r) * T) * CND(-d1)
-    else:
-        raise ValueError("invalid call put flag")
-
-
-# Delta for the generalized Black and Scholes formula
-def GInTheMoneyProbability(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, b: float, v: float) -> float:
-    d2 = (log(S / X) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
-    
-    if CallPutFlag == "c":
-        return CND(d2)
-    elif CallPutFlag == "p":
-        return CND(-d2)
     else:
         raise ValueError("invalid call put flag")
 
@@ -736,3 +715,234 @@ def CGBlackScholes(
         return CND((log(S / X) + (b - v ** 2 / 2) * T) / (v * sqrt(T)))
     else:
         raise ValueError("invalid output flag")
+    
+
+# The generalized Black and Scholes formula on variance form
+def GBlackScholesVariance(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, b: float, v: float) -> float:
+    d1 = (log(S / X) + (b + v / 2) * T) / sqrt(v * T)
+    d2 = d1 - sqrt(v * T)
+
+    if CallPutFlag == "c":
+        return S * exp((b - r) * T) * CND(d1) - X * exp(-r * T) * CND(d2)
+    elif CallPutFlag == "p":
+        return X * exp(-r * T) * CND(-d2) - S * exp((b - r) * T) * CND(-d1)
+    else:
+        raise ValueError('invalid call put flag')
+
+
+def GBlackScholesVarianceNGreeks(
+        OutPutFlag: Literal['p', 'd', 'e', 'g', 'gv', 'gp', 'dddv', 'v', 'vp', 'dvdv', 't', 'r', 'fr', 'f', 'b', 'g', 'dx', 'dxdx'],
+        CallPutFlag: Literal['c', 'p'],
+        S: float,
+        X: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        dS: Optional[float] = None
+) -> float:
+
+    if dS is None:
+        dS = 0.01
+    
+    
+    if OutPutFlag == "p": # Value
+        return GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v)
+    elif OutPutFlag == "d": # Delta
+        return (
+             GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v) -
+             GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v)
+        ) / (2 * dS)
+    elif OutPutFlag == "e": # Elasticity
+         return (
+             GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v) -
+             GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v)
+            ) / (2 * dS) * S / GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v)
+    elif OutPutFlag == "g": # Gamma
+        return (
+            GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v) -
+            2 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v) +
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v)
+        ) / dS ** 2
+    elif OutPutFlag == "gv": # DGammaDvariance
+        return (
+            GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v + 0.01) -
+            2 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v + 0.01) +
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v + 0.01) -
+            GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v - 0.01) +
+            2 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v - 0.01) -
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v - 0.01)
+        ) / (2 * 0.01 * dS ** 2) / 100
+    elif OutPutFlag == "gp": # GammaP
+        return S / 100 * (
+            GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v) -
+            2 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v) +
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v)
+        ) / dS ** 2
+    elif OutPutFlag == "dddv": # DDeltaDvariance
+        return 1 / (4 * dS * 0.01) * (
+            GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v + 0.01) -
+            GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v - 0.01) -
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v + 0.01) +
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v - 0.01)
+        ) / 100
+    elif OutPutFlag == "v": # Variance Vega
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v + 0.01) -
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v - 0.01)
+        ) / 2
+    elif OutPutFlag == "vp": # Variance VegaP
+        return v / 0.1 * (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v + 0.01) -
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v - 0.01)
+        ) / 2
+    elif OutPutFlag == "dvdv": # Variance Dvegavariance
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v + 0.01) -
+            2 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v) +
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v - 0.01)
+        )
+    elif OutPutFlag == "t": # Theta
+        if T <= 1 / 365:
+            return (
+                GBlackScholesVariance(CallPutFlag, S, X, 0.00001, r, b, v) -
+                GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v)
+            )
+        else:
+            return (
+                GBlackScholesVariance(CallPutFlag, S, X, T - 1 / 365, r, b, v) -
+                GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v)
+            )
+    elif OutPutFlag == "r": # Rho
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r + 0.01, b + 0.01, v) -
+            GBlackScholesVariance(CallPutFlag, S, X, T, r - 0.01, b - 0.01, v)
+        ) / (2)
+    elif OutPutFlag == "fr": # Futures options rho
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r + 0.01, 0, v) -
+            GBlackScholesVariance(CallPutFlag, S, X, T, r - 0.01, 0, v)
+        ) / 2
+    elif OutPutFlag == "f": # Rho2
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b - 0.01, v) -
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b + 0.01, v)
+        ) / 2
+    elif OutPutFlag == "b": # Carry
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b + 0.01, v) -
+            GBlackScholesVariance(CallPutFlag, S, X, T, r, b - 0.01, v)
+        ) / 2
+    elif OutPutFlag == "s": # Speed
+        return 1 / dS ** 3 * (
+            GBlackScholesVariance(CallPutFlag, S + 2 * dS, X, T, r, b, v) -
+            3 * GBlackScholesVariance(CallPutFlag, S + dS, X, T, r, b, v) +
+            3 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v) -
+            GBlackScholesVariance(CallPutFlag, S - dS, X, T, r, b, v)
+        )
+    elif OutPutFlag == "dx": # Strike Delta
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X + dS, T, r, b, v) -
+            GBlackScholesVariance(CallPutFlag, S, X - dS, T, r, b, v)
+        ) / (2 * dS)
+    elif OutPutFlag == "dxdx": # Gamma
+        return (
+            GBlackScholesVariance(CallPutFlag, S, X + dS, T, r, b, v) -
+            2 * GBlackScholesVariance(CallPutFlag, S, X, T, r, b, v) +
+            GBlackScholesVariance(CallPutFlag, S, X - dS, T, r, b, v)
+        ) / dS ** 2
+    else:
+        raise ValueError("invalid output flag")
+
+
+
+# What asset price that gives maximum DdeltaDvol
+def MaxDdeltaDvolAsset(UpperLowerFlag: Literal['l', 'u'], x: float, T: float, b: float, v: float) -> float:
+    # UpperLowerFlag"l" gives lower asset level that gives max DdeltaDvol
+    # UpperLowerFlag"l" gives upper asset level that gives max DdeltaDvol
+    
+    if UpperLowerFlag == "l":
+        return x * exp(-b * T - v * sqrt(T) * sqrt(4 + T * v ** 2) / 2)
+    elif UpperLowerFlag == "u":
+        return x * exp(-b * T + v * sqrt(T) * sqrt(4 + T * v ** 2) / 2)
+    else:
+        raise ValueError("invalid upper lower flag")
+
+# What strike price that gives maximum DdeltaDvol
+def MaxDdeltaDvolStrike(UpperLowerFlag: Literal['l', 'u'], S: float, T: float, b: float, v: float) -> float:
+    
+    # UpperLowerFlag"l" gives lower strike level that gives max DdeltaDvol
+    # UpperLowerFlag"l" gives upper strike level that gives max DdeltaDvol
+
+    if UpperLowerFlag == "l":
+        return S * exp(b * T - v * sqrt(T) * sqrt(4 + T * v * 2) / 2)
+    elif UpperLowerFlag == "u":
+        return S * exp(b * T + v * sqrt(T) * sqrt(4 + T * v ** 2) / 2)
+    else:
+        raise ValueError("invalid upper lower flag")
+
+# What strike price that gives maximum gamma and vega
+def GMaxGammaVegaatX(S: float, b: float, T: float, v: float) -> float:
+    return S * exp((b + v * v / 2) * T)
+
+# What asset price that gives maximum gamma
+def GMaxGammaatS(x: float, b: float, T: float, v: float) -> float:
+    return x * exp((-b - 3 * v * v / 2) * T)
+
+
+# What asset price that gives maximum vega
+def GMaxVegaatS(X: float, b: float, T: float, v: float) -> float:
+    return X * exp((-b + v * v / 2) * T)
+
+# Delta for the generalized Black and Scholes formula
+def GInTheMoneyProbability(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, b: float, v: float) -> float:
+    d2 = (log(S / X) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
+    
+    if CallPutFlag == "c":
+        return CND(d2)
+    elif CallPutFlag == "p":
+        return CND(-d2)
+    else:
+        raise ValueError("invalid call put flag")
+
+# MirrorDeltaStrike, delta neutral straddle strike in the BSM formula
+def GDeltaMirrorStrike(S: float, T: float, b: float, v: float) -> float:
+    return S * exp((b + v ** 2 / 2) * T)
+
+# MirrorProbabilityStrike, probability neutral straddle strike in the BSM formula
+def GProbabilityMirrorStrike(S: float, T: float, b: float, v: float) -> float:
+    return S * exp((b - v ** 2 / 2) * T)
+
+# MirrorDeltaStrike, general delta symmmetric strike in the BSM formula
+def GDeltaMirrorCallPutStrike(S: float, x: float, T: float, b: float, v: float) -> float:
+    return S ** 2 / x * exp((2 * b + v ** 2) * T)
+
+# Elasticity for the generalized Black and Scholes formula
+def GElasticity(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, b: float, v: float) -> float:
+    return (
+        GDelta(CallPutFlag, S, X, T, r, b, v) * S /
+        GBlackScholes(CallPutFlag, S, X, T, r, b, v)
+    )
+
+# Volatility estimate confidence interval
+def GConfidenceIntervalVolatility(Alfa: float, n: int, VolatilityEstimate: float, UpperLower: Literal['u', 'l']) -> float:
+    # UpperLower     ="L" gives the lower cofidence interval
+    #                ="U" gives the upper cofidence interval
+    # n: number of observations
+    if UpperLower == "L":
+        return VolatilityEstimate * sqrt((n - 1) / (CHIINV(Alfa / 2, n - 1)))
+    elif UpperLower == "U":
+        return VolatilityEstimate * sqrt((n - 1) / (CHIINV(1 - Alfa / 2, n - 1)))
+    else:
+        raise ValueError("invalid upper lower flag")
+
+
+# Profit/Loss STD for the generalized Black and Scholes formula
+def GProfitLossSTD(TypeFlag: Literal['a', 'p'], CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, b: float, v: float, NHedges: int) -> float:
+    
+    if TypeFlag == "a": # in dollars
+        return sqrt(pi / 4) * GVega(S, X, T, r, b, v) * v / sqrt(NHedges)
+    elif TypeFlag == "p": # in percent
+        return sqrt(pi / 4) * GVega(S, X, T, r, b, v) * v / sqrt(NHedges) / GBlackScholes(CallPutFlag, S, X, T, r, b, v)
+    else:
+        raise ValueError('invalid type flag')
