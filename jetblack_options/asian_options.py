@@ -4,7 +4,7 @@ from math import exp, log, sqrt
 from typing import Literal, Optional
 
 from .distributions import CND
-from .plain_vanilla import GBlackScholes
+from .european.plain_vanilla import GBlackScholes
 
 def AsianCurranApprox(CallPutFlag: Literal['c', 'p'], S: float, SA: float, X: float, t1: float, T: float, n: int, m: int, r: float, b: float, v: float) -> float:
 

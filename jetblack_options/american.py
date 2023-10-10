@@ -5,7 +5,7 @@ from typing import Literal, Optional
 
 from .black_scholes_merton import ImpliedVolGBlackScholes
 from .distributions import CND, CBND, ND
-from .plain_vanilla import GBlackScholes
+from .european.plain_vanilla import GBlackScholes
 
 def phi(S: float, T: float, gamma: float, h: float, i: float, r: float, b: float, v: float) -> float:
     lambda_ = (-r + gamma * b + 0.5 * gamma * (gamma - 1) * v ** 2) * T

@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from .plain_vanilla import GBlackScholes
+from .european.plain_vanilla import GBlackScholes
 
 def ImpliedVolGBlackScholes(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, b: float, cm: float) -> float:
 

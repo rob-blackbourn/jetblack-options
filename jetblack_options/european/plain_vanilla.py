@@ -3,7 +3,7 @@
 from math import exp, log, pi, sqrt
 from typing import Literal, Optional
 
-from .distributions import CND, ND, CNDEV, CHIINV
+from ..distributions import CND, ND, CNDEV, CHIINV
 
 # The generalized Black and Scholes formula
 def GBlackScholes(

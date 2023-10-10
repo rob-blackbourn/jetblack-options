@@ -5,7 +5,7 @@ from typing import Literal, Optional, cast
 
 from .distributions import CND, CBND
 from .lookback import PartialFixedLB
-from .plain_vanilla import GBlackScholes, EGBlackScholes, EGBlackScholes_OutPutFlag
+from .european.plain_vanilla import GBlackScholes, EGBlackScholes, EGBlackScholes_OutPutFlag
 
 # Soft barrier options
 def SoftBarrier(TypeFlag: Literal['cdi', 'cdo', 'pui', 'puo'], S: float, X: float, L: float, U: float, T: float, r: float, b: float, v: float) -> float:
