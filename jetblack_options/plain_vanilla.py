@@ -565,10 +565,12 @@ def GDeltaFromInTheMoneyProb(CallPutFlag: Literal['c', 'p'], S: float, T: float,
         raise ValueError("invalid call put flag")
 
 
+EGBlackScholes_OutPutFlag = Literal['p', 'd', 'df', 'dddv', 'dvv', 'dt', 'dmx', 'e', 'sg', 'g', 's', 'gv', 'gt', 'gp', 'gps', 'gpv', 'gpt', 'v', 'vt', 'dvdv' 'vvv', 'vp', 'vpv', 'vl', 'varvega', 'vardelta', 'varvar', 'varult', 't', 'dlt', 'r', 'fr', 'b', 'f', 'z', 'zv', 'zt', 'bp', 'dx', 'dxdx', 'xfip', 'RNDfip', 'dfip', 'd1', 'd2', 'nd1', 'nd2', 'CNDd1', 'CNDd2']
+
 # This is the generalized Black-Scholes-Merton formula including all greeeks
 # This function is simply calling all the other functions
-def CGBlackScholes(
-        OutPutFlag: Literal['p', 'd', 'df', 'dddv', 'dvv', 'dt', 'dmx', 'e', 'sg', 'g', 's', 'gv', 'gt', 'gp', 'gps', 'gpv', 'gpt', 'v', 'vt', 'dvdv' 'vvv', 'vp', 'vpv', 'vl', 'varvega', 'vardelta', 'varvar', 'varult', 't', 'dlt', 'r', 'fr', 'b', 'f', 'z', 'zv', 'zt', 'bp', 'dx', 'dxdx', 'xfip', 'RNDfip', 'dfip', 'd1', 'd2', 'nd1', 'nd2', 'CNDd1', 'CNDd2'],
+def EGBlackScholes(
+        OutPutFlag: EGBlackScholes_OutPutFlag,
         CallPutFlag: Literal['c', 'p'],
         S: float,
         X: float,
@@ -576,9 +578,9 @@ def CGBlackScholes(
         r: float,
         b: float,
         v: float,
-        delta: float,
-        InTheMoneyProb: float,
-        ThetaDays: float
+        delta: Optional[float]= None,
+        InTheMoneyProb: Optional[float] = None,
+        ThetaDays: Optional[float] = None
 ) -> float:
 
     output = 0
@@ -680,24 +682,33 @@ def CGBlackScholes(
 
     # FROM DELTA GREEKS
     elif OutPutFlag == "gfd": # Gamma from delta
+        assert delta is not None
         return GGammaFromDelta(S, T, r, b, v, delta)
     elif OutPutFlag == "gpfd": # GammaP from delta
+        assert delta is not None
         return GGammaPFromDelta(S, T, r, b, v, delta)
     elif OutPutFlag == "vfd": # Vega from delta
+        assert delta is not None
         return GVegaFromDelta(S, T, r, b, delta) / 100
     elif OutPutFlag == "vpfd": # VegaP from delta
+        assert delta is not None
         return GVegaPFromDelta(S, T, r, b, v, delta)
     elif OutPutFlag == "xfd": # Strike from delta
+        assert delta is not None
         return GStrikeFromDelta(CallPutFlag, S, T, r, b, v, delta)
     elif OutPutFlag == "ipfd": # In-the-money probability from delta
+        assert delta is not None
         return InTheMoneyProbFromDelta(CallPutFlag, S, T, r, b, v, delta)
 
     # FROM IN-THE GREEKS
     elif OutPutFlag == "xfip": # Strike from in-the-money probability
+        assert InTheMoneyProb is not None
         return GStrikeFromInTheMoneyProb(CallPutFlag, S, v, T, b, InTheMoneyProb)
     elif OutPutFlag == "RNDfip": # Risk Neutral Density from in-the-money probability
+        assert InTheMoneyProb is not None
         return GRNDFromInTheMoneyProb(X, T, r, v, InTheMoneyProb)
     elif OutPutFlag == "dfip": # Strike from in-the-money probability
+        assert InTheMoneyProb is not None
         return GDeltaFromInTheMoneyProb(CallPutFlag, S, T, r, b, v, InTheMoneyProb)
 
     # CALCULATIONS
