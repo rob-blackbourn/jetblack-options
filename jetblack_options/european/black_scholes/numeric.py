@@ -1,9 +1,8 @@
-"""Plain Vanilla"""
+"""Black-Scholes numeric solutions"""
 
-from math import exp, log, pi, sqrt
-from typing import Callable, Literal, Optional
+from typing import Callable
 
-from ...distributions import CND, ND, CNDEV, CHIINV
+from ...distributions import CND
 
 from .analytic import price
 
