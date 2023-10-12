@@ -2,6 +2,15 @@
     "[vb]": {
         "editor.tabSize": 4
     },
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "gitlens.codeLens.symbolScopes": [
+            "!Module"
+        ],
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": false,
+        "editor.rulers": [80]
+    },
     "cSpell.words": [
         "Bjerksund",
         "CNDEV",
