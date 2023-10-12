@@ -1,9 +1,10 @@
 """American"""
 
-from math import exp, log, sqrt
-from typing import Callable, Literal, Optional
+from typing import Callable
 
 from ...distributions import CND, ND
+from ...european.black_scholes.analytic import price as bs_price
+
 from .analytic import price
 
 def delta(
@@ -159,7 +160,7 @@ def vega(
         price(is_call, S, X, T, r, b, v - dv, nd=nd, cnd=cnd)
     ) / 2
 
-def dvega_dvolXX(
+def vomma(
         is_call: bool,
         S: float,
         X: float,
@@ -171,11 +172,11 @@ def dvega_dvolXX(
         dv: float = 0.01,
         nd: Callable[[float], float] = ND,
         cnd: Callable[[float], float] = CND
-) -> float: # DvegaDvol/vomma
+) -> float:
     return (
-        price(is_call, S, X, T, r, b, v + dv) -
-        2 * price(is_call, S, X, T, r, b, v) +
-        price(is_call, S, X, T, r, b, v - dv)
+        price(is_call, S, X, T, r, b, v + dv, nd=nd, cnd=cnd) -
+        2 * price(is_call, S, X, T, r, b, v, nd=nd, cnd=cnd) +
+        price(is_call, S, X, T, r, b, v - dv, nd=nd, cnd=cnd)
     ) / dv ** 2 / 10000
 
 def vegap(
@@ -368,8 +369,20 @@ def strike_gamma(
         + price(is_call, S, X - dS, T, r, b, v, nd=nd, cnd=cnd)
     ) / dS ** 2
 
-    # elif OutPutFlag == "di": #Difference in value between BS Approx and Black-Scholes Merton value
-    #     return (
-    #         price(is_call, S, X, T, r, b, v) -
-    #         price(is_call, S, X, T, r, b, v)
-    #     )
+def price_diff(
+        is_call: bool,
+        S: float,
+        X: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dS: float = 0.01,
+        nd: Callable[[float], float] = ND,
+        cnd: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S, X, T, r, b, v, nd=nd, cnd=cnd) -
+        bs_price(is_call, S, X, T, r, b, v, cnd=cnd)
+    )

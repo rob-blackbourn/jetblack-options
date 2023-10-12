@@ -1,12 +1,10 @@
 """American"""
 
 from math import exp, log, sqrt
-from typing import Callable, Literal, Optional
+from typing import Callable
 
 from ...distributions import CND, ND
 from ...european.black_scholes.analytic import price as bs_price
-
-# Newton Raphson algorithm to solve for the critical commodity price for a Call
 
 
 def _kc(
@@ -105,7 +103,6 @@ def _call_price(
             return S - X
 
 
-# Newton Raphson algorithm to solve for the critical commodity price for a Put
 def _kp(
         X: float,
         T: float,
@@ -116,6 +113,7 @@ def _kp(
         nd: Callable[[float], float] = ND,
         cnd: Callable[[float], float] = CND
 ) -> float:
+    # Newton Raphson algorithm to solve for the critical commodity price for a Put
 
     # Calculation of seed value, Si
     N = 2 * b / v ** 2
@@ -154,8 +152,6 @@ def _kp(
 
     return Si
 
-# American put
-
 
 def _put_price(
         S: float,
@@ -181,8 +177,6 @@ def _put_price(
     else:
         return X - S
 
-# The Barone-Adesi and Whaley (1987) American approximation
-
 
 def price(
         is_call: bool,
@@ -196,6 +190,7 @@ def price(
         nd: Callable[[float], float] = ND,
         cnd: Callable[[float], float] = CND
 ) -> float:
+    # The Barone-Adesi and Whaley (1987) American approximation
     if is_call:
         return _call_price(S, X, T, r, b, v, nd=nd, cnd=cnd)
     else:

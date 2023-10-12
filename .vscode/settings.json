@@ -12,13 +12,21 @@
         "editor.rulers": [80]
     },
     "cSpell.words": [
+        "Adesi",
         "Bjerksund",
         "CNDEV",
+        "ddelta",
+        "dgamma",
+        "dvega",
+        "dvol",
+        "gammap",
         "Garman",
         "Kohlhagen",
         "Kolhagen",
         "Kolhhagen",
-        "Stensland"
+        "Stensland",
+        "vegap",
+        "vomma"
     ],
     "python.testing.pytestArgs": [
         "tests"
