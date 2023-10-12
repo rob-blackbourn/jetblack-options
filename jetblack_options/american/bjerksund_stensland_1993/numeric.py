@@ -1,9 +1,9 @@
 """American"""
 
-from math import exp, log, sqrt
-from typing import Callable, Literal, Optional
+from math import exp
+from typing import Callable
 
-from ...distributions import CND, CBND, ND
+from ...distributions import CND
 from ...european.black_scholes.analytic import price as bs_price
 from ...european.black_scholes.implied_volatility import ivol as bs_ivol
 from .analytic import price
