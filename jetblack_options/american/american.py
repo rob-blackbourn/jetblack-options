@@ -1,79 +1,133 @@
 """American"""
 
 from math import exp, log, sqrt
-from typing import Literal, Optional
+from typing import Callable, Literal, Optional
 
-from .black_scholes_merton import ImpliedVolGBlackScholes
-from .distributions import CND, CBND, ND
-from .european.black_scholes.plain_vanilla import GBlackScholes
+from ..distributions import CND, CBND, ND
+from ..european.black_scholes.analytic import price
+from ..european.black_scholes.implied_volatility import ivol
 
-def phi(S: float, T: float, gamma: float, h: float, i: float, r: float, b: float, v: float) -> float:
-    lambda_ = (-r + gamma * b + 0.5 * gamma * (gamma - 1) * v ** 2) * T
-    d = -(log(S / h) + (b + (gamma - 0.5) * v ** 2) * T) / (v * sqrt(T))
-    kappa = 2 * b / v ** 2 + 2 * gamma - 1
-    return exp(lambda_) * S ** gamma * (CND(d) - (i / S) ** kappa * CND(d - 2 * log(i / S) / (v * sqrt(T))))
+def phi(
+        S: float,
+        T: float,
+        gamma_: float,
+        h: float,
+        i: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cnd: Callable[[float], float] = CND,
+) -> float:
+    lambda_ = (-r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2) * T
+    d = -(log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T) / (v * sqrt(T))
+    kappa = 2 * b / v ** 2 + 2 * gamma_ - 1
+    return exp(lambda_) * S ** gamma_ * (cnd(d) - (i / S) ** kappa * cnd(d - 2 * log(i / S) / (v * sqrt(T))))
 
-def ksi(S: float, T2: float, gamma: float, h: float, I2: float, I1: float, t1: float, r: float, b: float, v: float) -> float:
-    e1 = (log(S / I1) + (b + (gamma - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
-    e2 = (log(I2 ** 2 / (S * I1)) + (b + (gamma - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
-    e3 = (log(S / I1) - (b + (gamma - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
-    e4 = (log(I2 ** 2 / (S * I1)) - (b + (gamma - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
+def ksi(
+        S: float,
+        T2: float,
+        gamma_: float,
+        h: float,
+        I2: float,
+        I1: float,
+        t1: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cbnd: Callable[[float, float, float], float] = CBND,
+) -> float:
+    e1 = (log(S / I1) + (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
+    e2 = (log(I2 ** 2 / (S * I1)) + (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
+    e3 = (log(S / I1) - (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
+    e4 = (log(I2 ** 2 / (S * I1)) - (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
     
-    f1 = (log(S / h) + (b + (gamma - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    f2 = (log(I2 ** 2 / (S * h)) + (b + (gamma - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    f3 = (log(I1 ** 2 / (S * h)) + (b + (gamma - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    f4 = (log(S * I1 ** 2 / (h * I2 ** 2)) + (b + (gamma - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+    f1 = (log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+    f2 = (log(I2 ** 2 / (S * h)) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+    f3 = (log(I1 ** 2 / (S * h)) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+    f4 = (log(S * I1 ** 2 / (h * I2 ** 2)) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
     
     rho = sqrt(t1 / T2)
-    lambda_ = -r + gamma * b + 0.5 * gamma * (gamma - 1) * v ** 2
-    kappa = 2 * b / (v ** 2) + (2 * gamma - 1)
+    lambda_ = -r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2
+    kappa = 2 * b / (v ** 2) + (2 * gamma_ - 1)
     
     return (
         exp(lambda_ * T2) *
-        S ** gamma * 
+        S ** gamma_ * 
         (
-            CBND(-e1, -f1, rho) - 
-            (I2 / S) ** kappa * CBND(-e2, -f2, rho) - 
-            (I1 / S) ** kappa * CBND(-e3, -f3, -rho) + 
-            (I1 / I2) ** kappa * CBND(-e4, -f4, -rho)
-            )
-            )
+            cbnd(-e1, -f1, rho) - 
+            (I2 / S) ** kappa * cbnd(-e2, -f2, rho) - 
+            (I1 / S) ** kappa * cbnd(-e3, -f3, -rho) + 
+            (I1 / I2) ** kappa * cbnd(-e4, -f4, -rho)
+        )
+    )
 
-def BSAmericanCallApprox2002(S: float, X: float, T: float, r: float, b: float, v: float) -> float:
+def BSAmericanCallApprox2002(
+        S: float,
+        X: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cnd: Callable[[float], float] = CND,
+        nd: Callable[[float], float] = ND,
+        cbnd: Callable[[float, float, float], float] = CBND,
+) -> float:
     
     t1 = 1 / 2 * (sqrt(5) - 1) * T
     
     if b >= r: # Never optimal to exersice before maturity
-            return GBlackScholes("c", S, X, T, r, b, v)
+            return price(True, S, X, T, r, b, v, cnd=cnd)
     else:
-        Beta = (1 / 2 - b / v ** 2) + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
-        BInfinity = Beta / (Beta - 1) * X
+        beta = (1 / 2 - b / v ** 2) + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
+        b_infinity = beta / (beta - 1) * X
         B0 = max(X, r / (r - b) * X)
         
-        ht1 = -(b * t1 + 2 * v * sqrt(t1)) * X ** 2 / ((BInfinity - B0) * B0)
-        ht2 = -(b * T + 2 * v * sqrt(T)) * X ** 2 / ((BInfinity - B0) * B0)
-        I1 = B0 + (BInfinity - B0) * (1 - exp(ht1))
-        I2 = B0 + (BInfinity - B0) * (1 - exp(ht2))
-        alfa1 = (I1 - X) * I1 ** (-Beta)
-        alfa2 = (I2 - X) * I2 ** (-Beta)
+        ht1 = -(b * t1 + 2 * v * sqrt(t1)) * X ** 2 / ((b_infinity - B0) * B0)
+        ht2 = -(b * T + 2 * v * sqrt(T)) * X ** 2 / ((b_infinity - B0) * B0)
+        I1 = B0 + (b_infinity - B0) * (1 - exp(ht1))
+        I2 = B0 + (b_infinity - B0) * (1 - exp(ht2))
+        alfa1 = (I1 - X) * I1 ** (-beta)
+        alfa2 = (I2 - X) * I2 ** (-beta)
     
         if S >= I2:
             return S - X
         else:
             return (
-                alfa2 * S ** Beta - alfa2 * phi(S, t1, Beta, I2, I2, r, b, v)
-                + phi(S, t1, 1, I2, I2, r, b, v) - phi(S, t1, 1, I1, I2, r, b, v)
-                - X * phi(S, t1, 0, I2, I2, r, b, v) + X * phi(S, t1, 0, I1, I2, r, b, v)
-                + alfa1 * phi(S, t1, Beta, I1, I2, r, b, v) - alfa1 * ksi(S, T, Beta, I1, I2, I1, t1, r, b, v)
-                + ksi(S, T, 1, I1, I2, I1, t1, r, b, v) - ksi(S, T, 1, X, I2, I1, t1, r, b, v)
-                - X * ksi(S, T, 0, I1, I2, I1, t1, r, b, v) + X * ksi(S, T, 0, X, I2, I1, t1, r, b, v))
+                alfa2 * S ** beta
+                - alfa2 * phi(S, t1, beta, I2, I2, r, b, v, cnd=cnd)
+                + phi(S, t1, 1, I2, I2, r, b, v, cnd=cnd)
+                - phi(S, t1, 1, I1, I2, r, b, v, cnd=cnd)
+                - X * phi(S, t1, 0, I2, I2, r, b, v, cnd=cnd)
+                + X * phi(S, t1, 0, I1, I2, r, b, v, cnd=cnd)
+                + alfa1 * phi(S, t1, beta, I1, I2, r, b, v, cnd=cnd)
+                - alfa1 * ksi(S, T, beta, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+                + ksi(S, T, 1, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+                - ksi(S, T, 1, X, I2, I1, t1, r, b, v, cbnd=cbnd)
+                - X * ksi(S, T, 0, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+                + X * ksi(S, T, 0, X, I2, I1, t1, r, b, v, cbnd=cbnd)
+            )
 
 
 # The Bjerksund and Stensland (2002) American approximation
-def BSAmericanApprox2002(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, b: float, v: float) -> float:
-    if CallPutFlag == "c":
+def BSAmericanApprox2002(
+        is_call: bool,
+        S: float,
+        X: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cnd: Callable[[float], float] = CND,
+        nd: Callable[[float], float] = ND,
+        cbnd: Callable[[float, float, float], float] = CBND,
+) -> float:
+    if is_call:
         return BSAmericanCallApprox2002(S, X, T, r, b, v)
-    elif CallPutFlag == "p": # Use the Bjerksund and Stensland put-call transformation
+    else: # Use the Bjerksund and Stensland put-call transformation
         return BSAmericanCallApprox2002(X, S, T, r - b, -b, v)
 
 def EBSAmericanApprox2002(
