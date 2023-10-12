@@ -1,7 +1,7 @@
 """American"""
 
 from math import exp, log, sqrt
-from typing import Callable, Literal, Optional
+from typing import Callable
 
 from ...distributions import CND, CBND
 from ...european.black_scholes.analytic import price as bs_price
@@ -80,7 +80,7 @@ def _call_price(
     
     t1 = 1 / 2 * (sqrt(5) - 1) * T
     
-    if b >= r: # Never optimal to exersice before maturity
+    if b >= r: # Never optimal to exercise before maturity
             return bs_price(True, S, X, T, r, b, v, cnd=cnd)
     else:
         beta = (

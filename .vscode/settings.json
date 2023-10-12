@@ -14,19 +14,29 @@
     "cSpell.words": [
         "Adesi",
         "Bjerksund",
+        "CBND",
         "CNDEV",
         "ddelta",
         "dgamma",
+        "dgammap",
+        "dspot",
+        "dtime",
         "dvega",
+        "dvegap",
         "dvol",
+        "dvomma",
         "gammap",
         "Garman",
+        "ivol",
         "Kohlhagen",
         "Kolhagen",
         "Kolhhagen",
         "Stensland",
+        "ultima",
+        "vanna",
         "vegap",
-        "vomma"
+        "vomma",
+        "Zomma"
     ],
     "python.testing.pytestArgs": [
         "tests"
