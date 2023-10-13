@@ -27,15 +27,18 @@
         "dvomma",
         "gammap",
         "Garman",
+        "Haug",
         "ivol",
         "Kohlhagen",
         "Kolhagen",
         "Kolhhagen",
+        "Margrabe",
         "Stensland",
         "ultima",
         "vanna",
         "vegap",
         "vomma",
+        "Wakeman",
         "Zomma"
     ],
     "python.testing.pytestArgs": [
