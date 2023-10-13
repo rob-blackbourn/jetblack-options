@@ -1,7 +1,6 @@
-"""Turnbull-Wakeman analytic"""
+"""Turnbull-Wakeman numeric"""
 
-from math import exp, log, sqrt
-from typing import Literal, Optional, Callable
+from typing import Callable
 
 from ...distributions import CND
 
