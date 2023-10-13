@@ -169,7 +169,7 @@ def vegap(
         price(is_call, S, X, T, r, b, v - dv, cnd=cnd)
     ) * v / 0.1 / 2
 
-def dvega_dvol(
+def vomma(
         is_call: bool,
         S: float,
         X: float,
@@ -196,17 +196,17 @@ def theta(
         b: float,
         v: float,
         *,
-        dt: float = 1.0 / 365.0,
+        dT: float = 1.0 / 365.0,
         cnd: Callable[[float], float] = CND
 ) -> float:
-    if T <= dt:
+    if T <= dT:
         return (
             price(is_call, S, X, 0.00001, r, b, v, cnd=cnd) -
             price(is_call, S, X, T, r, b, v, cnd=cnd)
         )
     else:
         return (
-            price(is_call, S, X, T - dt, r, b, v, cnd=cnd) -
+            price(is_call, S, X, T - dT, r, b, v, cnd=cnd) -
             price(is_call, S, X, T, r, b, v, cnd=cnd)
         )
 
