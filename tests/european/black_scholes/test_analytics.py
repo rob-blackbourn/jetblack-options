@@ -8,6 +8,9 @@ from jetblack_options.european.black_scholes.analytic import (
     vega,
     rho,
     elasticity,
+    dgamma_dvol,
+    gammap,
+    ddelta_dvol
 )
 from jetblack_options.numeric_greeks import NumericGreeks
 
@@ -132,4 +135,56 @@ def test_elasticity():
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.elasticity(is_call, S, K, T, r, b, v)
+        assert is_close_to(numeric, analytic, precision)
+
+
+def test_dgamma_dvol():
+    ng = NumericGreeks(price)
+    for is_call, S, K, r, q, T, v, expected, precision in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.0006138389948689551, 1e-4),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.0006138389948689551, 1e-4),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.00338939132019472, 1e-4),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.00338939132019472, 1e-4),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.00015979636723250932, 1e-4),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.00015979636723250932, 1e-4),
+    ]:
+        b = r - q
+        analytic = dgamma_dvol(S, K, T, r, b, v) / 100
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.dgamma_dvol(is_call, S, K, T, r, b, v)
+        assert is_close_to(numeric, analytic, precision)
+
+def test_gammap():
+    ng = NumericGreeks(price)
+    for is_call, S, K, r, q, T, v, expected, precision in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.020211567019344047, 1e-5),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.020211567019344047, 1e-5),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.042831984686328525, 1e-5),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.042831984686328525, 1e-5),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376442324910798, 1e-5),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376442324910798, 1e-5),
+    ]:
+        b = r - q
+        analytic = gammap(S, K, T, r, b, v)
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.gammap(is_call, S, K, T, r, b, v, dS=0.01)
+        assert is_close_to(numeric, analytic, 1e-5)
+
+def test_ddelta_dvol():
+    ng = NumericGreeks(price)
+    for is_call, S, K, r, q, T, v, expected, precision in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.01639625858611978, 1e-4),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.01639625858611978, 1e-4),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.002088059253458516, 1e-4),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.002088059253458516, 1e-4),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.02025315899821502, 1e-4),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.02025315899821502, 1e-4),
+    ]:
+        b = r - q
+        analytic = ddelta_dvol(S, K, T, r, b, v) / 100
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.ddelta_dvol(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, precision)
