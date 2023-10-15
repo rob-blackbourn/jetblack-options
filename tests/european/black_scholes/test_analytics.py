@@ -10,7 +10,9 @@ from jetblack_options.european.black_scholes.analytic import (
     elasticity,
     dgamma_dvol,
     gammap,
-    ddelta_dvol
+    ddelta_dvol,
+    vegap,
+    dvega_dvol,
 )
 from jetblack_options.numeric_greeks import NumericGreeks
 
@@ -187,4 +189,40 @@ def test_ddelta_dvol():
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.ddelta_dvol(is_call, S, K, T, r, b, v, dS=0.01)
+        assert is_close_to(numeric, analytic, precision)
+
+
+def test_vegap():
+    ng = NumericGreeks(price)
+    for is_call, S, K, r, q, T, v, expected, precision in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.17369315407248792, 1e-3),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.17369315407248792, 1e-3),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.33462488036194166, 1e-3),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.33462488036194166, 1e-3),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.22169095566336564, 1e-3),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.22169095566336564, 1e-3),
+    ]:
+        b = r - q
+        analytic = vegap(S, K, T, r, b, v)
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.vegap(is_call, S, K, T, r, b, v)
+        assert is_close_to(numeric, analytic, precision)
+
+
+def test_dvega_dvol():
+    ng = NumericGreeks(price)
+    for is_call, S, K, r, q, T, v, expected, precision in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.0157585192593357, 1e-4),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.0157585192593357, 1e-4),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.00023229659194725993, 1e-4),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.00023229659194725993, 1e-4),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.013189493867252218, 1e-4),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.013189493867252218, 1e-4),
+    ]:
+        b = r - q
+        analytic = dvega_dvol(S, K, T, r, b, v) / 10000
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.dvega_dvol(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, precision)
