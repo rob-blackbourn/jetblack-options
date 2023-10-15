@@ -1,19 +1,40 @@
-"""Plain Vanilla"""
+"""Black 76"""
 
 from math import exp, log, sqrt
-from typing import Literal
+from typing import Callable
 
 from ..distributions import CND
 
 
-# Black (1976) Options on futures/forwards
-def Black76(CallPutFlag: Literal['c', 'p'], F: float, X: float, T: float, r: float, v: float) -> float:
+def price(
+        is_call: bool,
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    """Black (1976) Options on futures/forwards.
 
-    d1 = (log(F / X) + (v ** 2 / 2) * T) / (v * sqrt(T))
+    Args:
+        is_call (bool): True for a call, false for a put.
+        F (float): The price of the future.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CND.
+
+    Returns:
+        float: The option price.
+    """
+
+    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    if CallPutFlag == "c":
-        return exp(-r * T) * (F * CND(d1) - X * CND(d2))
-    elif CallPutFlag == "p":
-        return exp(-r * T) * (X * CND(-d2) - F * CND(-d1))
+    if is_call:
+        return exp(-r * T) * (F * cdf(d1) - K * cdf(d2))
     else:
-        raise ValueError("invalid call put flag")
+        return exp(-r * T) * (K * cdf(-d2) - F * cdf(-d1))

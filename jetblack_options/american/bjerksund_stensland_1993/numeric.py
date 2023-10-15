@@ -365,7 +365,7 @@ def price_diff(
 ) -> float:
     return (
         price(is_call, S, X, T, r, b, v, cnd=cnd)
-        - bs_price(is_call, S, X, T, r, b, v, cnd=cnd)
+        - bs_price(is_call, S, X, T, r, b, v, cdf=cnd)
     )
 
 def ivol(
@@ -382,5 +382,5 @@ def ivol(
 ) -> float:
     is_call = S >= S * exp(b * T)
     p = price(is_call, S, X, T, r, b, v, cnd=cnd)
-    return bs_ivol(is_call, S, X, T, r, b, p, cnd=cnd)
+    return bs_ivol(is_call, S, X, T, r, b, p, cdf=cnd)
 

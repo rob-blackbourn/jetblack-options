@@ -48,7 +48,7 @@ def _kc(
     Q2 = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * k)) / 2
     LHS = Si - X
     RHS = (
-        bs_price(True, Si, X, T, r, b, v, cnd=cnd) +
+        bs_price(True, Si, X, T, r, b, v, cdf=cnd) +
         (1 - exp((b - r) * T) * cnd(d1)) * Si / Q2
     )
     bi = (
@@ -62,7 +62,7 @@ def _kc(
         d1 = (log(Si / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
         LHS = Si - X
         RHS = (
-            bs_price(True, Si, X, T, r, b, v, cnd=cnd) +
+            bs_price(True, Si, X, T, r, b, v, cdf=cnd) +
             (1 - exp((b - r) * T) * cnd(d1)) * Si / Q2
         )
         bi = (
@@ -86,7 +86,7 @@ def _call_price(
 ) -> float:
 
     if b >= r:
-        return bs_price(True, S, X, T, r, b, v, cnd=cnd)
+        return bs_price(True, S, X, T, r, b, v, cdf=cnd)
     else:
         Sk = _kc(X, T, r, b, v, nd=nd, cnd=cnd)
         N = 2 * b / v ** 2
@@ -96,7 +96,7 @@ def _call_price(
         a2 = (Sk / Q2) * (1 - exp((b - r) * T) * cnd(d1))
         if S < Sk:
             return (
-                bs_price(True, S, X, T, r, b, v, cnd=cnd)
+                bs_price(True, S, X, T, r, b, v, cdf=cnd)
                 + a2 * (S / Sk) ** Q2
             )
         else:
@@ -128,7 +128,7 @@ def _kp(
     Q1 = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * k)) / 2
     LHS = X - Si
     RHS = (
-        bs_price(False, Si, X, T, r, b, v, cnd=cnd)
+        bs_price(False, Si, X, T, r, b, v, cdf=cnd)
         - (1 - exp((b - r) * T) * cnd(-d1)) * Si / Q1
     )
     bi = (
@@ -142,7 +142,7 @@ def _kp(
         d1 = (log(Si / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
         LHS = X - Si
         RHS = (
-            bs_price(False, Si, X, T, r, b, v, cnd=cnd)
+            bs_price(False, Si, X, T, r, b, v, cdf=cnd)
             - (1 - exp((b - r) * T) * cnd(-d1)) * Si / Q1
         )
         bi = (
@@ -173,7 +173,7 @@ def _put_price(
     a1 = -(Sk / Q1) * (1 - exp((b - r) * T) * cnd(-d1))
 
     if S > Sk:
-        return bs_price(False, S, X, T, r, b, v, cnd=cnd) + a1 * (S / Sk) ** Q1
+        return bs_price(False, S, X, T, r, b, v, cdf=cnd) + a1 * (S / Sk) ** Q1
     else:
         return X - S
 

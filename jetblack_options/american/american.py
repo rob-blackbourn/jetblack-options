@@ -79,7 +79,7 @@ def BSAmericanCallApprox2002(
     t1 = 1 / 2 * (sqrt(5) - 1) * T
     
     if b >= r: # Never optimal to exersice before maturity
-            return price(True, S, X, T, r, b, v, cnd=cnd)
+            return price(True, S, X, T, r, b, v, cdf=cnd)
     else:
         beta = (1 / 2 - b / v ** 2) + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
         b_infinity = beta / (beta - 1) * X

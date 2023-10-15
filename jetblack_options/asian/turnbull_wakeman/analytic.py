@@ -79,6 +79,6 @@ def price(
     vA = sqrt(log(M2) / T - 2 * bA)
     if tau > 0:
         X = T2 / T * X - tau / T * SA
-        return bs_price(is_call, S, X, T, r, bA, vA, cnd=cnd) * T / T2
+        return bs_price(is_call, S, X, T, r, bA, vA, cdf=cnd) * T / T2
     else:
-        return bs_price(is_call, S, X, T, r, bA, vA, cnd=cnd)
+        return bs_price(is_call, S, X, T, r, bA, vA, cdf=cnd)

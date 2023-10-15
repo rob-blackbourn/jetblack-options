@@ -63,4 +63,4 @@ def price(
     if is_in:
         return value
     else:
-        return bs_price(is_call, S, X, T, r, b, v, cnd=cnd) - value
+        return bs_price(is_call, S, X, T, r, b, v, cdf=cnd) - value

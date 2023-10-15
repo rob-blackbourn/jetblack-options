@@ -40,7 +40,7 @@ def _call_price(
 ) -> float:
     
     if b >= r: # Never optimal to exercise before maturity
-        return bs_price(True, S, X, T, r, b, v, cnd=cnd)
+        return bs_price(True, S, X, T, r, b, v, cdf=cnd)
     else:
         beta = (
             (1 / 2 - b / v ** 2)

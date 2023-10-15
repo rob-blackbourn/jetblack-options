@@ -384,5 +384,5 @@ def price_diff(
 ) -> float:
     return (
         price(is_call, S, X, T, r, b, v, nd=nd, cnd=cnd) -
-        bs_price(is_call, S, X, T, r, b, v, cnd=cnd)
+        bs_price(is_call, S, X, T, r, b, v, cdf=cnd)
     )

@@ -81,7 +81,7 @@ def _call_price(
     t1 = 1 / 2 * (sqrt(5) - 1) * T
     
     if b >= r: # Never optimal to exercise before maturity
-            return bs_price(True, S, X, T, r, b, v, cnd=cnd)
+            return bs_price(True, S, X, T, r, b, v, cdf=cnd)
     else:
         beta = (
             (1 / 2 - b / v ** 2)

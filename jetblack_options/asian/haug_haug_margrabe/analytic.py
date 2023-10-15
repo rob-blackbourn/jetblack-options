@@ -45,7 +45,7 @@ def price(
     if m == n - 1: # Only one fix left use Black-Scholes weighted with time
    
         X = n * X - (n - 1) * SA
-        return bs_price(is_call, S, X, T, r, b, v, cnd=cnd) * 1 / n
+        return bs_price(is_call, S, X, T, r, b, v, cdf=cnd) * 1 / n
 
     if b == 0:
         EA2 = (

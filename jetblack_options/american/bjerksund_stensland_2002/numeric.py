@@ -397,6 +397,6 @@ def price_diff(
 ) -> float: # Difference in value between BS Approx and Black-Scholes Merton value
     return (
         price(is_call, S, X, T, r, b, v, cnd=cnd, cbnd=cbnd) -
-        bs_price(is_call, S, X, T, r, b, v, cnd=cnd)
+        bs_price(is_call, S, X, T, r, b, v, cdf=cnd)
     )
 
