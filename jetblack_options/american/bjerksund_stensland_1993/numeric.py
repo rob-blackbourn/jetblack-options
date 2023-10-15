@@ -350,18 +350,17 @@ def strike_gamma(
 def price_diff(
         is_call: bool,
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S, X, T, r, b, v, cdf=cnd)
-        - bs_price(is_call, S, X, T, r, b, v, cdf=cnd)
+        price(is_call, S, K, T, r, b, v, cdf=cdf)
+        - bs_price(is_call, S, K, T, r, b, v, cdf=cdf)
     )
 
 def ivol(

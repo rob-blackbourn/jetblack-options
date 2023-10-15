@@ -11,7 +11,7 @@ def price(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -34,18 +34,18 @@ def price(
         EA = S / n * exp(b * t1) * (1 - exp(b * h * n)) / (1 - exp(b * h))
    
     if m > 0:
-        if SA > n / m * X: #  Exercise is certain for call, put must be out-of-the-money
+        if SA > n / m * K: #  Exercise is certain for call, put must be out-of-the-money
         
             if not is_call:
                 return 0
             else:
                 SA = SA * m / n + EA * (n - m) / n
-                return (SA - X) * exp(-r * T)
+                return (SA - K) * exp(-r * T)
 
     if m == n - 1: # Only one fix left use Black-Scholes weighted with time
    
-        X = n * X - (n - 1) * SA
-        return bs_price(is_call, S, X, T, r, b, v, cdf=cdf) * 1 / n
+        K = n * K - (n - 1) * SA
+        return bs_price(is_call, S, K, T, r, b, v, cdf=cdf) * 1 / n
 
     if b == 0:
         EA2 = (
@@ -73,14 +73,14 @@ def price(
     vA = sqrt((log(EA2) - 2 * log(EA)) / T)
 
     if m > 0:
-        X = n / (n - m) * X - m / (n - m) * SA
+        K = n / (n - m) * K - m / (n - m) * SA
     
-    d1 = (log(EA / X) + vA ** 2 / 2 * T) / (vA * sqrt(T))
+    d1 = (log(EA / K) + vA ** 2 / 2 * T) / (vA * sqrt(T))
     d2 = d1 - vA * sqrt(T)
 
     if is_call:
-        value = exp(-r * T) * (EA * cdf(d1) - X * cdf(d2))
+        value = exp(-r * T) * (EA * cdf(d1) - K * cdf(d2))
     else:
-        value = exp(-r * T) * (X * cdf(-d2) - EA * cdf(-d1))
+        value = exp(-r * T) * (K * cdf(-d2) - EA * cdf(-d1))
 
     return value * (n - m) / n

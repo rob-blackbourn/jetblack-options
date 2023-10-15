@@ -10,7 +10,7 @@ def price(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -18,13 +18,13 @@ def price(
         b: float,
         v: float,
         *,
-        cnd: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CND,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
     # Look-barrier options
 
     hh = log(H / S)
-    k = log(X / S)
+    k = log(K / S)
     mu1 = b - v ** 2 / 2
     mu2 = b + v ** 2 / 2
     rho = sqrt(t1 / T2)
@@ -37,18 +37,18 @@ def price(
         m = max(hh, k)
     
     g1 = (
-        cnd(eta * (hh - mu2 * t1) / (v * sqrt(t1))) -
-        exp(2 * mu2 * hh / v ** 2) * cnd(eta * (-hh - mu2 * t1) / (v * sqrt(t1)))
+        cdf(eta * (hh - mu2 * t1) / (v * sqrt(t1))) -
+        exp(2 * mu2 * hh / v ** 2) * cdf(eta * (-hh - mu2 * t1) / (v * sqrt(t1)))
     ) - (
-        cnd(eta * (m - mu2 * t1) / (v * sqrt(t1))) -
-        exp(2 * mu2 * hh / v ** 2) * cnd(eta * (m - 2 * hh - mu2 * t1) / (v * sqrt(t1)))
+        cdf(eta * (m - mu2 * t1) / (v * sqrt(t1))) -
+        exp(2 * mu2 * hh / v ** 2) * cdf(eta * (m - 2 * hh - mu2 * t1) / (v * sqrt(t1)))
     )
     g2 = (
-        cnd(eta * (hh - mu1 * t1) / (v * sqrt(t1))) -
-        exp(2 * mu1 * hh / v ** 2) * cnd(eta * (-hh - mu1 * t1) / (v * sqrt(t1)))
+        cdf(eta * (hh - mu1 * t1) / (v * sqrt(t1))) -
+        exp(2 * mu1 * hh / v ** 2) * cdf(eta * (-hh - mu1 * t1) / (v * sqrt(t1)))
     ) - (
-        cnd(eta * (m - mu1 * t1) / (v * sqrt(t1))) -
-        exp(2 * mu1 * hh / v ** 2) * cnd(eta * (m - 2 * hh - mu1 * t1) / (v * sqrt(t1)))
+        cdf(eta * (m - mu1 * t1) / (v * sqrt(t1))) -
+        exp(2 * mu1 * hh / v ** 2) * cdf(eta * (m - 2 * hh - mu1 * t1) / (v * sqrt(t1)))
     )
 
     part1 = (
@@ -70,7 +70,7 @@ def price(
         )
     )
     part2 = (
-        -exp(-r * T2) * X * (
+        -exp(-r * T2) * K * (
             cbnd(
                 eta * (m - mu1 * t1) / (v * sqrt(t1)),
                 eta * (-k + mu1 * T2) / (v * sqrt(T2)),
@@ -86,13 +86,13 @@ def price(
     )
     part3 = (
         -exp(-r * T2) * v ** 2 / (2 * b) * (
-            S * (S / X) ** (-2 * b / v ** 2) *
+            S * (S / K) ** (-2 * b / v ** 2) *
             cbnd(
                 eta * (m + mu1 * t1) / (v * sqrt(t1)),
                 eta * (-k - mu1 * T2) / (v * sqrt(T2)),
                 -rho
             ) -
-            H * (H / X) ** (-2 * b / v ** 2) *
+            H * (H / K) ** (-2 * b / v ** 2) *
             cbnd(
                 eta * (m - 2 * hh + mu1 * t1) / (v * sqrt(t1)),
                 eta * (2 * hh - k - mu1 * T2) / (v * sqrt(T2)),
@@ -103,14 +103,14 @@ def price(
     part4 = (
         S * exp((b - r) * T2) * (
             (1 + v ** 2 / (2 * b)) *
-            cnd(eta * mu2 * (T2 - t1) / (v * sqrt(T2 - t1))) +
+            cdf(eta * mu2 * (T2 - t1) / (v * sqrt(T2 - t1))) +
             exp(-b * (T2 - t1)) * (1 - v ** 2 / (2 * b)) *
-            cnd(eta * (-mu1 * (T2 - t1)) / (v * sqrt(T2 - t1)))
-        ) * g1 - exp(-r * T2) * X * g2)
+            cdf(eta * (-mu1 * (T2 - t1)) / (v * sqrt(T2 - t1)))
+        ) * g1 - exp(-r * T2) * K * g2)
     out_value = eta * (part1 + part2 + part3 + part4)
 
     if not is_in:
         return out_value
     else:
-        return lookback_price(is_call, S, X, t1, T2, r, b, v) - out_value
+        return lookback_price(is_call, S, K, t1, T2, r, b, v) - out_value
     

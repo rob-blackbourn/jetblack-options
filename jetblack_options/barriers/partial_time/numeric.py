@@ -23,7 +23,7 @@ def _is_at_barrier(
 def delta(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -38,14 +38,14 @@ def delta(
         return 0
       
     return (
-        price(TypeFlag, S + dS, X, H, t1, T2, r, b, v)
-        - price(TypeFlag, S - dS, X, H, t1, T2, r, b, v)
+        price(TypeFlag, S + dS, K, H, t1, T2, r, b, v)
+        - price(TypeFlag, S - dS, K, H, t1, T2, r, b, v)
     ) / (2 * dS)
 
 def ddelta_dvol(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -61,16 +61,16 @@ def ddelta_dvol(
         return 0
       
     return 1 / (4 * dS * 0.01) * (
-        price(TypeFlag, S + dS, X, H, t1, T2, r, b, v + dv)
-        - price(TypeFlag, S + dS, X, H, t1, T2, r, b, v - dv)
-        - price(TypeFlag, S - dS, X, H, t1, T2, r, b, v + dv)
-        + price(TypeFlag, S - dS, X, H, t1, T2, r, b, v - dv)
+        price(TypeFlag, S + dS, K, H, t1, T2, r, b, v + dv)
+        - price(TypeFlag, S + dS, K, H, t1, T2, r, b, v - dv)
+        - price(TypeFlag, S - dS, K, H, t1, T2, r, b, v + dv)
+        + price(TypeFlag, S - dS, K, H, t1, T2, r, b, v - dv)
     ) / 100
 
 def gamma(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -84,15 +84,15 @@ def gamma(
         return 0
       
     return (
-        price(TypeFlag, S + dS, X, H, t1, T2, r, b, v)
-        - 2 * price(TypeFlag, S, X, H, t1, T2, r, b, v)
-        + price(TypeFlag, S - dS, X, H, t1, T2, r, b, v)
+        price(TypeFlag, S + dS, K, H, t1, T2, r, b, v)
+        - 2 * price(TypeFlag, S, K, H, t1, T2, r, b, v)
+        + price(TypeFlag, S - dS, K, H, t1, T2, r, b, v)
     ) / (dS ** 2)
 
 def gammap(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -105,12 +105,12 @@ def gammap(
     if _is_at_barrier(TypeFlag, S, H):
         return 0
       
-    return S / 100 * gamma(TypeFlag, S + dS, X, H, t1, T2, r, b, v, dS=dS)
+    return S / 100 * gamma(TypeFlag, S + dS, K, H, t1, T2, r, b, v, dS=dS)
 
 def dgamma_dvol(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -126,18 +126,18 @@ def dgamma_dvol(
         return 0
       
     return (
-        price(TypeFlag, S + dS, X, H, t1, T2, r, b, v + dv)
-        - 2 * price(TypeFlag, S, X, H, t1, T2, r, b, v + dv)
-        + price(TypeFlag, S - dS, X, H, t1, T2, r, b, v + dv)
-        - price(TypeFlag, S + dS, X, H, t1, T2, r, b, v - dv)
-        + 2 * price(TypeFlag, S, X, H, t1, T2, r, b, v - dv)
-        - price(TypeFlag, S - dS, X, H, t1, T2, r, b, v - dv)
+        price(TypeFlag, S + dS, K, H, t1, T2, r, b, v + dv)
+        - 2 * price(TypeFlag, S, K, H, t1, T2, r, b, v + dv)
+        + price(TypeFlag, S - dS, K, H, t1, T2, r, b, v + dv)
+        - price(TypeFlag, S + dS, K, H, t1, T2, r, b, v - dv)
+        + 2 * price(TypeFlag, S, K, H, t1, T2, r, b, v - dv)
+        - price(TypeFlag, S - dS, K, H, t1, T2, r, b, v - dv)
     ) / (2 * dv * dS ** 2) / 100
 
 def vega(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -151,14 +151,14 @@ def vega(
         return 0
       
     return (
-        price(TypeFlag, S, X, H, t1, T2, r, b, v + dv)
-        - price(TypeFlag, S, X, H, t1, T2, r, b, v - dv)
+        price(TypeFlag, S, K, H, t1, T2, r, b, v + dv)
+        - price(TypeFlag, S, K, H, t1, T2, r, b, v - dv)
     ) / 2
 
 def vegap(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -172,12 +172,12 @@ def vegap(
     if _is_at_barrier(TypeFlag, S, H):
         return 0
 
-    return v / 0.1 * vega(TypeFlag, S + dS, X, H, t1, T2, r, b, v, dv=dv)
+    return v / 0.1 * vega(TypeFlag, S + dS, K, H, t1, T2, r, b, v, dv=dv)
 
 def vomma(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -191,15 +191,15 @@ def vomma(
         return 0
       
     return (
-        price(TypeFlag, S, X, H, t1, T2, r, b, v + dv)
-        - 2 * price(TypeFlag, S, X, H, t1, T2, r, b, v)
-        + price(TypeFlag, S, X, H, t1, T2, r, b, v - dv)
+        price(TypeFlag, S, K, H, t1, T2, r, b, v + dv)
+        - 2 * price(TypeFlag, S, K, H, t1, T2, r, b, v)
+        + price(TypeFlag, S, K, H, t1, T2, r, b, v - dv)
     ) / dv ** 2 / 10000
 
 def rho(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -213,14 +213,14 @@ def rho(
         return 0
       
     return (
-        price(TypeFlag, S, X, H, t1, T2, r + dr, b + dr, v)
-        - price(TypeFlag, S, X, H, t1, T2, r - dr, b - dr, v)
+        price(TypeFlag, S, K, H, t1, T2, r + dr, b + dr, v)
+        - price(TypeFlag, S, K, H, t1, T2, r - dr, b - dr, v)
     ) / 2
 
 def futures_rho(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -234,14 +234,14 @@ def futures_rho(
         return 0
       
     return (
-        price(TypeFlag, S + dS, X, H, t1, T2, r, b, v)
-        - price(TypeFlag, S - dS, X, H, t1, T2, r, b, v)
+        price(TypeFlag, S + dS, K, H, t1, T2, r, b, v)
+        - price(TypeFlag, S - dS, K, H, t1, T2, r, b, v)
     ) / (2 * dS)
 
 def rho2(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -255,14 +255,14 @@ def rho2(
         return 0
       
     return (
-        price(TypeFlag, S, X, H, t1, T2, r, b - db, v)
-        - price(TypeFlag, S, X, H, t1, T2, r, b + db, v)
+        price(TypeFlag, S, K, H, t1, T2, r, b - db, v)
+        - price(TypeFlag, S, K, H, t1, T2, r, b + db, v)
     ) / 2
 
 def carry(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -275,12 +275,12 @@ def carry(
     if _is_at_barrier(TypeFlag, S, H):
         return 0
 
-    return (price(TypeFlag, S, X, H, t1, T2, r, b + 0.01, v) - price(TypeFlag, S, X, H, t1, T2, r, b - 0.01, v)) / 2
+    return (price(TypeFlag, S, K, H, t1, T2, r, b + 0.01, v) - price(TypeFlag, S, K, H, t1, T2, r, b - 0.01, v)) / 2
 
 def theta(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -295,18 +295,18 @@ def theta(
       
     if t1 <= dT:
         return (
-            price(TypeFlag, S, X, H, 0.00001, T2 - dT, r, b, v)
-            - price(TypeFlag, S, X, H, t1, T2, r, b, v))
+            price(TypeFlag, S, K, H, 0.00001, T2 - dT, r, b, v)
+            - price(TypeFlag, S, K, H, t1, T2, r, b, v))
     else:
         return (
-            price(TypeFlag, S, X, H, t1 - dT, T2 - dT, r, b, v)
-            - price(TypeFlag, S, X, H, t1, T2, r, b, v)
+            price(TypeFlag, S, K, H, t1 - dT, T2 - dT, r, b, v)
+            - price(TypeFlag, S, K, H, t1, T2, r, b, v)
         )
 
 def strike_delta(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -320,14 +320,14 @@ def strike_delta(
         return 0
       
     return (
-        price(TypeFlag, S, X + dS, H, t1, T2, r, b, v)
-        - price(TypeFlag, S, X - dS, H, t1, T2, r, b, v)
+        price(TypeFlag, S, K + dS, H, t1, T2, r, b, v)
+        - price(TypeFlag, S, K - dS, H, t1, T2, r, b, v)
     ) / (2 * dS)
 
 def strike_gamma(
         TypeFlag: Literal['cdoA', 'cuoA', 'coB1', 'coB2', 'cuoB2', 'cdoB2', 'pdoA', 'puoA', 'poB1', 'poB2'],
         S: float,
-        X: float,
+        K: float,
         H: float,
         t1: float,
         T2: float,
@@ -341,7 +341,7 @@ def strike_gamma(
         return 0
       
     return (
-        price(TypeFlag, S, X + dS, H, t1, T2, r, b, v)
-        - 2 * price(TypeFlag, S, X, H, t1, T2, r, b, v)
-        + price(TypeFlag, S, X - dS, H, t1, T2, r, b, v)
+        price(TypeFlag, S, K + dS, H, t1, T2, r, b, v)
+        - 2 * price(TypeFlag, S, K, H, t1, T2, r, b, v)
+        + price(TypeFlag, S, K - dS, H, t1, T2, r, b, v)
     ) / (dS ** 2)

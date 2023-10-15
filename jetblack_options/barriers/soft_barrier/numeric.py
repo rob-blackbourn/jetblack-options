@@ -11,7 +11,7 @@ def delta(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        cdf: float,
         L: float,
         U: float,
         T: float,
@@ -23,8 +23,8 @@ def delta(
         cnd: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S + dS, X, L, U, T, r, b, v, cnd=cnd)
-        - price(is_call, is_in, S - dS, X, L, U, T, r, b, v, cnd=cnd)
+        price(is_call, is_in, S + dS, cdf, L, U, T, r, b, v, cdf=cnd)
+        - price(is_call, is_in, S - dS, cdf, L, U, T, r, b, v, cdf=cnd)
     ) / (2 * dS)
 
 
@@ -32,7 +32,7 @@ def ddelta_dvol(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -42,20 +42,20 @@ def ddelta_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S + dS, X, L, U, T, r, b, v + dv, cnd=cnd)
-        - price(is_call, is_in, S + dS, X, L, U, T, r, b, v - dv, cnd=cnd)
-        - price(is_call, is_in, S - dS, X, L, U, T, r, b, v + dv, cnd=cnd)
-        + price(is_call, is_in, S - dS, X, L, U, T, r, b, v - dv, cnd=cnd)
+        price(is_call, is_in, S + dS, K, L, U, T, r, b, v + dv, cdf=cdf)
+        - price(is_call, is_in, S + dS, K, L, U, T, r, b, v - dv, cdf=cdf)
+        - price(is_call, is_in, S - dS, K, L, U, T, r, b, v + dv, cdf=cdf)
+        + price(is_call, is_in, S - dS, K, L, U, T, r, b, v - dv, cdf=cdf)
     ) / (4 * dS * dv) / 100
 
 def gamma(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -64,19 +64,19 @@ def gamma(
         v: float,
         *,
         dS: float = 0.0001,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S + dS, X, L, U, T, r, b, v, cnd=cnd)
-        - 2 * price(is_call, is_in, S, X, L, U, T, r, b, v, cnd=cnd)
-        + price(is_call, is_in, S - dS, X, L, U, T, r, b, v, cnd=cnd)
+        price(is_call, is_in, S + dS, K, L, U, T, r, b, v, cdf=cdf)
+        - 2 * price(is_call, is_in, S, K, L, U, T, r, b, v, cdf=cdf)
+        + price(is_call, is_in, S - dS, K, L, U, T, r, b, v, cdf=cdf)
     ) / (dS ** 2)
 
 def gammap(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -85,15 +85,15 @@ def gammap(
         v: float,
         *,
         dS: float = 0.0001,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
-    return S / 100 * gamma(is_call, is_in, S + dS, X, L, U, T, r, b, v, cnd=cnd)
+    return S / 100 * gamma(is_call, is_in, S + dS, K, L, U, T, r, b, v, cdf=cdf)
 
 def dgamma_dvol(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -102,23 +102,23 @@ def dgamma_dvol(
         v: float,
         *,
         dS: float = 0.0001,
-        dv=0.01,
+        dv: float = 0.01,
         cnd: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S + dS, X, L, U, T, r, b, v + dv, cnd=cnd)
-        - 2 * price(is_call, is_in, S, X, L, U, T, r, b, v + dv, cnd=cnd)
-        + price(is_call, is_in, S - dS, X, L, U, T, r, b, v + dv, cnd=cnd)
-        - price(is_call, is_in, S + dS, X, L, U, T, r, b, v - dv, cnd=cnd)
-        + 2 * price(is_call, is_in, S, X, L, U, T, r, b, v - dv, cnd=cnd)
-        - price(is_call, is_in, S - dS, X, L, U, T, r, b, v - dv, cnd=cnd)
+        price(is_call, is_in, S + dS, K, L, U, T, r, b, v + dv, cdf=cnd)
+        - 2 * price(is_call, is_in, S, K, L, U, T, r, b, v + dv, cdf=cnd)
+        + price(is_call, is_in, S - dS, K, L, U, T, r, b, v + dv, cdf=cnd)
+        - price(is_call, is_in, S + dS, K, L, U, T, r, b, v - dv, cdf=cnd)
+        + 2 * price(is_call, is_in, S, K, L, U, T, r, b, v - dv, cdf=cnd)
+        - price(is_call, is_in, S - dS, K, L, U, T, r, b, v - dv, cdf=cnd)
     ) / (2 * dv * dS ** 2) / 100
 
 def vega(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -127,18 +127,18 @@ def vega(
         v: float,
         *,
         dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X, L, U, T, r, b, v + dv, cnd=cnd)
-        - price(is_call, is_in, S, X, L, U, T, r, b, v - dv, cnd=cnd)
+        price(is_call, is_in, S, K, L, U, T, r, b, v + dv, cdf=cdf)
+        - price(is_call, is_in, S, K, L, U, T, r, b, v - dv, cdf=cdf)
     ) / 2
 
 def vomma(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -147,19 +147,19 @@ def vomma(
         v: float,
         *,
         dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X, L, U, T, r, b, v + dv)
-        - 2 * price(is_call, is_in, S, X, L, U, T, r, b, v)
-        + price(is_call, is_in, S, X, L, U, T, r, b, v - dv)
+        price(is_call, is_in, S, K, L, U, T, r, b, v + dv, cdf=cdf)
+        - 2 * price(is_call, is_in, S, K, L, U, T, r, b, v, cdf=cdf)
+        + price(is_call, is_in, S, K, L, U, T, r, b, v - dv, cdf=cdf)
     ) / dv ** 2 / 10000
 
 def vegap(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -169,10 +169,10 @@ def vegap(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        vega(is_call, is_in, S + dS, X, L, U, T, r, b, v, dv=dv, cnd=cnd)
+        vega(is_call, is_in, S + dS, K, L, U, T, r, b, v, dv=dv, cdf=cdf)
         * v / 0.1
     )
 
@@ -180,7 +180,7 @@ def rho(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -189,18 +189,18 @@ def rho(
         v: float,
         *,
         dr: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X, L, U, T, r + dr, b + dr, v, cnd=cnd)
-        - price(is_call, is_in, S, X, L, U, T, r - dr, b - dr, v, cnd=cnd)
+        price(is_call, is_in, S, K, L, U, T, r + dr, b + dr, v, cdf=cdf)
+        - price(is_call, is_in, S, K, L, U, T, r - dr, b - dr, v, cdf=cdf)
     ) / 2
 
 def rho2(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -209,18 +209,18 @@ def rho2(
         v: float,
         *,
         db: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X, L, U, T, r, b - db, v, cnd=cnd)
-        - price(is_call, is_in, S, X, L, U, T, r, b + db, v, cnd=cnd)
+        price(is_call, is_in, S, K, L, U, T, r, b - db, v, cdf=cdf)
+        - price(is_call, is_in, S, K, L, U, T, r, b + db, v, cdf=cdf)
     ) / 2
 
 def carry(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -229,18 +229,18 @@ def carry(
         v: float,
         *,
         db: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X, L, U, T, r, b + db, v, cnd=cnd)
-        - price(is_call, is_in, S, X, L, U, T, r, b - db, v, cnd=cnd)
+        price(is_call, is_in, S, K, L, U, T, r, b + db, v, cdf=cdf)
+        - price(is_call, is_in, S, K, L, U, T, r, b - db, v, cdf=cdf)
     ) / 2
 
 def theta(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -249,24 +249,24 @@ def theta(
         v: float,
         *,
         dT: float = 1 / 365,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     if T <= dT:
         return (
-            price(is_call, is_in, S, X, L, U, 0.00001, r, b, v, cnd=cnd)
-            - price(is_call, is_in, S, X, L, U, T, r, b, v, cnd=cnd)
+            price(is_call, is_in, S, K, L, U, 0.00001, r, b, v, cdf=cdf)
+            - price(is_call, is_in, S, K, L, U, T, r, b, v, cdf=cdf)
         )
     else:
         return (
-            price(is_call, is_in, S, X, L, U, T - dT, r, b, v, cnd=cnd)
-            - price(is_call, is_in, S, X, L, U, T, r, b, v, cnd=cnd)
+            price(is_call, is_in, S, K, L, U, T - dT, r, b, v, cdf=cdf)
+            - price(is_call, is_in, S, K, L, U, T, r, b, v, cdf=cdf)
         )
 
 def strike_delta(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -275,18 +275,18 @@ def strike_delta(
         v: float,
         *,
         dS: float = 0.0001,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X + dS, L, U, T, r, b, v, cnd=cnd)
-        - price(is_call, is_in, S, X - dS, L, U, T, r, b, v, cnd=cnd)
+        price(is_call, is_in, S, K + dS, L, U, T, r, b, v, cdf=cdf)
+        - price(is_call, is_in, S, K - dS, L, U, T, r, b, v, cdf=cdf)
     ) / (2 * dS)
 
 def strike_gamma(
         is_call: bool,
         is_in: bool,
         S: float,
-        X: float,
+        K: float,
         L: float,
         U: float,
         T: float,
@@ -295,10 +295,10 @@ def strike_gamma(
         v: float,
         *,
         dS: float = 0.0001,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, is_in, S, X + dS, L, U, T, r, b, v, cnd=cnd)
-        - 2 * price(is_call, is_in, S, X, L, U, T, r, b, v, cnd=cnd)
-        + price(is_call, is_in, S, X - dS, L, U, T, r, b, v, cnd=cnd)
+        price(is_call, is_in, S, K + dS, L, U, T, r, b, v, cdf=cdf)
+        - 2 * price(is_call, is_in, S, K, L, U, T, r, b, v, cdf=cdf)
+        + price(is_call, is_in, S, K - dS, L, U, T, r, b, v, cdf=cdf)
     ) / (dS ** 2)
