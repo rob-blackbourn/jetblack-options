@@ -61,6 +61,22 @@ def delta(
         *,
         cnd: Callable[[float], float] = CND
 ) -> float:
+    """The sensitivity of the open to a change in the asset price.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        v (float): The volatility of the asset.
+        cnd (Callable[[float], float], optional): The cumulative normal density
+            function. Defaults to CND.
+
+    Returns:
+        float: the delta.
+    """
     d1 = (log(S / K) + T * (b + v ** 2 / 2)) / (v * sqrt(T))
 
     if is_call:
@@ -488,22 +504,39 @@ def theta(
         cnd: Callable[[float], float] = CND,
         nd: Callable[[float], float] = ND
 ) -> float:
+    """The theta or time decay of the value of the option.
+
+    This value is typically reported by dividing by 365 (for a one calendar day
+    movement) or 252 (for a 1 trading day movement).
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cnd (Callable[[float], float], optional): The cumulative density function. Defaults to CND.
+        nd (Callable[[float], float], optional): The probability density function. Defaults to ND.
+
+    Returns:
+        float: The theta.
+    """
     # Theta for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
 
     if is_call:
-        return (
-            -S * exp((b - r) * T) * nd(d1) * v / (2 * sqrt(T)) -
-            (b - r) * S * exp((b - r) * T) * cnd(d1) -
-            r * K * exp(-r * T) * cnd(d2)
-        )
+        p1 = -S * exp((b - r) * T) * nd(d1) * v / (2 * sqrt(T))
+        p2 = (b - r) * S * exp((b - r) * T) * cnd(d1)
+        p3 = r * K * exp(-r * T) * cnd(d2)
+        return p1 - p2 - p3
     else:
-        return (
-            -S * exp((b - r) * T) * nd(d1) * v / (2 * sqrt(T)) +
-            (b - r) * S * exp((b - r) * T) * cnd(-d1) +
-            r * K * exp(-r * T) * cnd(-d2)
-        )
+        p1 = -S * exp((b - r) * T) * nd(d1) * v / (2 * sqrt(T))
+        p2 = (b - r) * S * exp((b - r) * T) * cnd(-d1)
+        p3 = r * K * exp(-r * T) * cnd(-d2)
+        return p1 + p2 + p3
 
 
 def theta_driftless(

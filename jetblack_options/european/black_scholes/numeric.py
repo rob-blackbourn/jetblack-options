@@ -205,10 +205,10 @@ def theta(
             price(is_call, S, X, T, r, b, v, cnd=cnd)
         )
     else:
-        return (
-            price(is_call, S, X, T - dT, r, b, v, cnd=cnd) -
-            price(is_call, S, X, T, r, b, v, cnd=cnd)
-        )
+        return -(
+            price(is_call, S, X, T + dT, r, b, v, cnd=cnd) -
+            price(is_call, S, X, T - dT, r, b, v, cnd=cnd)
+        ) / (2 * dT)
 
 def rho(
         is_call: bool,
