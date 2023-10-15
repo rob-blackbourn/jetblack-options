@@ -1,6 +1,6 @@
 """Tests for Barone-Adesi-Whaley"""
 
-from jetblack_options.american.barone_adesi_whaley.analytic import price
+from jetblack_options.american.barone_adesi_whaley import price
 from jetblack_options.numeric_greeks import NumericGreeks
 
 from ..utils import is_close_to

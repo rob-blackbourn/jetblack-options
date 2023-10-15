@@ -1,6 +1,6 @@
 """Tests for Barone-Adesi-Whaley"""
 
-from jetblack_options.american.bjerksund_stensland_1993.analytic import price
+from jetblack_options.american.bjerksund_stensland_1993 import price
 from jetblack_options.numeric_greeks import NumericGreeks
 
 from ..utils import is_close_to

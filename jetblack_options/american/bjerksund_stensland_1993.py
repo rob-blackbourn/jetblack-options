@@ -3,8 +3,8 @@
 from math import exp, log, sqrt
 from typing import Callable, Literal, Optional
 
-from ...distributions import CND
-from ...european.black_scholes.analytic import price as bs_price
+from ..distributions import CND
+from ..european.black_scholes.analytic import price as bs_price
 
 def _phi(
         S: float,
