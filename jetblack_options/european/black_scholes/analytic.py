@@ -135,8 +135,6 @@ def ddelta_dvol(
     d2 = d1 - v * sqrt(T)
     return -exp((b - r) * T) * d2 / v * nd(d1)
 
-# DDeltaDvolDvol also known as DVannaDvol
-
 
 def ddelta_dvol_dvol(
         S: float,
@@ -148,6 +146,7 @@ def ddelta_dvol_dvol(
         *,
         nd: Callable[[float], float] = ND
 ) -> float:
+    # DDeltaDvolDvol also known as DVannaDvol
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return ddelta_dvol(S, K, T, r, b, v, nd=nd) * 1 / v * (d1 * d2 - d1 / d2 - 1)
