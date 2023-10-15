@@ -14,13 +14,13 @@ def price(
         X: float,
         t1: float,
         T: float,
-        n: float,
-        m: float,
+        n: int,
+        m: int,
         r: float,
         b: float,
         v: float,
         *,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
 
     # This is a modified version of the Levy formula, this is the formula published in "Asian Pyramid Power" By
@@ -45,7 +45,7 @@ def price(
     if m == n - 1: # Only one fix left use Black-Scholes weighted with time
    
         X = n * X - (n - 1) * SA
-        return bs_price(is_call, S, X, T, r, b, v, cdf=cnd) * 1 / n
+        return bs_price(is_call, S, X, T, r, b, v, cdf=cdf) * 1 / n
 
     if b == 0:
         EA2 = (
@@ -79,8 +79,8 @@ def price(
     d2 = d1 - vA * sqrt(T)
 
     if is_call:
-        value = exp(-r * T) * (EA * cnd(d1) - X * cnd(d2))
+        value = exp(-r * T) * (EA * cdf(d1) - X * cdf(d2))
     else:
-        value = exp(-r * T) * (X * cnd(-d2) - EA * cnd(-d1))
+        value = exp(-r * T) * (X * cdf(-d2) - EA * cdf(-d1))
 
     return value * (n - m) / n

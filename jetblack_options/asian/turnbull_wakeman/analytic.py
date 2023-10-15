@@ -11,14 +11,14 @@ def price(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         T: float,
         T2: float,
         r: float,
         b: float,
         v: float,
         *,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     """Arithmetic average rate option based on Turnbull-Wakeman.
 
@@ -56,11 +56,11 @@ def price(
     # Take into account when option wil be exercised
     if tau > 0:
     
-        if T2 / T * X - tau / T * SA < 0:
+        if T2 / T * K - tau / T * SA < 0:
     
             if is_call:
                 SA = SA * (T2 - T) / T2 + S * M1 * T / T2 # Expected average at maturity
-                return max(0, SA - X) * exp(-r * T)
+                return max(0, SA - K) * exp(-r * T)
             else:
                 return 0
 
@@ -78,7 +78,7 @@ def price(
     bA = log(M1) / T
     vA = sqrt(log(M2) / T - 2 * bA)
     if tau > 0:
-        X = T2 / T * X - tau / T * SA
-        return bs_price(is_call, S, X, T, r, bA, vA, cdf=cnd) * T / T2
+        K = T2 / T * K - tau / T * SA
+        return bs_price(is_call, S, K, T, r, bA, vA, cdf=cdf) * T / T2
     else:
-        return bs_price(is_call, S, X, T, r, bA, vA, cdf=cnd)
+        return bs_price(is_call, S, K, T, r, bA, vA, cdf=cdf)

@@ -12,7 +12,7 @@ def delta(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -22,39 +22,19 @@ def delta(
         v: float,
         *,
         dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        - price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
+        price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        - price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
     ) / (2 * dS)
 
-def elasticity(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        - price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-    ) / (2 * dS) * S / price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
 
 def gamma(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -64,177 +44,20 @@ def gamma(
         v: float,
         *,
         dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        - 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        + price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
+        price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        - 2 * price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        + price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
     ) / dS ** 2
 
-def dgamma_dvol(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dS: float = 0.01,
-        dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        + price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-        + 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-        - price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-    ) / (2 * dv * dS ** 2) / 100
-
-def gammap(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        - 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        + price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-    ) *S / 100 / dS ** 2
-
-def ddelta_dvol(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dS: float = 0.01,
-        dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-        - price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        + price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-    ) / (4 * dS * dv) / 100
-
-def vega(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - price(is_call, S, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-    ) / 2
-
-def vomma(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        + price(is_call, S, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-    ) / dv ** 2 / 10000
-
-def vegap(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return v / 0.1 * (
-        price(is_call, S, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - price(is_call, S, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-    ) / 2
-
-def dvega_dvol(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S, SA, X, t1, T, n, m, r, b, v + dv, cnd=cnd)
-        - 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        + price(is_call, S, SA, X, t1, T, n, m, r, b, v - dv, cnd=cnd)
-    )
 
 def theta(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -244,21 +67,44 @@ def theta(
         v: float,
         *,
         dT: float = 1 / 365,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     if t1 > dT and T > dT:
         return (
-            price(is_call, S, SA, X, t1 - dT, T - dT, n, m, r, b, v, cnd=cnd)
-            - price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
+            price(is_call, S, SA, K, t1 - dT, T - dT, n, m, r, b, v, cdf=cdf)
+            - price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
         )
     else:
-        raise ValueError("must have at least d day")
+        raise ValueError("must have at least 1 day")
+
+
+def vega(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dv: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        - price(is_call, S, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+    ) / 2
+
 
 def rho(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -268,60 +114,18 @@ def rho(
         v: float,
         *,
         dr: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S, SA, X, t1, T, n, m, r + dr, b + dr, v, cnd=cnd)
-        - price(is_call, S, SA, X, t1, T, n, m, r - dr, b - dr, v, cnd=cnd)
-    ) / 2
-
-def futures_rho(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        dr: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S, SA, X, t1, T, n, m, r + dr, b, v, cnd=cnd)
-        - price(is_call, S, SA, X, t1, T, n, m, r - dr, b, v, cnd=cnd)
-    ) / 2
-
-def rho2(
-        is_call: bool,
-        S: float,
-        SA: float,
-        X: float,
-        t1: float,
-        T: float,
-        n: int,
-        m: int,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        db: float = 0.01,
-        cnd: Callable[[float], float] = CND
-) -> float:
-    return (
-        price(is_call, S, SA, X, t1, T, n, m, r, b - db, v, cnd=cnd)
-        - price(is_call, S, SA, X, t1, T, n, m, r, b + db, v, cnd=cnd)
+        price(is_call, S, SA, K, t1, T, n, m, r + dr, b + dr, v, cdf=cdf)
+        - price(is_call, S, SA, K, t1, T, n, m, r - dr, b - dr, v, cdf=cdf)
     ) / 2
 
 def carry(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -331,18 +135,41 @@ def carry(
         v: float,
         *,
         db: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S, SA, X, t1, T, n, m, r, b + db, v, cnd=cnd)
-        - price(is_call, S, SA, X, t1, T, n, m, r, b - db, v, cnd=cnd)
+        price(is_call, S, SA, K, t1, T, n, m, r, b + db, v, cdf=cdf)
+        - price(is_call, S, SA, K, t1, T, n, m, r, b - db, v, cdf=cdf)
     ) / 2
+
+
+def elasticity(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dS: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        - price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+    ) / (2 * dS) * S / price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+
 
 def speed(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -352,20 +179,202 @@ def speed(
         v: float,
         *,
         dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S + 2 * dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        - 3 * price(is_call, S + dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        + 3 * price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        - price(is_call, S - dS, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
+        price(is_call, S + 2 * dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        - 3 * price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        + 3 * price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        - price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
     ) / dS ** 3
+
+
+def gammap(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dS: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        - 2 * price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        + price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+    ) *S / 100 / dS ** 2
+
+
+def vegap(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dv: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return v / 0.1 * (
+        price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        - price(is_call, S, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+    ) / 2
+
+
+def ddelta_dvol(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dS: float = 0.01,
+        dv: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        - price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+        - price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        + price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+    ) / (4 * dS * dv) / 100
+
+
+def dgamma_dvol(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dS: float = 0.01,
+        dv: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        - 2 * price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        + price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        - price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+        + 2 * price(is_call, S, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+        - price(is_call, S - dS, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+    ) / (2 * dv * dS ** 2) / 100
+
+
+def dvega_dvol(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dv: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
+        - 2 * price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        + price(is_call, S, SA, K, t1, T, n, m, r, b, v - dv, cdf=cdf)
+    )
+
+
+def vomma(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dv: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return dvega_dvol(is_call, S, SA, K, t1, T, n, m, r, b, v, dv=dv, cdf=cdf)  / dv ** 2 / 10000
+
+def futures_rho(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        dr: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S, SA, K, t1, T, n, m, r + dr, b, v, cdf=cdf)
+        - price(is_call, S, SA, K, t1, T, n, m, r - dr, b, v, cdf=cdf)
+    ) / 2
+
+
+def rho2(
+        is_call: bool,
+        S: float,
+        SA: float,
+        K: float,
+        t1: float,
+        T: float,
+        n: int,
+        m: int,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        db: float = 0.01,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    return (
+        price(is_call, S, SA, K, t1, T, n, m, r, b - db, v, cdf=cdf)
+        - price(is_call, S, SA, K, t1, T, n, m, r, b + db, v, cdf=cdf)
+    ) / 2
 
 def strike_delta(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -375,18 +384,18 @@ def strike_delta(
         v: float,
         *,
         dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S, SA, X + dS, t1, T, n, m, r, b, v, cnd=cnd)
-        - price(is_call, S, SA, X - dS, t1, T, n, m, r, b, v, cnd=cnd)
+        price(is_call, S, SA, K + dS, t1, T, n, m, r, b, v, cdf=cdf)
+        - price(is_call, S, SA, K - dS, t1, T, n, m, r, b, v, cdf=cdf)
     ) / (2 * dS)
 
 def strike_gamma(
         is_call: bool,
         S: float,
         SA: float,
-        X: float,
+        K: float,
         t1: float,
         T: float,
         n: int,
@@ -396,10 +405,10 @@ def strike_gamma(
         v: float,
         *,
         dS: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CND
 ) -> float:
     return (
-        price(is_call, S, SA, X + dS, t1, T, n, m, r, b, v, cnd=cnd)
-        - 2 * price(is_call, S, SA, X, t1, T, n, m, r, b, v, cnd=cnd)
-        + price(is_call, S, SA, X - dS, t1, T, n, m, r, b, v, cnd=cnd)
+        price(is_call, S, SA, K + dS, t1, T, n, m, r, b, v, cdf=cdf)
+        - 2 * price(is_call, S, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
+        + price(is_call, S, SA, K - dS, t1, T, n, m, r, b, v, cdf=cdf)
     ) / dS ** 2
