@@ -1,19 +1,26 @@
-"""Plain Vanilla"""
+"""Garman and Kolhagen (1983) Currency options"""
 
 from math import exp, log, pi, sqrt
-from typing import Literal, Optional
+from typing import Callable
 
-from ..distributions import CND, ND, CNDEV, CHIINV
+from ..distributions import CND
 
 
-# Garman and Kolhagen (1983) Currency options
-def GarmanKolhagen(CallPutFlag: Literal['c', 'p'], S: float, X: float, T: float, r: float, rf: float, v: float) -> float:
+def price(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        rf: float,
+        v: float,
+        cdf: Callable[[float], float] = CND
+) -> float:
+    # Garman and Kolhagen (1983) Currency options
                 
-    d1 = (log(S / X) + (r - rf + v ** 2 / 2) * T) / (v * sqrt(T))
+    d1 = (log(S / K) + (r - rf + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    if CallPutFlag == "c":
-        return S * exp(-rf * T) * CND(d1) - X * exp(-r * T) * CND(d2)
-    elif CallPutFlag == "p":
-        return X * exp(-r * T) * CND(-d2) - S * exp(-rf * T) * CND(-d1)
+    if is_call:
+        return S * exp(-rf * T) * cdf(d1) - K * exp(-r * T) * cdf(d2)
     else:
-        raise ValueError("invalid call put flag")
+        return K * exp(-r * T) * cdf(-d2) - S * exp(-rf * T) * cdf(-d1)

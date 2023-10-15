@@ -6,7 +6,19 @@ from typing import Literal, Optional
 from .distributions import CND
 
 # Binary barrier options
-def BinaryBarrier(TypeFlag: int, S: float, x: float, h: float, k: float, T: float, r: float, b: float, v: float, eta:int, phi: int) -> float:
+def BinaryBarrier(
+        TypeFlag: int,
+        S: float,
+        x: float,
+        h: float,
+        k: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        eta: int,
+        phi: int
+) -> float:
 
     # TypeFlag:  Value 1 to 28 dependent on binary option type,
     #            look in the book for specifications.
