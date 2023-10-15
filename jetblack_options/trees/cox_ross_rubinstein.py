@@ -8,7 +8,7 @@ def crr_binomial(
         is_european: bool,
         is_call: bool,
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
@@ -26,7 +26,7 @@ def crr_binomial(
     df = exp(-r * dT)
     
     option_value = [
-        max(0, z * (S * u ** i * d ** (n - i) - X))
+        max(0, z * (S * u ** i * d ** (n - i) - K))
         for i in range(n+1)
     ]
 
@@ -41,7 +41,7 @@ def crr_binomial(
                 ) * df
             else:
                 option_value[i] = max(
-                    (z * (S * u ** i * d ** (j - i) - X)),
+                    (z * (S * u ** i * d ** (j - i) - K)),
                     (
                         p * option_value[i + 1]
                         + (1 - p) * option_value[i]

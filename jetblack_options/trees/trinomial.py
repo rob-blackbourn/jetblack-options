@@ -5,7 +5,7 @@ def trinomial(
         is_european: bool,
         is_call: bool,
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
@@ -48,7 +48,7 @@ def trinomial(
     Df = exp(-r * dT)
     
     option_value = [
-        max(0, z * (S * u ** max(i - n, 0) * d ** max(n - i, 0) - X))
+        max(0, z * (S * u ** max(i - n, 0) * d ** max(n - i, 0) - K))
         for i in range(1 + 2*n)
     ]
 
@@ -65,7 +65,7 @@ def trinomial(
             
             if is_european:
                 option_value[i] = max(
-                    z * (S * u ** max(i - j, 0) * d ** max(j - i, 0) - X),
+                    z * (S * u ** max(i - j, 0) * d ** max(j - i, 0) - K),
                     option_value[i]
                 )
 

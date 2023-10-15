@@ -20,7 +20,7 @@ def leisen_reimer_binomial(
         is_european: bool,
         is_call: bool,
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
@@ -32,7 +32,7 @@ def leisen_reimer_binomial(
     n = _odd(n)
     z = 1 if is_call else -1
     
-    d1 = (log(S / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
 
     # Using Preizer-Pratt inversion method 2
@@ -51,7 +51,7 @@ def leisen_reimer_binomial(
     d = (exp(b * dT) - p * u) / (1 - p)
     df = exp(-r * dT)
     option_value = [
-        max(0, z * (S * u ** i * d ** (n - i) - X))
+        max(0, z * (S * u ** i * d ** (n - i) - K))
         for i in range(n+1)
     ]
     
@@ -66,7 +66,7 @@ def leisen_reimer_binomial(
                 ) * df
             else:
                 option_value[i] = max(
-                    (z * (S * u ** i * d ** (j - i) - X)),
+                    (z * (S * u ** i * d ** (j - i) - K)),
                     (
                         p * option_value[i + 1]
                         + (1 - p) * option_value[i]
