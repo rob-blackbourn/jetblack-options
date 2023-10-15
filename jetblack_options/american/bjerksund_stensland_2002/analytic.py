@@ -16,15 +16,15 @@ def _phi(
         b: float,
         v: float,
         *,
-        cnd: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CND,
 ) -> float:
     lambda_ = (-r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2) * T
     d = -(log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T) / (v * sqrt(T))
     kappa = 2 * b / v ** 2 + 2 * gamma_ - 1
     return (
         exp(lambda_) * S ** gamma_ * (
-            cnd(d)
-            - (i / S) ** kappa * cnd(d - 2 * log(i / S) / (v * sqrt(T))))
+            cdf(d)
+            - (i / S) ** kappa * cdf(d - 2 * log(i / S) / (v * sqrt(T))))
         )
 
 def _ksi(
@@ -68,70 +68,70 @@ def _ksi(
 
 def _call_price(
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        cnd: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CND,
         cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     
     t1 = 1 / 2 * (sqrt(5) - 1) * T
     
     if b >= r: # Never optimal to exercise before maturity
-            return bs_price(True, S, X, T, r, b, v, cdf=cnd)
+        return bs_price(True, S, K, T, r, b, v, cdf=cdf)
     else:
         beta = (
             (1 / 2 - b / v ** 2)
             + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
         )
-        b_infinity = beta / (beta - 1) * X
-        B0 = max(X, r / (r - b) * X)
+        b_infinity = beta / (beta - 1) * K
+        B0 = max(K, r / (r - b) * K)
         
-        ht1 = -(b * t1 + 2 * v * sqrt(t1)) * X ** 2 / ((b_infinity - B0) * B0)
-        ht2 = -(b * T + 2 * v * sqrt(T)) * X ** 2 / ((b_infinity - B0) * B0)
+        ht1 = -(b * t1 + 2 * v * sqrt(t1)) * K ** 2 / ((b_infinity - B0) * B0)
+        ht2 = -(b * T + 2 * v * sqrt(T)) * K ** 2 / ((b_infinity - B0) * B0)
         I1 = B0 + (b_infinity - B0) * (1 - exp(ht1))
         I2 = B0 + (b_infinity - B0) * (1 - exp(ht2))
-        alfa1 = (I1 - X) * I1 ** (-beta)
-        alfa2 = (I2 - X) * I2 ** (-beta)
+        alfa1 = (I1 - K) * I1 ** (-beta)
+        alfa2 = (I2 - K) * I2 ** (-beta)
     
         if S >= I2:
-            return S - X
+            return S - K
         else:
             return (
                 alfa2 * S ** beta
-                - alfa2 * _phi(S, t1, beta, I2, I2, r, b, v, cnd=cnd)
-                + _phi(S, t1, 1, I2, I2, r, b, v, cnd=cnd)
-                - _phi(S, t1, 1, I1, I2, r, b, v, cnd=cnd)
-                - X * _phi(S, t1, 0, I2, I2, r, b, v, cnd=cnd)
-                + X * _phi(S, t1, 0, I1, I2, r, b, v, cnd=cnd)
-                + alfa1 * _phi(S, t1, beta, I1, I2, r, b, v, cnd=cnd)
+                - alfa2 * _phi(S, t1, beta, I2, I2, r, b, v, cdf=cdf)
+                + _phi(S, t1, 1, I2, I2, r, b, v, cdf=cdf)
+                - _phi(S, t1, 1, I1, I2, r, b, v, cdf=cdf)
+                - K * _phi(S, t1, 0, I2, I2, r, b, v, cdf=cdf)
+                + K * _phi(S, t1, 0, I1, I2, r, b, v, cdf=cdf)
+                + alfa1 * _phi(S, t1, beta, I1, I2, r, b, v, cdf=cdf)
                 - alfa1 * _ksi(S, T, beta, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
                 + _ksi(S, T, 1, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-                - _ksi(S, T, 1, X, I2, I1, t1, r, b, v, cbnd=cbnd)
-                - X * _ksi(S, T, 0, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-                + X * _ksi(S, T, 0, X, I2, I1, t1, r, b, v, cbnd=cbnd)
+                - _ksi(S, T, 1, K, I2, I1, t1, r, b, v, cbnd=cbnd)
+                - K * _ksi(S, T, 0, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+                + K * _ksi(S, T, 0, K, I2, I1, t1, r, b, v, cbnd=cbnd)
             )
 
 
 def price(
         is_call: bool,
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        cnd: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CND,
         cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     # The Bjerksund and Stensland (2002) American approximation
     if is_call:
-        return _call_price(S, X, T, r, b, v, cnd=cnd, cbnd=cbnd)
+        return _call_price(S, K, T, r, b, v, cdf=cdf, cbnd=cbnd)
     else:
         # Use the Bjerksund and Stensland put-call transformation
-        return _call_price(X, S, T, r - b, -b, v, cnd=cnd, cbnd=cbnd)
+        return _call_price(K, S, T, r - b, -b, v, cdf=cdf, cbnd=cbnd)
     

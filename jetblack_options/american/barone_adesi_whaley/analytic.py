@@ -8,27 +8,27 @@ from ...european.black_scholes.analytic import price as bs_price
 
 
 def _kc(
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        nd: Callable[[float], float] = ND,
-        cnd: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = ND,
+        cdf: Callable[[float], float] = CND
 ) -> float:
     """Newton Raphson algorithm to solve for the critical commodity price for a
     Call.
 
     Args:
-        X (float): The strike.
+        K (float): The strike.
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         b (float): The asset growth.
         v (float): The volatility.
-        nd (Callable[[float], float], optional): A function returning the normal
+        pdf (Callable[[float], float], optional): A function returning the normal
             distribution. Defaults to ND.
-        cnd (Callable[[float], float], optional): A function returning the
+        cdf (Callable[[float], float], optional): A function returning the
             cumulative normal distribution. Defaults to CND.
 
     Returns:
@@ -39,35 +39,35 @@ def _kc(
     N = 2 * b / v ** 2
     m = 2 * r / v ** 2
     q2u = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * m)) / 2
-    su = X / (1 - 1 / q2u)
-    h2 = -(b * T + 2 * v * sqrt(T)) * X / (su - X)
-    Si = X + (su - X) * (1 - exp(h2))
+    su = K / (1 - 1 / q2u)
+    h2 = -(b * T + 2 * v * sqrt(T)) * K / (su - K)
+    Si = K + (su - K) * (1 - exp(h2))
 
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
-    d1 = (log(Si / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     Q2 = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * k)) / 2
-    LHS = Si - X
+    LHS = Si - K
     RHS = (
-        bs_price(True, Si, X, T, r, b, v, cdf=cnd) +
-        (1 - exp((b - r) * T) * cnd(d1)) * Si / Q2
+        bs_price(True, Si, K, T, r, b, v, cdf=cdf) +
+        (1 - exp((b - r) * T) * cdf(d1)) * Si / Q2
     )
     bi = (
-        exp((b - r) * T) * cnd(d1) * (1 - 1 / Q2) +
-        (1 - exp((b - r) * T) * cnd(d1) / (v * sqrt(T))) / Q2
+        exp((b - r) * T) * cdf(d1) * (1 - 1 / Q2) +
+        (1 - exp((b - r) * T) * cdf(d1) / (v * sqrt(T))) / Q2
     )
     E = 0.000001
     # Newton Raphson algorithm for finding critical price Si
-    while abs(LHS - RHS) / X > E:
-        Si = (X + RHS - bi * Si) / (1 - bi)
-        d1 = (log(Si / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-        LHS = Si - X
+    while abs(LHS - RHS) / K > E:
+        Si = (K + RHS - bi * Si) / (1 - bi)
+        d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+        LHS = Si - K
         RHS = (
-            bs_price(True, Si, X, T, r, b, v, cdf=cnd) +
-            (1 - exp((b - r) * T) * cnd(d1)) * Si / Q2
+            bs_price(True, Si, K, T, r, b, v, cdf=cdf) +
+            (1 - exp((b - r) * T) * cdf(d1)) * Si / Q2
         )
         bi = (
-            exp((b - r) * T) * cnd(d1) * (1 - 1 / Q2) +
-            (1 - exp((b - r) * T) * nd(d1) / (v * sqrt(T))) / Q2
+            exp((b - r) * T) * cdf(d1) * (1 - 1 / Q2) +
+            (1 - exp((b - r) * T) * pdf(d1) / (v * sqrt(T))) / Q2
         )
 
     return Si
@@ -75,43 +75,43 @@ def _kc(
 
 def _call_price(
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        nd: Callable[[float], float] = ND,
-        cnd: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = ND,
+        cdf: Callable[[float], float] = CND
 ) -> float:
 
     if b >= r:
-        return bs_price(True, S, X, T, r, b, v, cdf=cnd)
+        return bs_price(True, S, K, T, r, b, v, cdf=cdf)
     else:
-        Sk = _kc(X, T, r, b, v, nd=nd, cnd=cnd)
+        Sk = _kc(K, T, r, b, v, pdf=pdf, cdf=cdf)
         N = 2 * b / v ** 2
         k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
-        d1 = (log(Sk / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+        d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
         Q2 = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * k)) / 2
-        a2 = (Sk / Q2) * (1 - exp((b - r) * T) * cnd(d1))
+        a2 = (Sk / Q2) * (1 - exp((b - r) * T) * cdf(d1))
         if S < Sk:
             return (
-                bs_price(True, S, X, T, r, b, v, cdf=cnd)
+                bs_price(True, S, K, T, r, b, v, cdf=cdf)
                 + a2 * (S / Sk) ** Q2
             )
         else:
-            return S - X
+            return S - K
 
 
 def _kp(
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        nd: Callable[[float], float] = ND,
-        cnd: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = ND,
+        cdf: Callable[[float], float] = CND
 ) -> float:
     # Newton Raphson algorithm to solve for the critical commodity price for a Put
 
@@ -119,35 +119,35 @@ def _kp(
     N = 2 * b / v ** 2
     m = 2 * r / v ** 2
     q1u = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * m)) / 2
-    su = X / (1 - 1 / q1u)
-    h1 = (b * T - 2 * v * sqrt(T)) * X / (X - su)
-    Si = su + (X - su) * exp(h1)
+    su = K / (1 - 1 / q1u)
+    h1 = (b * T - 2 * v * sqrt(T)) * K / (K - su)
+    Si = su + (K - su) * exp(h1)
 
     k = 2 * r / (v * 2 * (1 - exp(-r * T)))
-    d1 = (log(Si / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     Q1 = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * k)) / 2
-    LHS = X - Si
+    LHS = K - Si
     RHS = (
-        bs_price(False, Si, X, T, r, b, v, cdf=cnd)
-        - (1 - exp((b - r) * T) * cnd(-d1)) * Si / Q1
+        bs_price(False, Si, K, T, r, b, v, cdf=cdf)
+        - (1 - exp((b - r) * T) * cdf(-d1)) * Si / Q1
     )
     bi = (
-        -exp((b - r) * T) * cnd(-d1) * (1 - 1 / Q1)
-        - (1 + exp((b - r) * T) * nd(-d1) / (v * sqrt(T))) / Q1
+        -exp((b - r) * T) * cdf(-d1) * (1 - 1 / Q1)
+        - (1 + exp((b - r) * T) * pdf(-d1) / (v * sqrt(T))) / Q1
     )
     E = 0.000001
     # Newton Raphson algorithm for finding critical price Si
-    while abs(LHS - RHS) / X > E:
-        Si = (X - RHS + bi * Si) / (1 + bi)
-        d1 = (log(Si / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-        LHS = X - Si
+    while abs(LHS - RHS) / K > E:
+        Si = (K - RHS + bi * Si) / (1 + bi)
+        d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+        LHS = K - Si
         RHS = (
-            bs_price(False, Si, X, T, r, b, v, cdf=cnd)
-            - (1 - exp((b - r) * T) * cnd(-d1)) * Si / Q1
+            bs_price(False, Si, K, T, r, b, v, cdf=cdf)
+            - (1 - exp((b - r) * T) * cdf(-d1)) * Si / Q1
         )
         bi = (
-            -exp((b - r) * T) * cnd(-d1) * (1 - 1 / Q1)
-            - (1 + exp((b - r) * T) * cnd(-d1) / (v * sqrt(T))) / Q1
+            -exp((b - r) * T) * cdf(-d1) * (1 - 1 / Q1)
+            - (1 + exp((b - r) * T) * cdf(-d1) / (v * sqrt(T))) / Q1
         )
 
     return Si
@@ -155,43 +155,43 @@ def _kp(
 
 def _put_price(
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        nd: Callable[[float], float] = ND,
-        cnd: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = ND,
+        cdf: Callable[[float], float] = CND
 ) -> float:
 
-    Sk = _kp(X, T, r, b, v, nd=nd, cnd=cnd)
+    Sk = _kp(K, T, r, b, v, pdf=pdf, cdf=cdf)
     N = 2 * b / v ** 2
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
-    d1 = (log(Sk / X) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     Q1 = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * k)) / 2
-    a1 = -(Sk / Q1) * (1 - exp((b - r) * T) * cnd(-d1))
+    a1 = -(Sk / Q1) * (1 - exp((b - r) * T) * cdf(-d1))
 
     if S > Sk:
-        return bs_price(False, S, X, T, r, b, v, cdf=cnd) + a1 * (S / Sk) ** Q1
+        return bs_price(False, S, K, T, r, b, v, cdf=cdf) + a1 * (S / Sk) ** Q1
     else:
-        return X - S
+        return K - S
 
 
 def price(
         is_call: bool,
         S: float,
-        X: float,
+        K: float,
         T: float,
         r: float,
         b: float,
         v: float,
         *,
-        nd: Callable[[float], float] = ND,
-        cnd: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = ND,
+        cdf: Callable[[float], float] = CND
 ) -> float:
     # The Barone-Adesi and Whaley (1987) American approximation
     if is_call:
-        return _call_price(S, X, T, r, b, v, nd=nd, cnd=cnd)
+        return _call_price(S, K, T, r, b, v, pdf=pdf, cdf=cdf)
     else:
-        return _put_price(S, X, T, r, b, v, nd=nd, cnd=cnd)
+        return _put_price(S, K, T, r, b, v, pdf=pdf, cdf=cdf)
