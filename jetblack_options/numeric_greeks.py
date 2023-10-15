@@ -27,7 +27,7 @@ class NumericGreeks:
             self,
             is_call: bool,
             S: float,
-            X: float,
+            K: float,
             T: float,
             r: float,
             b: float,
@@ -36,32 +36,15 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-                self.price(is_call, S + dS, X, T, r, b, v) -
-                self.price(is_call, S - dS, X, T, r, b, v)
+                self.price(is_call, S + dS, K, T, r, b, v) -
+                self.price(is_call, S - dS, K, T, r, b, v)
         ) / (2 * dS)
-
-    def elasticity(
-            self,
-            is_call: bool,
-            S: float,
-            X: float,
-            T: float,
-            r: float,
-            b: float,
-            v: float,
-            *,
-            dS: float = 0.01,
-    ) -> float:
-        return (
-            self.price(is_call, S + dS, X, T, r, b, v) -
-            self.price(is_call, S - dS, X, T, r, b, v)
-        ) / (2 * dS) * S / self.price(is_call, S, X, T, r, b, v)
 
     def gamma(
             self,
             is_call: bool,
             S: float,
-            X: float,
+            K: float,
             T: float,
             r: float,
             b: float,
@@ -70,10 +53,27 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S + dS, X, T, r, b, v) -
-            2 * self.price(is_call, S, X, T, r, b, v) +
-            self.price(is_call, S - dS, X, T, r, b, v)
+            self.price(is_call, S + dS, K, T, r, b, v) -
+            2 * self.price(is_call, S, K, T, r, b, v) +
+            self.price(is_call, S - dS, K, T, r, b, v)
         ) / dS ** 2
+
+    def elasticity(
+            self,
+            is_call: bool,
+            S: float,
+            K: float,
+            T: float,
+            r: float,
+            b: float,
+            v: float,
+            *,
+            dS: float = 0.01,
+    ) -> float:
+        return (
+            self.price(is_call, S + dS, K, T, r, b, v) -
+            self.price(is_call, S - dS, K, T, r, b, v)
+        ) / (2 * dS) * S / self.price(is_call, S, K, T, r, b, v)
 
     def dgamma_dvol(
             self,
