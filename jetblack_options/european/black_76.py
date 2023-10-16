@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ..distributions import CND
+from ..distributions import CDF
 
 
 def price(
@@ -14,7 +14,7 @@ def price(
         r: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Black (1976) Options on futures/forwards.
 
@@ -26,7 +26,7 @@ def price(
         r (float): The risk free rate.
         v (float): The asset volatility.
         cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CND.
+            distribution function. Defaults to CDF.
 
     Returns:
         float: The option price.
