@@ -80,40 +80,41 @@ def _call_price(
     
     t1 = 1 / 2 * (sqrt(5) - 1) * T
     
-    if b >= r: # Never optimal to exercise before maturity
+    if b >= r:
+        # Use Black-Scholes as it is never optimal to exercise before maturity.
         return bs_price(True, S, K, T, r, b, v, cdf=cdf)
-    else:
-        beta = (
-            (1 / 2 - b / v ** 2)
-            + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
-        )
-        b_infinity = beta / (beta - 1) * K
-        B0 = max(K, r / (r - b) * K)
-        
-        ht1 = -(b * t1 + 2 * v * sqrt(t1)) * K ** 2 / ((b_infinity - B0) * B0)
-        ht2 = -(b * T + 2 * v * sqrt(T)) * K ** 2 / ((b_infinity - B0) * B0)
-        I1 = B0 + (b_infinity - B0) * (1 - exp(ht1))
-        I2 = B0 + (b_infinity - B0) * (1 - exp(ht2))
-        alfa1 = (I1 - K) * I1 ** (-beta)
-        alfa2 = (I2 - K) * I2 ** (-beta)
+
+    beta = (
+        (1 / 2 - b / v ** 2)
+        + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
+    )
+    b_infinity = beta / (beta - 1) * K
+    b0 = max(K, r / (r - b) * K)
     
-        if S >= I2:
-            return S - K
-        else:
-            return (
-                alfa2 * S ** beta
-                - alfa2 * _phi(S, t1, beta, I2, I2, r, b, v, cdf=cdf)
-                + _phi(S, t1, 1, I2, I2, r, b, v, cdf=cdf)
-                - _phi(S, t1, 1, I1, I2, r, b, v, cdf=cdf)
-                - K * _phi(S, t1, 0, I2, I2, r, b, v, cdf=cdf)
-                + K * _phi(S, t1, 0, I1, I2, r, b, v, cdf=cdf)
-                + alfa1 * _phi(S, t1, beta, I1, I2, r, b, v, cdf=cdf)
-                - alfa1 * _ksi(S, T, beta, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-                + _ksi(S, T, 1, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-                - _ksi(S, T, 1, K, I2, I1, t1, r, b, v, cbnd=cbnd)
-                - K * _ksi(S, T, 0, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-                + K * _ksi(S, T, 0, K, I2, I1, t1, r, b, v, cbnd=cbnd)
-            )
+    ht1 = -(b * t1 + 2 * v * sqrt(t1)) * K ** 2 / ((b_infinity - b0) * b0)
+    ht2 = -(b * T + 2 * v * sqrt(T)) * K ** 2 / ((b_infinity - b0) * b0)
+    I1 = b0 + (b_infinity - b0) * (1 - exp(ht1))
+    I2 = b0 + (b_infinity - b0) * (1 - exp(ht2))
+    alfa1 = (I1 - K) * I1 ** (-beta)
+    alfa2 = (I2 - K) * I2 ** (-beta)
+
+    if S >= I2:
+        return S - K
+    else:
+        return (
+            alfa2 * S ** beta
+            - alfa2 * _phi(S, t1, beta, I2, I2, r, b, v, cdf=cdf)
+            + _phi(S, t1, 1, I2, I2, r, b, v, cdf=cdf)
+            - _phi(S, t1, 1, I1, I2, r, b, v, cdf=cdf)
+            - K * _phi(S, t1, 0, I2, I2, r, b, v, cdf=cdf)
+            + K * _phi(S, t1, 0, I1, I2, r, b, v, cdf=cdf)
+            + alfa1 * _phi(S, t1, beta, I1, I2, r, b, v, cdf=cdf)
+            - alfa1 * _ksi(S, T, beta, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+            + _ksi(S, T, 1, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+            - _ksi(S, T, 1, K, I2, I1, t1, r, b, v, cbnd=cbnd)
+            - K * _ksi(S, T, 0, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
+            + K * _ksi(S, T, 0, K, I2, I1, t1, r, b, v, cbnd=cbnd)
+        )
 
 
 def price(

@@ -39,29 +39,31 @@ def _call_price(
         cdf: Callable[[float], float] = CDF
 ) -> float:
     
-    if b >= r: # Never optimal to exercise before maturity
+    if b >= r:
+        # We can use Black-Scholes as it is never optimal to exercise before
+        # maturity.
         return bs_price(True, S, K, T, r, b, v, cdf=cdf)
+
+    beta = (
+        (1 / 2 - b / v ** 2)
+        + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
+    )
+    b_infinity = beta / (beta - 1) * K
+    b0 = max(K, r / (r - b) * K)
+    ht = -(b * T + 2 * v * sqrt(T)) * b0 / (b_infinity - b0)
+    i = b0 + (b_infinity - b0) * (1 - exp(ht))
+    alpha = (i - K) * i ** (-beta)
+    if S >= i:
+        return S - K
     else:
-        beta = (
-            (1 / 2 - b / v ** 2)
-            + sqrt((b / v ** 2 - 1 / 2) ** 2 + 2 * r / v ** 2)
+        return (
+            alpha * S ** beta
+            - alpha * _phi(S, T, beta, i, i, r, b, v, cdf=cdf)
+            + _phi(S, T, 1, i, i, r, b, v, cdf=cdf)
+            - _phi(S, T, 1, K, i, r, b, v, cdf=cdf)
+            - K * _phi(S, T, 0, i, i, r, b, v, cdf=cdf)
+            + K * _phi(S, T, 0, K, i, r, b, v, cdf=cdf)
         )
-        b_infinity = beta / (beta - 1) * K
-        B0 = max(K, r / (r - b) * K)
-        ht = -(b * T + 2 * v * sqrt(T)) * B0 / (b_infinity - B0)
-        i = B0 + (b_infinity - B0) * (1 - exp(ht))
-        alpha = (i - K) * i ** (-beta)
-        if S >= i:
-            return S - K
-        else:
-            return (
-                alpha * S ** beta
-                - alpha * _phi(S, T, beta, i, i, r, b, v, cdf=cdf)
-                + _phi(S, T, 1, i, i, r, b, v, cdf=cdf)
-                - _phi(S, T, 1, K, i, r, b, v, cdf=cdf)
-                - K * _phi(S, T, 0, i, i, r, b, v, cdf=cdf)
-                + K * _phi(S, T, 0, K, i, r, b, v, cdf=cdf)
-            )
 
 # The Bjerksund and Stensland (1993) American approximation
 def price(
