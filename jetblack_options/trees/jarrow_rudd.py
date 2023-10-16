@@ -1,8 +1,7 @@
 from math import exp,nan, sqrt
 from typing import Tuple
 
-# Rendelman-Barter binomial tree
-def jarrow_rudd(
+def greeks(
         is_european: bool,
         is_call: bool,
         S: float,
@@ -13,6 +12,7 @@ def jarrow_rudd(
         v: float,
         n: int
 ) -> Tuple[float, float, float, float]:
+    # Rendelman-Barter binomial tree
     
     z = 1 if is_call else -1
     

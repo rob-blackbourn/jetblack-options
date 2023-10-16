@@ -16,7 +16,7 @@ def _odd(n: int) -> int:
         n += 1
     return n * s
  
-def leisen_reimer_binomial(
+def greeks(
         is_european: bool,
         is_call: bool,
         S: float,

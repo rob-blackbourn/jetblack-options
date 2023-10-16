@@ -1,7 +1,7 @@
 from math import exp, log, nan, sqrt
 from typing import Tuple
 
-def trinomial(
+def greeks(
         is_european: bool,
         is_call: bool,
         S: float,
@@ -12,14 +12,6 @@ def trinomial(
         v: float,
         n: int
 ) -> Tuple[float, float, float, float]:
-
-    # Dim OptionValue() As Double
-    # ReDim OptionValue(0 To n * 2 + 1)
-
-    # Dim ReturnValue(3) As Double
-    # Dim dt As Double, u As Double, d As Double
-    # Dim pu As Double, pd As Double, pm As Double, Df As Double
-    # Dim i As Long, j As Long, z As Integer
 
     z = 1 if is_call else -1
     

@@ -4,7 +4,7 @@ from math import exp, nan, sqrt
 from typing import Tuple
 
 # Cox-Ross-Rubinstein binomial tree
-def crr_binomial(
+def greeks(
         is_european: bool,
         is_call: bool,
         S: float,

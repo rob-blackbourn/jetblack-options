@@ -1,6 +1,6 @@
 from math import comb, exp, log, sqrt
 
-def european_binomial(
+def price(
         is_call: bool,
         S: float,
         K: float,

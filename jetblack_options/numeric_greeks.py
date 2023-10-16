@@ -52,11 +52,10 @@ class NumericGreeks:
             *,
             dS: float = 0.01,
     ) -> float:
-        return (
-            self.price(is_call, S + dS, K, T, r, b, v) -
-            2 * self.price(is_call, S, K, T, r, b, v) +
-            self.price(is_call, S - dS, K, T, r, b, v)
-        ) / dS ** 2
+        p1 = self.price(is_call, S + dS, K, T, r, b, v)
+        p2 = self.price(is_call, S, K, T, r, b, v)
+        p3 = self.price(is_call, S - dS, K, T, r, b, v)
+        return (p1 - 2 * p2 + p3) / dS ** 2
 
     def theta(
             self,
