@@ -1,4 +1,6 @@
-from math import exp, log, nan, sqrt
+"""Trinomial"""
+
+from math import exp, nan, sqrt
 from typing import Tuple
 
 def greeks(

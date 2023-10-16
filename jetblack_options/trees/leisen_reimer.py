@@ -1,3 +1,5 @@
+"""Leisen Reimer"""
+
 from math import exp, log, nan, sqrt
 from typing import Literal, Tuple, Union
 

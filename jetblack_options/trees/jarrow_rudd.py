@@ -1,4 +1,6 @@
-from math import exp,nan, sqrt
+"""Jarrow-Rudd"""
+
+from math import exp, nan, sqrt
 from typing import Tuple
 
 def greeks(

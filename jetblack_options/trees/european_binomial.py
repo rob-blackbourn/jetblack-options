@@ -1,3 +1,5 @@
+"""European binomial"""
+
 from math import comb, exp, log, sqrt
 
 def price(
