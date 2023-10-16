@@ -1,4 +1,4 @@
-"""Black Scholes Merton"""
+"""implied volatility for Black-Scholes-Merton"""
 
 from typing import Callable
 

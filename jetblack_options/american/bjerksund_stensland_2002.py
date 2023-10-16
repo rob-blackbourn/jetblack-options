@@ -1,4 +1,4 @@
-"""American"""
+"""The Bjerksund and Stensland (2002)"""
 
 from math import exp, log, sqrt
 from typing import Callable

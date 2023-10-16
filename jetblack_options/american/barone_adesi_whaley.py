@@ -1,4 +1,4 @@
-"""American"""
+"""Barone-Adesi and Whaley"""
 
 from math import exp, log, sqrt
 from typing import Callable
