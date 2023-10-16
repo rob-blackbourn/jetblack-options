@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND
+from ..distributions import CDF
 
 def price(
         is_call: bool,
@@ -14,7 +14,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # The generalized Black and Scholes formula on variance form
 
