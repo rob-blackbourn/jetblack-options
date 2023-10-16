@@ -16,7 +16,7 @@ from jetblack_options.european.black_scholes_merton import (
 )
 from jetblack_options.numeric_greeks import NumericGreeks
 
-from ...utils import is_close_to
+from ..utils import is_close_to
 
 def test_price():
 
