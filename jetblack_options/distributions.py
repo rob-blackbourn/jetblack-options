@@ -1,7 +1,12 @@
 """Distributions"""
 
 from math import asin, exp, log, nan, pi, sin, sqrt
+from statistics import NormalDist
 
+NORMAL_DIST = NormalDist()
+PDF = NORMAL_DIST.pdf
+CDF = NORMAL_DIST.cdf
+INV_CDF = NORMAL_DIST.inv_cdf
                                                                                          
 # The normal distribution function
 def ND(x: float) -> float:

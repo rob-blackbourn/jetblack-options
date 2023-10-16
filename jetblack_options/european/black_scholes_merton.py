@@ -3,7 +3,7 @@
 from math import exp, log, pi, sqrt
 from typing import Literal, Callable
 
-from ..distributions import CND, ND, CNDEV, CHIINV
+from ..distributions import CDF, PDF, INV_CDF, CHIINV
 
 
 def price(
@@ -15,7 +15,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The generalised Black-Scholes pricing model for European options.
 
@@ -35,7 +35,7 @@ def price(
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
         cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CND.
+            distribution function. Defaults to CDF.
 
     Returns:
         float: The price of the options.
@@ -59,7 +59,7 @@ def delta(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The sensitivity of the open to a change in the asset price.
 
@@ -72,7 +72,7 @@ def delta(
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
         cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CND.
+            distribution function. Defaults to CDF.
 
     Returns:
         float: the delta.
@@ -93,7 +93,7 @@ def gamma(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + T * (b + v ** 2 / 2)) / (v * sqrt(T))
 
@@ -109,7 +109,7 @@ def forward_delta(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -128,7 +128,7 @@ def ddelta_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DDeltaDvol also known as vanna
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
@@ -144,7 +144,7 @@ def ddelta_dvol_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DDeltaDvolDvol also known as DVannaDvol
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
@@ -163,8 +163,8 @@ def ddelta_dtime(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
-        pdf: Callable[[float], float] = ND
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
 ) -> float:
 
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -198,7 +198,7 @@ def dgamma_dspot(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DgammaDspot/Speed for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -213,7 +213,7 @@ def dgamma_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DgammaDvol/Zomma for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -229,7 +229,7 @@ def dgamma_dtime(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # GGammaDtime for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -248,7 +248,7 @@ def gammap(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # GammaP for the generalized Black and Scholes formula
     return S * gamma(S, K, T, r, b, v, pdf=pdf) / 100
@@ -262,7 +262,7 @@ def dgammap_dspot(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DgammaPDspot/SpeedP for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -277,7 +277,7 @@ def dgammap_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DgammaPDvol for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -293,7 +293,7 @@ def dgammap_dtime(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # GGammaPDtime for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -312,7 +312,7 @@ def vega(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Vega for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -327,7 +327,7 @@ def dvega_dtime(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DvegaDtime for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -346,7 +346,7 @@ def dvega_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DvegaDvol/Vomma for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -362,7 +362,7 @@ def dvomma_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DVommaDVol for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -381,7 +381,7 @@ def vegap(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # VegaP for the generalized Black and Scholes formula
     return v / 10 * vega(S, K, T, r, b, v, pdf=pdf)
@@ -395,7 +395,7 @@ def dvegap_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DvegaPDvol/VommaP for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -412,8 +412,8 @@ def vega_leverage(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
-        pdf: Callable[[float], float] = ND
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Vega for the generalized Black and Scholes formula
     return (
@@ -430,7 +430,7 @@ def variance_vega(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Variance-vega for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -445,7 +445,7 @@ def variance_delta(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Variance-delta for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -461,7 +461,7 @@ def variance_vomma(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Variance-vomma for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -477,7 +477,7 @@ def variance_ultima(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Variance-ultima for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -500,8 +500,8 @@ def theta(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
-        pdf: Callable[[float], float] = ND
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The theta or time decay of the value of the option.
 
@@ -516,8 +516,8 @@ def theta(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CND.
-        pdf (Callable[[float], float], optional): The probability density function. Defaults to ND.
+        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
 
     Returns:
         float: The theta.
@@ -546,7 +546,7 @@ def theta_driftless(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Driftless Theta for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -562,7 +562,7 @@ def rho(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Rho for the generalized Black and Scholes formula for all options except futures
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -581,7 +581,7 @@ def futures_rho(
         r: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Rho for the generalized Black and Scholes formula for Futures option
     return -T * price(is_call, S, K, T, r, 0, v, cdf=cdf)
@@ -596,7 +596,7 @@ def elasticity(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
 ) -> float:
     # Elasticity for the generalized Black and Scholes formula
     return (
@@ -614,7 +614,7 @@ def carry(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Carry rho sensitivity for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -633,7 +633,7 @@ def phi(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Rho2/Phi for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -651,7 +651,7 @@ def dzeta_dvol(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DZetaDvol for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -670,7 +670,7 @@ def dzeta_dtime(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # DZetaDtime for the generalized Black and Scholes formula
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -690,7 +690,7 @@ def break_even_probability(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Risk neutral break even probability for the generalized Black and Scholes formula
     if is_call:
@@ -712,7 +712,7 @@ def strike_delta(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # StrikeDelta for the generalized Black and Scholes formula
     d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
@@ -730,7 +730,7 @@ def risk_neutral_density(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Risk Neutral Density for the generalized Black and Scholes formula
     d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
@@ -745,11 +745,11 @@ def gamma_from_delta(
         v: float,
         delta_: float,
         *,
-        cndev: Callable[[float], float] = CNDEV
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # Gamma from delta
-    return exp((b - r) * T) * ND(
-        cndev(exp((r - b) * T) * abs(delta_))
+    return exp((b - r) * T) * PDF(
+        inv_cdf(exp((r - b) * T) * abs(delta_))
     ) / (S * v * sqrt(T))
 
 
@@ -761,10 +761,10 @@ def gammap_from_delta(
         v: float,
         delta_: float,
         *,
-        cndev: Callable[[float], float] = CNDEV
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # GammaP from delta
-    return S / 100 * gamma_from_delta(S, T, r, b, v, delta_, cndev=cndev)
+    return S / 100 * gamma_from_delta(S, T, r, b, v, delta_, inv_cdf=inv_cdf)
 
 
 def vega_from_delta(
@@ -774,12 +774,12 @@ def vega_from_delta(
         b: float,
         delta_: float,
         *,
-        cndev: Callable[[float], float] = CNDEV,
-        pdf: Callable[[float], float] = ND
+        inv_cdf: Callable[[float], float] = INV_CDF,
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Vega from delta
     return S * exp((b - r) * T) * sqrt(T) * pdf(
-        cndev(exp((r - b) * T) * abs(delta_))
+        inv_cdf(exp((r - b) * T) * abs(delta_))
     )
 
 
@@ -791,11 +791,11 @@ def vegap_from_delta(
         v: float,
         delta_: float,
         *,
-        cndev: Callable[[float], float] = CNDEV,
-        pdf: Callable[[float], float] = ND
+        inv_cdf: Callable[[float], float] = INV_CDF,
+        pdf: Callable[[float], float] = PDF
 ) -> float:
     # VegaP from delta
-    return v / 10 * vega_from_delta(S, T, r, b, delta_, cndev=cndev, pdf=pdf)
+    return v / 10 * vega_from_delta(S, T, r, b, delta_, inv_cdf=inv_cdf, pdf=pdf)
 
 
 def strike_from_delta(
@@ -807,17 +807,17 @@ def strike_from_delta(
         v: float,
         delta_: float,
         *,
-        cndev: Callable[[float], float] = CNDEV
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # Closed form solution to find strike given the delta
     if is_call:
         return S * exp(
-            -cndev(delta_ * exp((r - b) * T)) *
+            -inv_cdf(delta_ * exp((r - b) * T)) *
             v * sqrt(T) + (b + v * v / 2) * T
         )
     else:
         return S * exp(
-            cndev(-delta_ * exp((r - b) * T)) *
+            inv_cdf(-delta_ * exp((r - b) * T)) *
             v * sqrt(T) + (b + v * v / 2) * T
         )
 
@@ -830,15 +830,15 @@ def in_the_money_prob_from_delta(
         v: float,
         delta_: float,
         *,
-        cdf: Callable[[float], float] = CND,
-        cndev: Callable[[float], float] = CNDEV
+        cdf: Callable[[float], float] = CDF,
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # Closed form solution to find in-the-money risk-neutral probaility given the delta
 
     if is_call:
-        return cdf(cndev(delta_ / exp((b - r) * T)) - v * sqrt(T))
+        return cdf(inv_cdf(delta_ / exp((b - r) * T)) - v * sqrt(T))
     else:
-        return cdf(cndev(-delta_ / exp((b - r) * T)) + v * sqrt(T))
+        return cdf(inv_cdf(-delta_ / exp((b - r) * T)) + v * sqrt(T))
 
 
 def strike_from_in_the_money_prob(
@@ -849,16 +849,16 @@ def strike_from_in_the_money_prob(
         b: float,
         in_the_money_prob: float,
         *,
-        cndev: Callable[[float], float] = CNDEV
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # Closed form solution to find strike given the in-the-money risk neutral probability
     if is_call:
         return S * exp(
-            -cndev(in_the_money_prob) * v * sqrt(T) + (b - v * v / 2) * T
+            -inv_cdf(in_the_money_prob) * v * sqrt(T) + (b - v * v / 2) * T
         )
     else:
         return S * exp(
-            cndev(in_the_money_prob) * v * sqrt(T) + (b - v * v / 2) * T
+            inv_cdf(in_the_money_prob) * v * sqrt(T) + (b - v * v / 2) * T
         )
 
 
@@ -869,11 +869,11 @@ def rnd_from_in_the_money_prob(
         v: float,
         in_the_money_prob: float,
         *,
-        pdf: Callable[[float], float] = ND,
-        cndev: Callable[[float], float] = CNDEV
+        pdf: Callable[[float], float] = PDF,
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # Risk Neutral Density from in-the-money probability
-    return exp(-r * T) * pdf(cndev(in_the_money_prob)) / (K * v * sqrt(T))
+    return exp(-r * T) * pdf(inv_cdf(in_the_money_prob)) / (K * v * sqrt(T))
 
 
 def delta_from_in_the_money_prob(
@@ -884,14 +884,14 @@ def delta_from_in_the_money_prob(
         v: float,
         in_the_money_prob: float,
         *,
-        cdf: Callable[[float], float] = CND,
-        cndev: Callable[[float], float] = CNDEV
+        cdf: Callable[[float], float] = CDF,
+        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     # Closed form solution to find in-the-money risk-neutral probaility given the delta
     if is_call:
-        return cdf(cndev(in_the_money_prob * exp((b - r) * T)) - v * sqrt(T))
+        return cdf(inv_cdf(in_the_money_prob * exp((b - r) * T)) - v * sqrt(T))
     else:
-        return -cdf(cndev(in_the_money_prob * exp((b - r) * T)) + v * sqrt(T))
+        return -cdf(inv_cdf(in_the_money_prob * exp((b - r) * T)) + v * sqrt(T))
 
 
 def max_ddelta_dvol_asset(
@@ -953,7 +953,7 @@ def in_the_money_probability(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
 ) -> float:
     # Delta for the generalized Black and Scholes formula
     d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
@@ -1009,8 +1009,8 @@ def profit_loss_std(
         v: float,
         NHedges: int,
         *,
-        pdf: Callable[[float], float] = ND,
-        cdf: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = PDF,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Profit/Loss STD for the generalized Black and Scholes formula
 
