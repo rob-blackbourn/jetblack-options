@@ -17,6 +17,22 @@ def ivol(
         *,
         cdf: Callable[[float], float] = CDF
 ) -> float:
+    """Calculate the volatility of an option that is implied by the price.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        p (float): The option price.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CDF.
+
+    Returns:
+        float: The implied volatility.
+    """
 
     vLow = 0.005
     vHigh = 4
