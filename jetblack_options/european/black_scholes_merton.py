@@ -1,4 +1,14 @@
-"""Plain Vanilla"""
+"""Black-Scholes-Merton analytic options pricing
+
+This is the "generalised" version using "cost of carry" (variable b).
+
+The cost of carry rate (b) is:
+
+* b == r: for non dividend paying stocks
+* b == r - q: For dividend paying stocks where the dividend yield is q
+* b == 0: for futures options
+* b = r - rj: for currency options.
+"""
 
 from math import exp, log, pi, sqrt
 from typing import Literal, Callable
@@ -18,13 +28,6 @@ def price(
         cdf: Callable[[float], float] = CDF
 ) -> float:
     """The generalised Black-Scholes pricing model for European options.
-
-    The cost of carry rate (b) is:
-
-    * b == r: for non dividend paying stocks
-    * b == r - q: For dividend paying stocks where the dividend yield is q
-    * b == 0: for futures options
-    * b = r - rj: for currency options.
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -95,9 +98,234 @@ def gamma(
         *,
         pdf: Callable[[float], float] = PDF
 ) -> float:
+    """The second derivative to the change in the asset price.
+
+    Args:
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        v (float): The volatility of the asset.
+        pdf (Callable[[float], float], optional): The probability distribution
+            function. Defaults to PDF.
+
+    Returns:
+        float: The gamma.
+    """
     d1 = (log(S / K) + T * (b + v ** 2 / 2)) / (v * sqrt(T))
 
     return exp((b - r) * T) * pdf(d1) / (S * v * sqrt(T))
+
+
+def theta(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    """The theta or time decay of the value of the option.
+
+    This value is typically reported by dividing by 365 (for a one calendar day
+    movement) or 252 (for a 1 trading day movement).
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
+
+    Returns:
+        float: The theta.
+    """
+    # Theta for the generalized Black and Scholes formula
+    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+
+    if is_call:
+        p1 = -S * exp((b - r) * T) * pdf(d1) * v / (2 * sqrt(T))
+        p2 = (b - r) * S * exp((b - r) * T) * cdf(d1)
+        p3 = r * K * exp(-r * T) * cdf(d2)
+        return p1 - p2 - p3
+    else:
+        p1 = -S * exp((b - r) * T) * pdf(d1) * v / (2 * sqrt(T))
+        p2 = (b - r) * S * exp((b - r) * T) * cdf(-d1)
+        p3 = r * K * exp(-r * T) * cdf(-d2)
+        return p1 + p2 + p3
+
+
+def vega(
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    """The sensitivity of the options price or a change in the asset volatility.
+
+    Args:
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        v (float): The volatility of the asset.
+        pdf (Callable[[float], float], optional): The probability distribution
+            function. Defaults to PDF.
+
+    Returns:
+        float: The vega
+    """
+    # Vega for the generalized Black and Scholes formula
+    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    return S * exp((b - r) * T) * pdf(d1) * sqrt(T)
+
+
+def rho(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    """The sensitivity of the option price to the risk free rate.
+
+    Useful for all options except futures options which should use
+    futures_rho.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+
+    Returns:
+        float: The rho.
+    """
+    # Rho for the generalized Black and Scholes formula for all options except futures
+    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    if is_call:
+        return T * K * exp(-r * T) * cdf(d2)
+    else:
+        return -T * K * exp(-r * T) * cdf(-d2)
+
+
+def carry(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    """Sensitivity to the cost of carry.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
+
+    Returns:
+        float: The carry.
+    """
+    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    if is_call:
+        return T * S * exp((b - r) * T) * cdf(d1)
+    else:
+        return -T * S * exp((b - r) * T) * cdf(-d1)
+
+
+def elasticity(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+) -> float:
+    """The option elasticity.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+
+    Returns:
+        float: The elasticity.
+    """
+    # Elasticity for the generalized Black and Scholes formula
+    return (
+        delta(is_call, S, K, T, r, b, v, cdf=cdf) * S /
+        price(is_call, S, K, T, r, b, v, cdf=cdf)
+    )
+
+
+def gammap(
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    # GammaP for the generalized Black and Scholes formula
+    return S * gamma(S, K, T, r, b, v, pdf=pdf) / 100
+
+
+def vegap(
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    # VegaP for the generalized Black and Scholes formula
+    return v / 10 * vega(S, K, T, r, b, v, pdf=pdf)
 
 
 def forward_delta(
@@ -240,20 +468,6 @@ def dgamma_dtime(
     )
 
 
-def gammap(
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    # GammaP for the generalized Black and Scholes formula
-    return S * gamma(S, K, T, r, b, v, pdf=pdf) / 100
-
-
 def dgammap_dspot(
         S: float,
         K: float,
@@ -302,21 +516,6 @@ def dgammap_dtime(
         gammap(S, K, T, r, b, v, pdf=pdf) *
         (r - b + b * d1 / (v * sqrt(T)) + (1 - d1 * d2) / (2 * T))
     )
-
-
-def vega(
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    # Vega for the generalized Black and Scholes formula
-    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    return S * exp((b - r) * T) * pdf(d1) * sqrt(T)
 
 
 def dvega_dtime(
@@ -371,20 +570,6 @@ def dvomma_dvol(
         dvega_dvol(S, K, T, r, b, v, pdf=pdf) *
         1 / v * (d1 * d2 - d1 / d2 - d2 / d1 - 1)
     )
-
-
-def vegap(
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    # VegaP for the generalized Black and Scholes formula
-    return v / 10 * vega(S, K, T, r, b, v, pdf=pdf)
 
 
 def dvegap_dvol(
@@ -491,53 +676,6 @@ def variance_ultima(
     )
 
 
-def theta(
-        is_call: bool,
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    """The theta or time decay of the value of the option.
-
-    This value is typically reported by dividing by 365 (for a one calendar day
-    movement) or 252 (for a 1 trading day movement).
-
-    Args:
-        is_call (bool): True for a call, false for a put.
-        S (float): The asset price.
-        K (float): The strike price.
-        T (float): The time to expiry in years.
-        r (float): The risk free rate.
-        b (float): The cost of carry.
-        v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
-        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
-
-    Returns:
-        float: The theta.
-    """
-    # Theta for the generalized Black and Scholes formula
-    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    d2 = d1 - v * sqrt(T)
-
-    if is_call:
-        p1 = -S * exp((b - r) * T) * pdf(d1) * v / (2 * sqrt(T))
-        p2 = (b - r) * S * exp((b - r) * T) * cdf(d1)
-        p3 = r * K * exp(-r * T) * cdf(d2)
-        return p1 - p2 - p3
-    else:
-        p1 = -S * exp((b - r) * T) * pdf(d1) * v / (2 * sqrt(T))
-        p2 = (b - r) * S * exp((b - r) * T) * cdf(-d1)
-        p3 = r * K * exp(-r * T) * cdf(-d2)
-        return p1 + p2 + p3
-
-
 def theta_driftless(
         S: float,
         K: float,
@@ -553,26 +691,6 @@ def theta_driftless(
     return -S * exp((b - r) * T) * pdf(d1) * v / (2 * sqrt(T))
 
 
-def rho(
-        is_call: bool,
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
-) -> float:
-    # Rho for the generalized Black and Scholes formula for all options except futures
-    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    d2 = d1 - v * sqrt(T)
-    if is_call:
-        return T * K * exp(-r * T) * cdf(d2)
-    else:
-        return -T * K * exp(-r * T) * cdf(-d2)
-
-
 def futures_rho(
         is_call: bool,
         S: float,
@@ -585,43 +703,6 @@ def futures_rho(
 ) -> float:
     # Rho for the generalized Black and Scholes formula for Futures option
     return -T * price(is_call, S, K, T, r, 0, v, cdf=cdf)
-
-
-def elasticity(
-        is_call: bool,
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-) -> float:
-    # Elasticity for the generalized Black and Scholes formula
-    return (
-        delta(is_call, S, K, T, r, b, v, cdf=cdf) * S /
-        price(is_call, S, K, T, r, b, v, cdf=cdf)
-    )
-
-
-def carry(
-        is_call: bool,
-        S: float,
-        K: float,
-        T: float,
-        r: float,
-        b: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
-) -> float:
-    # Carry rho sensitivity for the generalized Black and Scholes formula
-    d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    if is_call:
-        return T * S * exp((b - r) * T) * cdf(d1)
-    else:
-        return -T * S * exp((b - r) * T) * cdf(-d1)
 
 
 def phi(
