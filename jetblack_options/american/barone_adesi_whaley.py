@@ -36,38 +36,38 @@ def _kc(
     """
 
     # Calculate the seed value Si
-    N = 2 * b / v ** 2
+    n = 2 * b / v ** 2
     m = 2 * r / v ** 2
-    q2u = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * m)) / 2
+    q2u = (-(n - 1) + sqrt((n - 1) ** 2 + 4 * m)) / 2
     su = K / (1 - 1 / q2u)
     h2 = -(b * T + 2 * v * sqrt(T)) * K / (su - K)
     Si = K + (su - K) * (1 - exp(h2))
 
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
     d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    Q2 = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * k)) / 2
-    LHS = Si - K
-    RHS = (
+    q2 = (-(n - 1) + sqrt((n - 1) ** 2 + 4 * k)) / 2
+    lhs = Si - K
+    rhs = (
         bs_price(True, Si, K, T, r, b, v, cdf=cdf) +
-        (1 - exp((b - r) * T) * cdf(d1)) * Si / Q2
+        (1 - exp((b - r) * T) * cdf(d1)) * Si / q2
     )
     bi = (
-        exp((b - r) * T) * cdf(d1) * (1 - 1 / Q2) +
-        (1 - exp((b - r) * T) * cdf(d1) / (v * sqrt(T))) / Q2
+        exp((b - r) * T) * cdf(d1) * (1 - 1 / q2) +
+        (1 - exp((b - r) * T) * cdf(d1) / (v * sqrt(T))) / q2
     )
-    E = 0.000001
-    # Newton Raphson algorithm for finding critical price Si
-    while abs(LHS - RHS) / K > E:
-        Si = (K + RHS - bi * Si) / (1 - bi)
+    epsilon = 0.000001
+    # Using the Newton Raphson algorithm solve for Si
+    while abs(lhs - rhs) / K > epsilon:
+        Si = (K + rhs - bi * Si) / (1 - bi)
         d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-        LHS = Si - K
-        RHS = (
+        lhs = Si - K
+        rhs = (
             bs_price(True, Si, K, T, r, b, v, cdf=cdf) +
-            (1 - exp((b - r) * T) * cdf(d1)) * Si / Q2
+            (1 - exp((b - r) * T) * cdf(d1)) * Si / q2
         )
         bi = (
-            exp((b - r) * T) * cdf(d1) * (1 - 1 / Q2) +
-            (1 - exp((b - r) * T) * pdf(d1) / (v * sqrt(T))) / Q2
+            exp((b - r) * T) * cdf(d1) * (1 - 1 / q2) +
+            (1 - exp((b - r) * T) * pdf(d1) / (v * sqrt(T))) / q2
         )
 
     return Si
@@ -87,20 +87,20 @@ def _call_price(
 
     if b >= r:
         return bs_price(True, S, K, T, r, b, v, cdf=cdf)
+    
+    Sk = _kc(K, T, r, b, v, pdf=pdf, cdf=cdf)
+    n = 2 * b / v ** 2
+    k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
+    d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
+    q2 = (-(n - 1) + sqrt((n - 1) ** 2 + 4 * k)) / 2
+    a2 = (Sk / q2) * (1 - exp((b - r) * T) * cdf(d1))
+    if S < Sk:
+        return (
+            bs_price(True, S, K, T, r, b, v, cdf=cdf)
+            + a2 * (S / Sk) ** q2
+        )
     else:
-        Sk = _kc(K, T, r, b, v, pdf=pdf, cdf=cdf)
-        N = 2 * b / v ** 2
-        k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
-        d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-        Q2 = (-(N - 1) + sqrt((N - 1) ** 2 + 4 * k)) / 2
-        a2 = (Sk / Q2) * (1 - exp((b - r) * T) * cdf(d1))
-        if S < Sk:
-            return (
-                bs_price(True, S, K, T, r, b, v, cdf=cdf)
-                + a2 * (S / Sk) ** Q2
-            )
-        else:
-            return S - K
+        return S - K
 
 
 def _kp(
@@ -116,38 +116,38 @@ def _kp(
     # Newton Raphson algorithm to solve for the critical commodity price for a Put
 
     # Calculation of seed value, Si
-    N = 2 * b / v ** 2
+    n = 2 * b / v ** 2
     m = 2 * r / v ** 2
-    q1u = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * m)) / 2
+    q1u = (-(n - 1) - sqrt((n - 1) ** 2 + 4 * m)) / 2
     su = K / (1 - 1 / q1u)
     h1 = (b * T - 2 * v * sqrt(T)) * K / (K - su)
     Si = su + (K - su) * exp(h1)
 
     k = 2 * r / (v * 2 * (1 - exp(-r * T)))
     d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    Q1 = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * k)) / 2
-    LHS = K - Si
-    RHS = (
+    q1 = (-(n - 1) - sqrt((n - 1) ** 2 + 4 * k)) / 2
+    lhs = K - Si
+    rhs = (
         bs_price(False, Si, K, T, r, b, v, cdf=cdf)
-        - (1 - exp((b - r) * T) * cdf(-d1)) * Si / Q1
+        - (1 - exp((b - r) * T) * cdf(-d1)) * Si / q1
     )
     bi = (
-        -exp((b - r) * T) * cdf(-d1) * (1 - 1 / Q1)
-        - (1 + exp((b - r) * T) * pdf(-d1) / (v * sqrt(T))) / Q1
+        -exp((b - r) * T) * cdf(-d1) * (1 - 1 / q1)
+        - (1 + exp((b - r) * T) * pdf(-d1) / (v * sqrt(T))) / q1
     )
-    E = 0.000001
-    # Newton Raphson algorithm for finding critical price Si
-    while abs(LHS - RHS) / K > E:
-        Si = (K - RHS + bi * Si) / (1 + bi)
+    epsilon = 0.000001
+    # Using the Newton Raphson algorithm, solve for Si.
+    while abs(lhs - rhs) / K > epsilon:
+        Si = (K - rhs + bi * Si) / (1 + bi)
         d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-        LHS = K - Si
-        RHS = (
+        lhs = K - Si
+        rhs = (
             bs_price(False, Si, K, T, r, b, v, cdf=cdf)
-            - (1 - exp((b - r) * T) * cdf(-d1)) * Si / Q1
+            - (1 - exp((b - r) * T) * cdf(-d1)) * Si / q1
         )
         bi = (
-            -exp((b - r) * T) * cdf(-d1) * (1 - 1 / Q1)
-            - (1 + exp((b - r) * T) * cdf(-d1) / (v * sqrt(T))) / Q1
+            -exp((b - r) * T) * cdf(-d1) * (1 - 1 / q1)
+            - (1 + exp((b - r) * T) * cdf(-d1) / (v * sqrt(T))) / q1
         )
 
     return Si
@@ -166,14 +166,14 @@ def _put_price(
 ) -> float:
 
     Sk = _kp(K, T, r, b, v, pdf=pdf, cdf=cdf)
-    N = 2 * b / v ** 2
+    n = 2 * b / v ** 2
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
     d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    Q1 = (-(N - 1) - sqrt((N - 1) ** 2 + 4 * k)) / 2
-    a1 = -(Sk / Q1) * (1 - exp((b - r) * T) * cdf(-d1))
+    q1 = (-(n - 1) - sqrt((n - 1) ** 2 + 4 * k)) / 2
+    a1 = -(Sk / q1) * (1 - exp((b - r) * T) * cdf(-d1))
 
     if S > Sk:
-        return bs_price(False, S, K, T, r, b, v, cdf=cdf) + a1 * (S / Sk) ** Q1
+        return bs_price(False, S, K, T, r, b, v, cdf=cdf) + a1 * (S / Sk) ** q1
     else:
         return K - S
 
@@ -206,7 +206,7 @@ def price(
     Returns:
         float: The price of the option.
     """
-    # The Barone-Adesi and Whaley (1987) American approximation
+
     if is_call:
         return _call_price(S, K, T, r, b, v, pdf=pdf, cdf=cdf)
     else:
