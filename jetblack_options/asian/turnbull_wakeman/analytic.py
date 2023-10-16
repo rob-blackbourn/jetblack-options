@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND
+from ...distributions import CDF
 from ...european.black_scholes_merton import price as bs_price
 
 
@@ -18,7 +18,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Arithmetic average rate option based on Turnbull-Wakeman.
 
@@ -34,7 +34,7 @@ def price(
         b (float): Cost of carry underlying asset can be positive and negative.
         v (float): Annualized volatility of asset price.
         cnd (Callable[[float], float], optional): The cumulative normal
-            distribution function. Defaults to CND.
+            distribution function. Defaults to CDF.
 
     Raises:
         ValueError: _description_

@@ -1,9 +1,6 @@
 """Barriers"""
 
-from math import exp, log, sqrt
-from typing import Literal, Optional, Callable
-
-from ...distributions import CND, CBND
+from typing import Literal
 
 from .analytic import price
 

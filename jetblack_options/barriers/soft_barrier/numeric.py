@@ -1,9 +1,8 @@
 """Barriers"""
 
-from math import exp, log, sqrt
-from typing import Literal, Optional, Callable
+from typing import Callable
 
-from ...distributions import CND, CBND
+from ...distributions import CDF
 
 from .analytic import price
 
@@ -20,7 +19,7 @@ def delta(
         v: float,
         *,
         dS: float = 0.0001,
-        cnd: Callable[[float], float] = CND
+        cnd: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S + dS, cdf, L, U, T, r, b, v, cdf=cnd)
@@ -42,7 +41,7 @@ def ddelta_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S + dS, K, L, U, T, r, b, v + dv, cdf=cdf)
@@ -64,7 +63,7 @@ def gamma(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S + dS, K, L, U, T, r, b, v, cdf=cdf)
@@ -85,7 +84,7 @@ def gammap(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return S / 100 * gamma(is_call, is_in, S + dS, K, L, U, T, r, b, v, cdf=cdf)
 
@@ -103,7 +102,7 @@ def dgamma_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cnd: Callable[[float], float] = CND
+        cnd: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S + dS, K, L, U, T, r, b, v + dv, cdf=cnd)
@@ -127,7 +126,7 @@ def vega(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K, L, U, T, r, b, v + dv, cdf=cdf)
@@ -147,7 +146,7 @@ def vomma(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K, L, U, T, r, b, v + dv, cdf=cdf)
@@ -169,7 +168,7 @@ def vegap(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         vega(is_call, is_in, S + dS, K, L, U, T, r, b, v, dv=dv, cdf=cdf)
@@ -189,7 +188,7 @@ def rho(
         v: float,
         *,
         dr: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K, L, U, T, r + dr, b + dr, v, cdf=cdf)
@@ -209,7 +208,7 @@ def rho2(
         v: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K, L, U, T, r, b - db, v, cdf=cdf)
@@ -229,7 +228,7 @@ def carry(
         v: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K, L, U, T, r, b + db, v, cdf=cdf)
@@ -249,7 +248,7 @@ def theta(
         v: float,
         *,
         dT: float = 1 / 365,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     if T <= dT:
         return (
@@ -275,7 +274,7 @@ def strike_delta(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K + dS, L, U, T, r, b, v, cdf=cdf)
@@ -295,7 +294,7 @@ def strike_gamma(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, is_in, S, K + dS, L, U, T, r, b, v, cdf=cdf)

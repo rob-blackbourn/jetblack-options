@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND
+from ...distributions import CDF
 
 from .analytic import price
 
@@ -22,7 +22,7 @@ def delta(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
@@ -43,7 +43,7 @@ def elasticity(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
@@ -64,7 +64,7 @@ def gamma(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
         return (
             price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
@@ -87,7 +87,7 @@ def dgamma_dvol(
         *,
         dS: float = 0.01,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
@@ -112,7 +112,7 @@ def gammap(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
@@ -135,7 +135,7 @@ def ddelta_dvol(
         *,
         dS: float = 0.01,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S + dS, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
@@ -158,7 +158,7 @@ def vega(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
@@ -179,7 +179,7 @@ def vomma(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
@@ -201,7 +201,7 @@ def vegap(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
@@ -222,7 +222,7 @@ def dvega_dvol(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r, b, v + dv, cdf=cdf)
@@ -244,7 +244,7 @@ def theta(
         v: float,
         *,
         dT: float = 1 / 365,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     if t1 > dT and T > dT:
         return (
@@ -268,7 +268,7 @@ def rho(
         v: float,
         *,
         dr: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r + dr, b + dr, v, cdf=cdf)
@@ -289,7 +289,7 @@ def futures_rho(
         v: float,
         *,
         dr: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r + dr, b, v, cdf=cdf)
@@ -310,7 +310,7 @@ def rho2(
         v: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r, b - db, v, cdf=cdf)
@@ -331,7 +331,7 @@ def carry(
         v: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K, t1, T, n, m, r, b + db, v, cdf=cdf)
@@ -352,7 +352,7 @@ def speed(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S + 2 * dS, SA, K, t1, T, n, m, r, b, v, cdf=cdf)
@@ -375,7 +375,7 @@ def strike_delta(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K + dS, t1, T, n, m, r, b, v, cdf=cdf)
@@ -396,7 +396,7 @@ def strike_gamma(
         v: float,
         *,
         dS: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     return (
         price(is_call, S, SA, K + dS, t1, T, n, m, r, b, v, cdf=cdf)

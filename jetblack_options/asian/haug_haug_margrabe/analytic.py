@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND
+from ...distributions import CDF
 from ...european.black_scholes_merton import price as bs_price
 
 
@@ -20,7 +20,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     # This is a modified version of the Levy formula, this is the formula published in "Asian Pyramid Power" By

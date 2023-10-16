@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Literal, Optional, Callable
 
-from ...distributions import CND, CBND
+from ...distributions import CDF, CBND
 from ...european.black_scholes_merton import price as bs_price
 
 # Partial-time single asset barrier options
@@ -16,7 +16,10 @@ def price(
         T2: float,
         r: float,
         b: float,
-        v: float
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        bcdf: Callable[[float, float, float], float] = CBND
 ) -> float:
     
     d1 = (log(S / K) + (b + v ** 2 / 2) * T2) / (v * sqrt(T2))
@@ -34,14 +37,14 @@ def price(
     g3 = g1 + 2 * log(H / S) / (v * sqrt(T2))
     g4 = g3 - v * sqrt(T2)
     
-    z1 = CND(e2) - (H / S) ** (2 * mu) * CND(e4)
-    z2 = CND(-e2) - (H / S) ** (2 * mu) * CND(-e4)
-    z3 = CBND(g2, e2, rho) - (H / S) ** (2 * mu) * CBND(g4, -e4, -rho)
-    z4 = CBND(-g2, -e2, rho) - (H / S) ** (2 * mu) * CBND(-g4, e4, -rho)
-    z5 = CND(e1) - (H / S) ** (2 * (mu + 1)) * CND(e3)
-    z6 = CND(-e1) - (H / S) ** (2 * (mu + 1)) * CND(-e3)
-    z7 = CBND(g1, e1, rho) - (H / S) ** (2 * (mu + 1)) * CBND(g3, -e3, -rho)
-    z8 = CBND(-g1, -e1, rho) - (H / S) ** (2 * (mu + 1)) * CBND(-g3, e3, -rho)
+    z1 = cdf(e2) - (H / S) ** (2 * mu) * cdf(e4)
+    z2 = cdf(-e2) - (H / S) ** (2 * mu) * cdf(-e4)
+    z3 = bcdf(g2, e2, rho) - (H / S) ** (2 * mu) * bcdf(g4, -e4, -rho)
+    z4 = bcdf(-g2, -e2, rho) - (H / S) ** (2 * mu) * bcdf(-g4, e4, -rho)
+    z5 = cdf(e1) - (H / S) ** (2 * (mu + 1)) * cdf(e3)
+    z6 = cdf(-e1) - (H / S) ** (2 * (mu + 1)) * cdf(-e3)
+    z7 = bcdf(g1, e1, rho) - (H / S) ** (2 * (mu + 1)) * bcdf(g3, -e3, -rho)
+    z8 = bcdf(-g1, -e1, rho) - (H / S) ** (2 * (mu + 1)) * bcdf(-g3, e3, -rho)
     
     if TypeFlag == "cdoA" or TypeFlag == "cuoA": # call down-and out and up-and-out type A
         if TypeFlag == "cdoA":

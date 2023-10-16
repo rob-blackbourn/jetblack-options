@@ -2,7 +2,7 @@
 
 from typing import Callable
 
-from ..distributions import CND
+from ..distributions import CDF
 
 from .black_scholes_merton import price
 
@@ -15,7 +15,7 @@ def ivol(
         b: float,
         p: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     vLow = 0.005

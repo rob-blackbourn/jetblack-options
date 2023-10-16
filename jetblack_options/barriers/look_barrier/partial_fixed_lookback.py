@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND, CBND
+from ...distributions import CDF, CBND
 
 
 def price(
@@ -15,7 +15,7 @@ def price(
         r: float,
         b: float,
         v: float,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
     # Partial-time fixed strike look-back options
@@ -44,8 +44,8 @@ def price(
             * exp((b - r) * T2) * cdf(f1) * cdf(-e2))
     else:
         return (
-            K * exp(-r * T2) * CND(-d2)
-            - S * exp((b - r) * T2) * CND(-d1)
+            K * exp(-r * T2) * cdf(-d2)
+            - S * exp((b - r) * T2) * cdf(-d1)
             + S * exp(-r * T2) * v ** 2 / (2 * b) * (
                 (S / K) ** (-2 * b / v ** 2) * cbnd(
                     -d1 + 2 * b * sqrt(T2) / v,

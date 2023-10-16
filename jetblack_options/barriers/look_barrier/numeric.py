@@ -1,9 +1,8 @@
 """Barriers"""
 
-from math import exp, log, sqrt
-from typing import Literal, Optional, Callable
+from typing import Optional, Callable
 
-from ...distributions import CND, CBND
+from ...distributions import CDF, CBND
 from .partial_fixed_lookback import price as lookback_price
 
 from .analytic import price
@@ -42,7 +41,7 @@ def delta(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -70,7 +69,7 @@ def ddelta_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -98,7 +97,7 @@ def gamma(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -125,7 +124,7 @@ def gammap(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -149,7 +148,7 @@ def dgamma_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -179,7 +178,7 @@ def vega(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -206,7 +205,7 @@ def vegap(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -229,7 +228,7 @@ def vomma(
         v: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -256,7 +255,7 @@ def rho(
         v: float,
         *,
         dr: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -282,7 +281,7 @@ def rho2(
         v: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -308,7 +307,7 @@ def carry(
         v: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -334,7 +333,7 @@ def theta(
         v: float,
         *,
         dT: float = 1 / 365,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -366,7 +365,7 @@ def strike_delta(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 
@@ -392,7 +391,7 @@ def strike_gamma(
         v: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
 

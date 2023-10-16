@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND, CBND
+from ...distributions import CDF, CBND
 from .partial_fixed_lookback import price as lookback_price
 
 def price(
@@ -18,7 +18,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND
 ) -> float:
     # Look-barrier options

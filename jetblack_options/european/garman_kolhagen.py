@@ -1,9 +1,9 @@
 """Garman and Kolhagen (1983) Currency options"""
 
-from math import exp, log, pi, sqrt
+from math import exp, log, sqrt
 from typing import Callable
 
-from ..distributions import CND
+from ..distributions import CDF
 
 
 def price(
@@ -14,7 +14,7 @@ def price(
         r: float,
         rf: float,
         v: float,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Garman and Kolhagen (1983) Currency options
                 

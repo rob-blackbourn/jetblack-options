@@ -1,10 +1,9 @@
 """Double barriers"""
 
-from math import exp, log, sqrt
-from typing import Literal, Optional, Callable
+from typing import Callable
 
 from ...european.black_scholes_merton import price as bs_price
-from ...distributions import CND, CBND
+from ...distributions import CDF
 from ...numeric_greeks import NumericGreeks
 
 from .analytics import price
@@ -24,7 +23,7 @@ def delta(
         delta2: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -56,7 +55,7 @@ def gamma(
         delta2: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -90,7 +89,7 @@ def ddelta_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -123,7 +122,7 @@ def gammap(
         delta2: float,
         *,
         dS: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -152,7 +151,7 @@ def dgamma_dvol(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -187,7 +186,7 @@ def vega(
         delta2: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -218,7 +217,7 @@ def vomma(
         delta2: float,
         *,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -251,7 +250,7 @@ def vegap(
         *,
         dS: float = 0.0001,
         dv: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -279,7 +278,7 @@ def rho(
         delta2: float,
         *,
         dr: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -310,7 +309,7 @@ def futures_rho(
         delta2: float,
         *,
         dr: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -341,7 +340,7 @@ def rho2(
         delta2: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -372,7 +371,7 @@ def carry(
         delta2: float,
         *,
         db: float = 0.01,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -403,7 +402,7 @@ def theta(
         delta2: float,
         *,
         dT: float = 1 / 365,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -440,7 +439,7 @@ def strike_delta(
         delta2: float,
         *,
         dX: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):
@@ -471,7 +470,7 @@ def strike_gamma(
         delta2: float,
         *,
         dX: float = 0.0001,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if not is_in and (S <= L or S >= U):

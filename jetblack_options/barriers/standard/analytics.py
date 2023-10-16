@@ -1,8 +1,9 @@
 """Standard barrier option - analytic"""
 
 from math import exp, log, sqrt
+from typing import Callable
 
-from ...distributions import CND
+from ...distributions import CDF
 
 
 def price(
@@ -16,7 +17,9 @@ def price(
         T: float,
         r: float,
         b: float,
-        v: float
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Standard barrier options
 
@@ -43,12 +46,34 @@ def price(
             eta = 1
             phi = -1
     
-    f1 = phi * S * exp((b - r) * T) * CND(phi * X1) - phi * K * exp(-r * T) * CND(phi * X1 - phi * v * sqrt(T))
-    f2 = phi * S * exp((b - r) * T) * CND(phi * X2) - phi * K * exp(-r * T) * CND(phi * X2 - phi * v * sqrt(T))
-    f3 = phi * S * exp((b - r) * T) * (H / S) ** (2 * (mu + 1)) * CND(eta * y1) - phi * K * exp(-r * T) * (H / S) ** (2 * mu) * CND(eta * y1 - eta * v * sqrt(T))
-    f4 = phi * S * exp((b - r) * T) * (H / S) ** (2 * (mu + 1)) * CND(eta * y2) - phi * K * exp(-r * T) * (H / S) ** (2 * mu) * CND(eta * y2 - eta * v * sqrt(T))
-    f5 = k * exp(-r * T) * (CND(eta * X2 - eta * v * sqrt(T)) - (H / S) ** (2 * mu) * CND(eta * y2 - eta * v * sqrt(T)))
-    f6 = k * ((H / S) ** (mu + lambda_) * CND(eta * z) + (H / S) ** (mu - lambda_) * CND(eta * z - 2 * eta * lambda_ * v * sqrt(T)))
+    f1 = (
+        phi * S * exp((b - r) * T) * cdf(phi * X1)
+        - phi * K * exp(-r * T) * cdf(phi * X1 - phi * v * sqrt(T))
+    )
+    f2 = (
+        phi * S * exp((b - r) * T) * cdf(phi * X2)
+        - phi * K * exp(-r * T) * cdf(phi * X2 - phi * v * sqrt(T))
+    )
+    f3 = (
+        phi * S * exp((b - r) * T) * (H / S) ** (2 * (mu + 1)) * cdf(eta * y1)
+        - phi * K * exp(-r * T) * (H / S) ** (2 * mu) * cdf(eta * y1 - eta * v * sqrt(T))
+    )
+    f4 = (
+        phi * S * exp((b - r) * T) * (H / S) ** (2 * (mu + 1)) * cdf(eta * y2)
+        - phi * K * exp(-r * T) * (H / S) ** (2 * mu) * cdf(eta * y2 - eta * v * sqrt(T))
+    )
+    f5 = (
+        k * exp(-r * T) * (
+            cdf(eta * X2 - eta * v * sqrt(T))
+            - (H / S) ** (2 * mu) * cdf(eta * y2 - eta * v * sqrt(T))
+        )
+    )
+    f6 = (
+        k * (
+            (H / S) ** (mu + lambda_) * cdf(eta * z)
+            + (H / S) ** (mu - lambda_) * cdf(eta * z - 2 * eta * lambda_ * v * sqrt(T))
+        )
+    )
     
     if K > H:
         if is_call:

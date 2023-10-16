@@ -1,11 +1,6 @@
 """Barriers"""
 
-from math import exp, log, sqrt
-from typing import Literal, Optional, cast
-
-from ..distributions import CND, CBND
-from ..european.black_scholes.plain_vanilla import GBlackScholes, EGBlackScholes, EGBlackScholes_OutPutFlag
-
+from math import exp, sqrt
 
 # Discrete barrier monitoring adjustment
 def DiscreteAdjustedBarrier(S: float, H: float, v: float, dt: float) -> float:

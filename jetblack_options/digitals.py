@@ -1,9 +1,9 @@
 """Digitals"""
 
 from math import exp, log, sqrt
-from typing import Literal, Optional
+from typing import Literal, Optional, Callable
 
-from .distributions import CND
+from .distributions import CDF
 
 # Binary barrier options
 def BinaryBarrier(
@@ -17,7 +17,9 @@ def BinaryBarrier(
         b: float,
         v: float,
         eta: int,
-        phi: int
+        phi: int,
+        *,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     # TypeFlag:  Value 1 to 28 dependent on binary option type,
@@ -31,15 +33,20 @@ def BinaryBarrier(
     y2 = log(h / S) / (v * sqrt(T)) + (mu + 1) * v * sqrt(T)
     Z = log(h / S) / (v * sqrt(T)) + lambda_ * v * sqrt(T)
     
-    a1 = S * exp((b - r) * T) * CND(phi * X1)
-    b1 = k * exp(-r * T) * CND(phi * X1 - phi * v * sqrt(T))
-    a2 = S * exp((b - r) * T) * CND(phi * X2)
-    b2 = k * exp(-r * T) * CND(phi * X2 - phi * v * sqrt(T))
-    a3 = S * exp((b - r) * T) * (h / S) ** (2 * (mu + 1)) * CND(eta * y1)
-    b3 = k * exp(-r * T) * (h / S) ** (2 * mu) * CND(eta * y1 - eta * v * sqrt(T))
-    a4 = S * exp((b - r) * T) * (h / S) ** (2 * (mu + 1)) * CND(eta * y2)
-    b4 = k * exp(-r * T) * (h / S) ** (2 * mu) * CND(eta * y2 - eta * v * sqrt(T))
-    a5 = k * ((h / S) ** (mu + lambda_) * CND(eta * Z) + (h / S) ** (mu - lambda_) * CND(eta * Z - 2 * eta * lambda_ * v * sqrt(T)))
+    a1 = S * exp((b - r) * T) * cdf(phi * X1)
+    b1 = k * exp(-r * T) * cdf(phi * X1 - phi * v * sqrt(T))
+    a2 = S * exp((b - r) * T) * cdf(phi * X2)
+    b2 = k * exp(-r * T) * cdf(phi * X2 - phi * v * sqrt(T))
+    a3 = S * exp((b - r) * T) * (h / S) ** (2 * (mu + 1)) * cdf(eta * y1)
+    b3 = k * exp(-r * T) * (h / S) ** (2 * mu) * cdf(eta * y1 - eta * v * sqrt(T))
+    a4 = S * exp((b - r) * T) * (h / S) ** (2 * (mu + 1)) * cdf(eta * y2)
+    b4 = k * exp(-r * T) * (h / S) ** (2 * mu) * cdf(eta * y2 - eta * v * sqrt(T))
+    a5 = (
+        k * (
+            (h / S) ** (mu + lambda_) * cdf(eta * Z)
+            + (h / S) ** (mu - lambda_) * cdf(eta * Z - 2 * eta * lambda_ * v * sqrt(T))
+        )
+    )
     
     if x > h:
         if TypeFlag < 5:
@@ -293,14 +300,23 @@ def EBinaryBarrier(
         raise ValueError("invalid output flag")
 
 
-# Cash-or-nothing options
-def CashOrNothing(CallPutFlag: Literal['c', 'p'], S: float, x: float, k: float, T: float, r: float, b: float, v: float) -> float:
+def CashOrNothing(
+        is_call: bool,
+        S: float,
+        x: float,
+        k: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    # Cash-or-nothing options
 
     d = (log(S / x) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
 
-    if CallPutFlag == "c":
-        return k * exp(-r * T) * CND(d)
-    elif CallPutFlag == "p":
-        return k * exp(-r * T) * CND(-d)
+    if is_call:
+        return k * exp(-r * T) * cdf(d)
     else:
-        raise ValueError("invalid call put flag")
+        return k * exp(-r * T) * cdf(-d)

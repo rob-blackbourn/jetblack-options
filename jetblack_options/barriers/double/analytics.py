@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Literal, Optional, Callable
 
-from ...distributions import CND
+from ...distributions import CDF
 from ...european.black_scholes_merton import price as bs_price
 
 # Double barrier options
@@ -21,7 +21,7 @@ def price(
         delta1: float,
         delta2: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     F = U * exp(delta1 * T)
