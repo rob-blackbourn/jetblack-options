@@ -48,7 +48,7 @@ def CND(x: float)-> float:
     return 1 - c if x > 0 else c
 
 
-# Inverse cummulative normal distribution function
+# Inverse cumulative normal distribution function
 def CNDEV(U: float) -> float:
     
     A = (2.50662823884, -18.61500062529, 41.39119773534, -25.44106049637)
@@ -72,7 +72,7 @@ def CNDEV(U: float) -> float:
 
 # Approximation of inverse chi-square (Weiss and Greenhall, 1996)
 # Restrictions: df >= 1 and 0.005 <= p <= 0.995
-# df can in theory be nonintegral, but we define it as int here. 
+# df can in theory be non-integral, but we define it as int here. 
 # Returns, given the desired p-value and a degree of freedom df, 
 # the corresponding chi-square value.
 # Max. error of approximation is 3%
@@ -132,7 +132,7 @@ def CBND(x: float, y: float, rho: float) -> float:
     #        On the computation of the bivariate normal integral,
     #        Journal of Statist. Comput. Simul. 35, pp. 101-107,
     #    with major modifications for double precision, and for |R| close to 1.
-    #   This code was originally transelated into VBA by Graeme West
+    #   This code was originally translated into VBA by Graeme West
 
     if abs(rho) < 0.3:
         W = [
