@@ -15,7 +15,9 @@ def ivol(
         b: float,
         p: float,
         *,
-        cdf: Callable[[float], float] = CDF
+        cdf: Callable[[float], float] = CDF,
+        max_iterations: int = 20,
+        epsilon = 1e-8
 ) -> float:
     """Calculate the volatility of an option that is implied by the price.
 
@@ -29,30 +31,33 @@ def ivol(
         p (float): The option price.
         cdf (Callable[[float], float], optional): The cumulative probability
             distribution function. Defaults to CDF.
+        max_iterations (int, Optional): The maximum number of iterations before
+            a price is returned. Defaults to 20.
+        epsilon (float, Optional): The largest acceptable error. Defaults to 1e-8.
 
     Returns:
         float: The implied volatility.
     """
 
-    vLow = 0.005
-    vHigh = 4
-    epsilon = 0.00000001
-    cLow = price(is_call, S, K, T, r, b, vLow, cdf=cdf)
-    cHigh = price(is_call, S, K, T, r, b, vHigh, cdf=cdf)
-    N = 0
-    vi = vLow + (p - cLow) * (vHigh - vLow) / (cHigh - cLow)
-    while abs(p - price(is_call, S, K, T, r, b, vi, cdf=cdf)) > epsilon:
-        N = N + 1
-        if N > 20:
-            break
+    v_lo = 0.005
+    v_hi = 4
+    p_lo = price(is_call, S, K, T, r, b, v_lo, cdf=cdf)
+    p_hi = price(is_call, S, K, T, r, b, v_hi, cdf=cdf)
+
+    n = 0
+    v = v_lo + (p - p_lo) * (v_hi - v_lo) / (p_hi - p_lo)
+    p1 = price(is_call, S, K, T, r, b, v, cdf=cdf)
+    while abs(p - p1) > epsilon and n < max_iterations:
+        n += 1
         
-        if price(is_call, S, K, T, r, b, vi, cdf=cdf) < p:
-            vLow = vi
+        if p1 < p:
+            v_lo = v
         else:
-            vHigh = vi
+            v_hi = v
 
-        cLow = price(is_call, S, K, T, r, b, vLow, cdf=cdf)
-        cHigh = price(is_call, S, K, T, r, b, vHigh, cdf=cdf)
-        vi = vLow + (p - cLow) * (vHigh - vLow) / (cHigh - cLow)
+        p_lo = price(is_call, S, K, T, r, b, v_lo, cdf=cdf)
+        p_hi = price(is_call, S, K, T, r, b, v_hi, cdf=cdf)
+        v = v_lo + (p - p_lo) * (v_hi - v_lo) / (p_hi - p_lo)
+        p1 = price(is_call, S, K, T, r, b, v, cdf=cdf)
 
-    return vi
+    return v
