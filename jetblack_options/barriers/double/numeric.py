@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Literal, Optional, Callable
 
-from ...european.black_scholes.analytic import price as bs_price
+from ...european.black_scholes_merton import price as bs_price
 from ...distributions import CND, CBND
 from ...numeric_greeks import NumericGreeks
 

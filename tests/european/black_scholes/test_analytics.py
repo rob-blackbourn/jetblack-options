@@ -1,6 +1,6 @@
 """Tests for Black-Scholes European analytic options"""
 
-from jetblack_options.european.black_scholes.analytic import (
+from jetblack_options.european.black_scholes_merton import (
     price,
     delta,
     gamma,

@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ...distributions import CND
+from ..distributions import CND
 
 
 def price(

@@ -2,9 +2,9 @@
 
 from typing import Callable
 
-from ...distributions import CND
+from ..distributions import CND
 
-from .analytic import price
+from .black_scholes_merton import price
 
 def ivol(
         is_call: bool,
