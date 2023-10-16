@@ -190,6 +190,22 @@ def price(
         pdf: Callable[[float], float] = PDF,
         cdf: Callable[[float], float] = CDF
 ) -> float:
+    """The Barone-Adesi and Whaley (1987) American approximation.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
+
+    Returns:
+        float: The price of the option.
+    """
     # The Barone-Adesi and Whaley (1987) American approximation
     if is_call:
         return _call_price(S, K, T, r, b, v, pdf=pdf, cdf=cdf)

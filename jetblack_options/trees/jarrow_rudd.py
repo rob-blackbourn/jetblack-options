@@ -14,8 +14,22 @@ def greeks(
         v: float,
         n: int
 ) -> Tuple[float, float, float, float]:
-    # Rendelman-Barter binomial tree
-    
+    """Jarrow-Rudd binomial option pricing tree.
+
+    Args:
+        is_european (bool): Tue for European, false for American.
+        is_call (bool): True for a call, false for a put.
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        v (float): The volatility of the asset.
+        n (int): The number of the steps in the tree.
+
+    Returns:
+        Tuple[float, float, float, float]: The price, delta, gamma, theta.
+    """
     z = 1 if is_call else -1
     
     dT = T / n

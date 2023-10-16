@@ -75,6 +75,22 @@ def price(
         *,
         cdf: Callable[[float], float] = CDF
 ) -> float:
+    """The Bjerksund and Stensland (1993) American approximation.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        v (float): The volatility of the asset.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CDF.
+
+    Returns:
+        float: The price of the option.
+    """
     if is_call:
         return _call_price(S, K, T, r, b, v, cdf=cdf)
     else:
