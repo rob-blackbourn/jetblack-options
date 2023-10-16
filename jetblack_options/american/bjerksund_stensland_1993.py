@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable, Literal, Optional
 
-from ..distributions import CND
+from ..distributions import CDF
 from ..european.black_scholes_merton import price as bs_price
 
 def _phi(
@@ -16,7 +16,7 @@ def _phi(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
 ) -> float:
     lambda_ = (-r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2) * T
     d = -(log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T) / (v * sqrt(T))
@@ -36,7 +36,7 @@ def _call_price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     
     if b >= r: # Never optimal to exercise before maturity
@@ -73,7 +73,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     if is_call:
         return _call_price(S, K, T, r, b, v, cdf=cdf)

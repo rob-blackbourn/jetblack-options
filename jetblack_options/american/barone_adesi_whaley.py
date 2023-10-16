@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ..distributions import CND, ND
+from ..distributions import CDF, PDF
 from ..european.black_scholes_merton import price as bs_price
 
 
@@ -14,8 +14,8 @@ def _kc(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND,
-        cdf: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = PDF,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Newton Raphson algorithm to solve for the critical commodity price for a
     Call.
@@ -27,9 +27,9 @@ def _kc(
         b (float): The asset growth.
         v (float): The volatility.
         pdf (Callable[[float], float], optional): A function returning the normal
-            distribution. Defaults to ND.
+            distribution. Defaults to PDF.
         cdf (Callable[[float], float], optional): A function returning the
-            cumulative normal distribution. Defaults to CND.
+            cumulative normal distribution. Defaults to CDF.
 
     Returns:
         float: The price.
@@ -81,8 +81,8 @@ def _call_price(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND,
-        cdf: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = PDF,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     if b >= r:
@@ -110,8 +110,8 @@ def _kp(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND,
-        cdf: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = PDF,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Newton Raphson algorithm to solve for the critical commodity price for a Put
 
@@ -161,8 +161,8 @@ def _put_price(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND,
-        cdf: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = PDF,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     Sk = _kp(K, T, r, b, v, pdf=pdf, cdf=cdf)
@@ -187,8 +187,8 @@ def price(
         b: float,
         v: float,
         *,
-        pdf: Callable[[float], float] = ND,
-        cdf: Callable[[float], float] = CND
+        pdf: Callable[[float], float] = PDF,
+        cdf: Callable[[float], float] = CDF
 ) -> float:
     # The Barone-Adesi and Whaley (1987) American approximation
     if is_call:

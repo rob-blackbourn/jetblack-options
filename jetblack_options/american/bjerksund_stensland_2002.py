@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ..distributions import CND, CBND
+from ..distributions import CDF, CBND
 from ..european.black_scholes_merton import price as bs_price
 
 def _phi(
@@ -16,7 +16,7 @@ def _phi(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
 ) -> float:
     lambda_ = (-r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2) * T
     d = -(log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T) / (v * sqrt(T))
@@ -74,7 +74,7 @@ def _call_price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     
@@ -125,7 +125,7 @@ def price(
         b: float,
         v: float,
         *,
-        cdf: Callable[[float], float] = CND,
+        cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     # The Bjerksund and Stensland (2002) American approximation
