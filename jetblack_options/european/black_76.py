@@ -88,13 +88,13 @@ def theta(
 
     if is_call:
         return (
-            F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
+            -F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
             + r * F * exp(-r * T) * cdf(d1)
             - r * K * exp(-r * T) * cdf(d2)
         )
     else:
         return (
-            -F * exp(-r * T) * pdf(d1) * v / 2 * sqrt(T)
+            -F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
             - r * F * exp(-r * T) * cdf(-d1)
             + r * K * exp(-r * T) * cdf(-d2)
         )

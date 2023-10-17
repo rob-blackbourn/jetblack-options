@@ -73,8 +73,8 @@ class NumericGreeksWithoutCarry:
         else:
             return (
                 self.price(is_call, S, K, T - dT, r, v)
-                - self.price(is_call, S, K, T, r, v)
-            )
+                - self.price(is_call, S, K, T + dT, r, v)
+            ) / 2
 
     def vega(
             self,
