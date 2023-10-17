@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "jetblack-options"
 version = "0.1.0"
-description = "Some example code"
+description = "A collection of options formulae"
 authors = ["Rob Blackbourn <rob.blackbourn@gmail.com>"]
 readme = "README.md"
 packages = [
@@ -10,12 +10,12 @@ packages = [
 repository = "https://github.com/rob-blackbourn/jetblack-finance"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
-jupyter = "^1.0.0"
 pandas = "1.5.2"
-plotly = "^5.15.0"
+jupyter = "^1.0.0"
+ipykernel = "^6.25.2"
 
 [build-system]
 requires = ["poetry-core"]
