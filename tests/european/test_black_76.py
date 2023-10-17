@@ -8,6 +8,7 @@ from jetblack_options.european.black_76 import (
     vega,
     rho,
     vanna,
+    vomma,
     ivol
 )
 from jetblack_options.numeric_greeks_without_carry import NumericGreeksWithoutCarry
@@ -139,4 +140,22 @@ def test_vanna():
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.vanna(is_call, S, K, T, r, v, dS=0.01)
+        assert is_close_to(numeric, analytic, 1e-4)
+
+
+def test_vomma():
+    ng = NumericGreeksWithoutCarry(price)
+    for is_call, S, K, r, q, T, v, expected in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.014598618448189165),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.014598618448189165),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, -4.188671040998999e-05),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, -4.188671040998999e-05),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.014598618448189165),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.014598618448189165),
+    ]:
+        b = r - q
+        analytic = vomma(S, K, T, r, v) / 10000
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.dvega_dvol(is_call, S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-4)

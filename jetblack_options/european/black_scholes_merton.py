@@ -567,7 +567,7 @@ def dvega_dtime(
     )
 
 
-def dvega_dvol(
+def vomma(
         S: float,
         K: float,
         T: float,
@@ -577,7 +577,7 @@ def dvega_dvol(
         *,
         pdf: Callable[[float], float] = PDF
 ) -> float:
-    # Also known as Vomma
+    # Also known as DvegaDvol
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return vega(S, K, T, r, b, v, pdf=pdf) * d1 * d2 / v
@@ -596,7 +596,7 @@ def dvomma_dvol(
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return (
-        dvega_dvol(S, K, T, r, b, v, pdf=pdf) *
+        vomma(S, K, T, r, b, v, pdf=pdf) *
         1 / v * (d1 * d2 - d1 / d2 - d2 / d1 - 1)
     )
 

@@ -14,7 +14,7 @@ from jetblack_options.european.black_scholes_merton import (
     vanna,
     vegap,
     charm,
-    dvega_dvol,
+    vomma,
 )
 from jetblack_options.numeric_greeks import NumericGreeks
 
@@ -244,7 +244,7 @@ def test_vegap():
         assert is_close_to(numeric, analytic, 1e-3)
 
 
-def test_dvega_dvol():
+def test_vomma():
     ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.0157585192593357),
@@ -255,7 +255,7 @@ def test_dvega_dvol():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.013189493867252218),
     ]:
         b = r - q
-        analytic = dvega_dvol(S, K, T, r, b, v) / 10000
+        analytic = vomma(S, K, T, r, b, v) / 10000
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.dvega_dvol(is_call, S, K, T, r, b, v)

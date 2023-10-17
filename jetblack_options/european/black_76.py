@@ -182,3 +182,18 @@ def vanna(
     d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return -exp(-r * T) * pdf(d1) * d2 / v 
+
+
+def vomma(
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    return F * exp(-r * T) * pdf(d1) * sqrt(T) * d1 * d2 / v

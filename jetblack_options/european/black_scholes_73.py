@@ -200,3 +200,18 @@ def charm(
         return -pdf(d1) * (r / (v * sqrt(T)) - d2 / (2 * T))
     else:
         return -pdf(d1) * (r / (v * sqrt(T)) - d2 / (2 * T))
+
+
+def vomma(
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    # Also known as DvegaDvol
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    return vega(S, K, T, r, v, pdf=pdf) * d1 * d2 / v
