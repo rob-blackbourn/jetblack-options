@@ -29,7 +29,7 @@ def price(
         *,
         cdf: Callable[[float], float] = CDF
 ) -> float:
-    """The generalised Black-Scholes pricing model for European options.
+    """The fair value of a European option, using Black-Scholes-Merton.
 
     Args:
         is_call (bool): True for a call, false for a put.
