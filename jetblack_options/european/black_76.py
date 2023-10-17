@@ -1,4 +1,4 @@
-"""Black 76"""
+"""Black (1976) Options on futures/forwards"""
 
 from math import exp, log, sqrt
 from typing import Callable
@@ -17,7 +17,7 @@ def price(
         *,
         cdf: Callable[[float], float] = CDF
 ) -> float:
-    """Black (1976) Options on futures/forwards.
+    """Fair value of a futures/forward using Black 76.
 
     Args:
         is_call (bool): True for a call, false for a put.
