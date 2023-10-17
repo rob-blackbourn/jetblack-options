@@ -144,7 +144,7 @@ def vega (
         pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
-    return S * sqrt(T) * pdf(d1) * 0.01
+    return S * sqrt(T) * pdf(d1)
 
 
 def rho(
