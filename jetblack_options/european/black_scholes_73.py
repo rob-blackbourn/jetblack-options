@@ -3,7 +3,7 @@
 from math import exp, log, sqrt
 from typing import Callable
 
-from ..distributions import CDF
+from ..distributions import CDF, PDF
 from ..implied_volatility import solve_ivol
 
 
@@ -77,3 +77,90 @@ def ivol(
         max_iterations=max_iterations,
         epsilon=epsilon
     )
+
+
+def delta(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    if is_call:
+        return cdf(d1)
+    else:
+        return -cdf(-d1)
+
+def gamma (
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    "Calculates option gamma"
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    return pdf(d1) / (S * v * sqrt(T))
+
+def theta(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    "Calculates option theta"
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    
+    if is_call:
+        return - (
+            (S * pdf(d1) * v) / (2 * sqrt(T))
+        ) - r * K * exp(-r * T) * cdf(d2)
+
+    else:
+        return - (
+            (S * pdf(d1) * v) / (2 * sqrt(T))
+        ) + r * K * exp(-r * T) * cdf(-d2)
+
+
+def vega (
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    return S * sqrt(T) * pdf(d1) * 0.01
+
+
+def rho(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    
+    if is_call:
+        return K * T * exp(-r * T) * cdf(d2)
+    else:
+        return -K * T * exp(-r * T) * cdf(-d2)

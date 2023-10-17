@@ -55,7 +55,7 @@ def delta(
     if is_call:
         return exp(-r * T) * cdf(d1)
     else:
-        return - exp(-r * T) * cdf(-d1)
+        return -exp(-r * T) * cdf(-d1)
 
 
 def gamma(
@@ -126,9 +126,9 @@ def rho(
     d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     if is_call:
-        return T * K * exp(-r * T) * cdf(d2)
+        return -T * exp(-r * T) * (F * cdf(d1) - K * cdf(d2))
     else:
-        return -T * K * exp(-r * T) * cdf(-d2)
+        return -T * exp(-r * T) * (K * cdf(-d2) - F * cdf(-d1))
 
 
 def ivol(
