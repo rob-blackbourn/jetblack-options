@@ -93,7 +93,7 @@ def theta(
         )
     else:
         return exp(-r * T) * (
-            -(F * v * pdf(d1)) / (2 * np.sqrt(t))
+            -(F * v * pdf(d1)) / (2 * sqrt(T))
             - r * F * cdf(-d1)
             + r * K * cdf(-d2)
         )
