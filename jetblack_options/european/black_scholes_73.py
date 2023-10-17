@@ -164,3 +164,18 @@ def rho(
         return K * T * exp(-r * T) * cdf(d2)
     else:
         return -K * T * exp(-r * T) * cdf(-d2)
+
+
+def vanna(
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    # Also known as DdeltaDvol.
+    d1 = (log(S / K) + (r + v * v / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    return -d2 / v * pdf(d1)

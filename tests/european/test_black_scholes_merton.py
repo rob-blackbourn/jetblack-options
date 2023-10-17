@@ -11,7 +11,7 @@ from jetblack_options.european.black_scholes_merton import (
     elasticity,
     dgamma_dvol,
     gammap,
-    ddelta_dvol,
+    vanna,
     vegap,
     dvega_dvol,
 )
@@ -189,7 +189,7 @@ def test_gammap():
         numeric = ng.gammap(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-5)
 
-def test_ddelta_dvol():
+def test_vanna():
     ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.01639625858611978),
@@ -200,10 +200,10 @@ def test_ddelta_dvol():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.02025315899821502),
     ]:
         b = r - q
-        analytic = ddelta_dvol(S, K, T, r, b, v) / 100
+        analytic = vanna(S, K, T, r, b, v) / 100
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.ddelta_dvol(is_call, S, K, T, r, b, v, dS=0.01)
+        numeric = ng.vanna(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-4)
 
 

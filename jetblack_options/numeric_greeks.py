@@ -220,7 +220,7 @@ class NumericGreeks:
             self.price(is_call, S, K, T, r, b, v - dv)
         ) * v / 0.1 / 2
 
-    def ddelta_dvol(
+    def vanna(
             self,
             is_call: bool,
             S: float,
@@ -233,7 +233,7 @@ class NumericGreeks:
             dS: float = 0.01,
             dv: float = 0.01
     ) -> float:
-        # Also known as vanna
+        # Also known as DdeltaDvol
         return 1 / (4 * dS * 0.01) * (
             self.price(is_call, S + dS, K, T, r, b, v + dv) -
             self.price(is_call, S + dS, K, T, r, b, v - dv) -

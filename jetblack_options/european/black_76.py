@@ -167,3 +167,18 @@ def ivol(
         max_iterations=max_iterations,
         epsilon=epsilon
     )
+
+
+def vanna(
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    return -exp(-r * T) * pdf(d1) * d2 / v 

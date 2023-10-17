@@ -384,7 +384,7 @@ def forward_delta(
         return exp(-r * T) * (cdf(d1) - 1)
 
 
-def ddelta_dvol(
+def vanna(
         S: float,
         K: float,
         T: float,
@@ -394,7 +394,7 @@ def ddelta_dvol(
         *,
         pdf: Callable[[float], float] = PDF
 ) -> float:
-    # Also known as vanna
+    # Also known as DdeltaDvol.
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return -exp((b - r) * T) * d2 / v * pdf(d1)
@@ -413,7 +413,7 @@ def ddelta_dvol_dvol(
     # Also known as DVannaDvol
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return ddelta_dvol(S, K, T, r, b, v, pdf=pdf) * 1 / v * (d1 * d2 - d1 / d2 - 1)
+    return vanna(S, K, T, r, b, v, pdf=pdf) * 1 / v * (d1 * d2 - d1 / d2 - 1)
 
 
 

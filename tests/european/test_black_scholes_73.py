@@ -7,6 +7,7 @@ from jetblack_options.european.black_scholes_73 import (
     theta,
     vega,
     rho,
+    vanna,
     ivol
 )
 from jetblack_options.numeric_greeks_without_carry import NumericGreeksWithoutCarry
@@ -121,4 +122,22 @@ def test_rho():
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.rho(is_call, S, K, T, r, v)
+        assert is_close_to(numeric, analytic, 1e-4)
+
+
+def test_vanna():
+    ng = NumericGreeksWithoutCarry(price)
+    for is_call, S, K, r, q, T, v, expected in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.012280022470048304),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.012280022470048304),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.013819059437024944),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.013819059437024944),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.015924538086889685),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.015924538086889685),
+    ]:
+        b = r - q
+        analytic = vanna(S, K, T, r, v) / 100
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.vanna(is_call, S, K, T, r, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-4)
