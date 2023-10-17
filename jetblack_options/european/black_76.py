@@ -6,6 +6,7 @@ from typing import Callable
 from ..distributions import CDF, PDF
 from ..implied_volatility import solve_ivol
 
+
 def price(
         is_call: bool,
         F: float,
@@ -86,17 +87,48 @@ def theta(
     d2 = d1 - v * sqrt(T)
 
     if is_call:
-        return exp(-r * T) * (
-            -(F * v * pdf(d1)) / (2 * sqrt(T))
-            + r * F * cdf(d1)
-            - r * K * cdf(d2)
+        return (
+            F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
+            + r * F * exp(-r * T) * cdf(d1)
+            - r * K * exp(-r * T) * cdf(d2)
         )
     else:
-        return exp(-r * T) * (
-            -(F * v * pdf(d1)) / (2 * sqrt(T))
-            - r * F * cdf(-d1)
-            + r * K * cdf(-d2)
+        return (
+            -F * exp(-r * T) * pdf(d1) * v / 2 * sqrt(T)
+            - r * F * exp(-r * T) * cdf(-d1)
+            + r * K * exp(-r * T) * cdf(-d2)
         )
+
+
+def vega(
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
+    return F * exp(-r * T) * pdf(d1) * sqrt(T)
+
+
+def rho(
+        is_call: bool,
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    if is_call:
+        return T * K * exp(-r * T) * cdf(d2)
+    else:
+        return -T * K * exp(-r * T) * cdf(-d2)
 
 
 def ivol(
