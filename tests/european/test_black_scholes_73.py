@@ -8,6 +8,7 @@ from jetblack_options.european.black_scholes_73 import (
     vega,
     rho,
     vanna,
+    charm,
     ivol
 )
 from jetblack_options.numeric_greeks_without_carry import NumericGreeksWithoutCarry
@@ -141,3 +142,21 @@ def test_vanna():
 
         numeric = ng.vanna(is_call, S, K, T, r, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-4)
+
+
+def test_charm():
+    ng = NumericGreeksWithoutCarry(price)
+    for is_call, S, K, r, q, T, v, expected in [
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.044945814894341574),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.044945814894341574),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.20201591126159346),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.20201591126159346),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.6035085054564097),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.6035085054564097),
+    ]:
+        b = r - q
+        analytic = charm(is_call, S, K, T, r, v)
+        assert is_close_to(analytic, expected, 1e-12)
+
+        numeric = ng.charm(is_call, S, K, T, r, v, dS=0.01)
+        assert is_close_to(numeric, analytic, 1e-5)

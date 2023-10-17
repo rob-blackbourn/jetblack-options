@@ -234,12 +234,33 @@ class NumericGreeks:
             dv: float = 0.01
     ) -> float:
         # Also known as DdeltaDvol
-        return 1 / (4 * dS * 0.01) * (
+        return (
             self.price(is_call, S + dS, K, T, r, b, v + dv) -
             self.price(is_call, S + dS, K, T, r, b, v - dv) -
             self.price(is_call, S - dS, K, T, r, b, v + dv) +
             self.price(is_call, S - dS, K, T, r, b, v - dv)
-        ) / 100
+        ) / (4 * dS)
+
+    def charm(
+            self,
+            is_call: bool,
+            S: float,
+            K: float,
+            T: float,
+            r: float,
+            b: float,
+            v: float,
+            *,
+            dS: float = 0.01,
+            dT: float = 1 / 365
+    ) -> float:
+        # Also known as DdeltaDtime
+        return (
+            self.price(is_call, S + dS, K, T + dT, r, b, v) -
+            self.price(is_call, S + dS, K, T - dT, r, b, v) -
+            self.price(is_call, S - dS, K, T + dT, r, b, v) +
+            self.price(is_call, S - dS, K, T - dT, r, b, v)
+        ) / (4 * dS) / -dT
 
     def dgamma_dvol(
             self,

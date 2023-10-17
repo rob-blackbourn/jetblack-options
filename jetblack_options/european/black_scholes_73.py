@@ -178,4 +178,25 @@ def vanna(
     # Also known as DdeltaDvol.
     d1 = (log(S / K) + (r + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return -d2 / v * pdf(d1)
+    return -d2 * pdf(d1) / v
+
+def charm(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    # Also known as DdeltaDtime
+
+    d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+
+    if is_call:
+        return -pdf(d1) * (r / (v * sqrt(T)) - d2 / (2 * T))
+    else:
+        return -pdf(d1) * (r / (v * sqrt(T)) - d2 / (2 * T))

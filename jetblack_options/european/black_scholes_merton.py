@@ -416,8 +416,7 @@ def ddelta_dvol_dvol(
     return vanna(S, K, T, r, b, v, pdf=pdf) * 1 / v * (d1 * d2 - d1 / d2 - 1)
 
 
-
-def ddelta_dtime(
+def charm(
         is_call: bool,
         S: float,
         K: float,
@@ -429,7 +428,7 @@ def ddelta_dtime(
         cdf: Callable[[float], float] = CDF,
         pdf: Callable[[float], float] = PDF
 ) -> float:
-    # Also known as Charm
+    # Also known as DdeltaDtime
 
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
