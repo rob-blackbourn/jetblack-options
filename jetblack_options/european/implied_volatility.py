@@ -4,7 +4,38 @@ from typing import Callable
 
 from ..distributions import CDF
 
-from .black_scholes_merton import price
+from .black_scholes_merton import price as bs_price
+
+def _ivol(
+        p: float,
+        price: Callable[[float], float],
+        *,
+        max_iterations: int = 20,
+        epsilon = 1e-8
+) -> float:
+
+    v_lo = 0.005
+    v_hi = 4
+    p_lo = price(v_lo)
+    p_hi = price(v_hi)
+
+    n = 0
+    v = v_lo + (p - p_lo) * (v_hi - v_lo) / (p_hi - p_lo)
+    p1 = price(v)
+    while abs(p - p1) > epsilon and n < max_iterations:
+        n += 1
+        
+        if p1 < p:
+            v_lo = v
+        else:
+            v_hi = v
+
+        p_lo = price(v_lo)
+        p_hi = price(v_hi)
+        v = v_lo + (p - p_lo) * (v_hi - v_lo) / (p_hi - p_lo)
+        p1 = price(v)
+
+    return v
 
 def ivol(
         is_call: bool,
@@ -38,26 +69,9 @@ def ivol(
     Returns:
         float: The implied volatility.
     """
-
-    v_lo = 0.005
-    v_hi = 4
-    p_lo = price(is_call, S, K, T, r, b, v_lo, cdf=cdf)
-    p_hi = price(is_call, S, K, T, r, b, v_hi, cdf=cdf)
-
-    n = 0
-    v = v_lo + (p - p_lo) * (v_hi - v_lo) / (p_hi - p_lo)
-    p1 = price(is_call, S, K, T, r, b, v, cdf=cdf)
-    while abs(p - p1) > epsilon and n < max_iterations:
-        n += 1
-        
-        if p1 < p:
-            v_lo = v
-        else:
-            v_hi = v
-
-        p_lo = price(is_call, S, K, T, r, b, v_lo, cdf=cdf)
-        p_hi = price(is_call, S, K, T, r, b, v_hi, cdf=cdf)
-        v = v_lo + (p - p_lo) * (v_hi - v_lo) / (p_hi - p_lo)
-        p1 = price(is_call, S, K, T, r, b, v, cdf=cdf)
-
-    return v
+    return _ivol(
+        p,
+        lambda v: bs_price(is_call, S, K, T, r, b, v, cdf=cdf),
+        max_iterations=max_iterations,
+        epsilon=epsilon
+    )
