@@ -87,7 +87,7 @@ def _call_price(
 
     if b >= r:
         return bs_price(True, S, K, T, r, b, v, cdf=cdf)
-    
+
     Sk = _kc(K, T, r, b, v, pdf=pdf, cdf=cdf)
     n = 2 * b / v ** 2
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))

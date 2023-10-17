@@ -6,6 +6,7 @@ from typing import Callable
 from ..distributions import CDF, CBND
 from ..european.black_scholes_merton import price as bs_price
 
+
 def _phi(
         S: float,
         T: float,
@@ -25,7 +26,8 @@ def _phi(
         exp(lambda_) * S ** gamma_ * (
             cdf(d)
             - (i / S) ** kappa * cdf(d - 2 * log(i / S) / (v * sqrt(T))))
-        )
+    )
+
 
 def _ksi(
         S: float,
@@ -42,29 +44,35 @@ def _ksi(
         cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     e1 = (log(S / I1) + (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
-    e2 = (log(I2 ** 2 / (S * I1)) + (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
+    e2 = (log(I2 ** 2 / (S * I1)) +
+          (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
     e3 = (log(S / I1) - (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
-    e4 = (log(I2 ** 2 / (S * I1)) - (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
-    
+    e4 = (log(I2 ** 2 / (S * I1)) -
+          (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
+
     f1 = (log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    f2 = (log(I2 ** 2 / (S * h)) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    f3 = (log(I1 ** 2 / (S * h)) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    f4 = (log(S * I1 ** 2 / (h * I2 ** 2)) + (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
-    
+    f2 = (log(I2 ** 2 / (S * h)) +
+          (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+    f3 = (log(I1 ** 2 / (S * h)) +
+          (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+    f4 = (log(S * I1 ** 2 / (h * I2 ** 2)) +
+          (b + (gamma_ - 0.5) * v ** 2) * T2) / (v * sqrt(T2))
+
     rho = sqrt(t1 / T2)
     lambda_ = -r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2
     kappa = 2 * b / (v ** 2) + (2 * gamma_ - 1)
-    
+
     return (
         exp(lambda_ * T2) *
-        S ** gamma_ * 
+        S ** gamma_ *
         (
-            cbnd(-e1, -f1, rho) - 
-            (I2 / S) ** kappa * cbnd(-e2, -f2, rho) - 
-            (I1 / S) ** kappa * cbnd(-e3, -f3, -rho) + 
+            cbnd(-e1, -f1, rho) -
+            (I2 / S) ** kappa * cbnd(-e2, -f2, rho) -
+            (I1 / S) ** kappa * cbnd(-e3, -f3, -rho) +
             (I1 / I2) ** kappa * cbnd(-e4, -f4, -rho)
         )
     )
+
 
 def _call_price(
         S: float,
@@ -77,9 +85,9 @@ def _call_price(
         cdf: Callable[[float], float] = CDF,
         cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
-    
+
     t1 = 1 / 2 * (sqrt(5) - 1) * T
-    
+
     if b >= r:
         # Use Black-Scholes as it is never optimal to exercise before maturity.
         return bs_price(True, S, K, T, r, b, v, cdf=cdf)
@@ -90,7 +98,7 @@ def _call_price(
     )
     b_infinity = beta / (beta - 1) * K
     b0 = max(K, r / (r - b) * K)
-    
+
     ht1 = -(b * t1 + 2 * v * sqrt(t1)) * K ** 2 / ((b_infinity - b0) * b0)
     ht2 = -(b * T + 2 * v * sqrt(T)) * K ** 2 / ((b_infinity - b0) * b0)
     I1 = b0 + (b_infinity - b0) * (1 - exp(ht1))
@@ -153,4 +161,3 @@ def price(
     else:
         # Use the Bjerksund and Stensland put-call transformation
         return _call_price(K, S, T, r - b, -b, v, cdf=cdf, cbnd=cbnd)
-    

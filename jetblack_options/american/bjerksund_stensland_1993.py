@@ -1,10 +1,11 @@
 """The Bjerksund and Stensland (1993)"""
 
 from math import exp, log, sqrt
-from typing import Callable, Literal, Optional
+from typing import Callable
 
 from ..distributions import CDF
 from ..european.black_scholes_merton import price as bs_price
+
 
 def _phi(
         S: float,
@@ -26,7 +27,7 @@ def _phi(
             cdf(d) - (i / S) ** kappa * cdf(d - 2 * log(i / S) / (v * sqrt(T)))
         )
     )
-    
+
 
 def _call_price(
         S: float,
@@ -38,7 +39,7 @@ def _call_price(
         *,
         cdf: Callable[[float], float] = CDF
 ) -> float:
-    
+
     if b >= r:
         # We can use Black-Scholes as it is never optimal to exercise before
         # maturity.
@@ -65,7 +66,7 @@ def _call_price(
             + K * _phi(S, T, 0, K, i, r, b, v, cdf=cdf)
         )
 
-# The Bjerksund and Stensland (1993) American approximation
+
 def price(
         is_call: bool,
         S: float,
@@ -98,4 +99,3 @@ def price(
     else:
         # Use the Bjerksund and Stensland put-call transformation
         return _call_price(K, S, T, r - b, -b, v, cdf=cdf)
-    
