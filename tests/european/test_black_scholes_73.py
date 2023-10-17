@@ -2,6 +2,7 @@
 
 from jetblack_options.european.black_scholes_73 import (
     price,
+    ivol
 )
 from jetblack_options.numeric_greeks_without_carry import NumericGreeksWithoutCarry
 
@@ -19,6 +20,19 @@ def test_price():
     ]:
         actual = price(is_call, S, K, T, r, v)
         assert is_close_to(actual, expected, 1e-12)
+
+def test_ivol():
+
+    for is_call, F, K, r, T, p, expected in [
+        (True, 110, 100, 0.1, 6/12, 15.066208620179964, 0.125),
+        (False, 110, 100, 0.1, 6/12, 0.18915107025137257, 0.125),
+        (True, 100, 100, 0.1, 6/12, 6.413154785988965, 0.125),
+        (False, 100, 100, 0.1, 6/12, 1.536097236060364, 0.125),
+        (True, 100, 110, 0.1, 6/12, 1.7525027662779316, 0.125),
+        (False, 100, 110, 0.1, 6/12, 6.387739461356475, 0.125),
+    ]:
+        actual = ivol(is_call, F, K, T, r, p)
+        assert is_close_to(actual, expected, 1e-6)
 
 def test_delta():
     ng = NumericGreeksWithoutCarry(price)

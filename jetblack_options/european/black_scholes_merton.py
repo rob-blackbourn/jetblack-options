@@ -1,4 +1,4 @@
-"""Black-Scholes-Merton analytic options pricing
+"""Black-Scholes-Merton options pricing formulae.
 
 This is the "generalised" version using "cost of carry" (variable b).
 
@@ -14,6 +14,8 @@ from math import exp, log, pi, sqrt
 from typing import Literal, Callable
 
 from ..distributions import CDF, PDF, INV_CDF, CHIINV
+
+from ..implied_volatility import solve_ivol
 
 
 def price(
@@ -51,6 +53,46 @@ def price(
         return S * exp((b - r) * T) * cdf(d1) - K * exp(-r * T) * cdf(d2)
     else:
         return K * exp(-r * T) * cdf(-d2) - S * exp((b - r) * T) * cdf(-d1)
+
+
+def ivol(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        p: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        max_iterations: int = 20,
+        epsilon = 1e-8
+) -> float:
+    """Calculate the volatility of an option that is implied by the price.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to maturity of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        p (float): The option price.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CDF.
+        max_iterations (int, Optional): The maximum number of iterations before
+            a price is returned. Defaults to 20.
+        epsilon (float, Optional): The largest acceptable error. Defaults to 1e-8.
+
+    Returns:
+        float: The implied volatility.
+    """
+    return solve_ivol(
+        p,
+        lambda v: price(is_call, S, K, T, r, b, v, cdf=cdf),
+        max_iterations=max_iterations,
+        epsilon=epsilon
+    )
 
 
 def delta(
