@@ -1,6 +1,6 @@
 """Tests for generalised Black-Scholes European options"""
 
-from jetblack_options.european.black_scholes_merton import (
+from jetblack_options.european.generalised_black_scholes import (
     price,
     ivol,
     delta,
@@ -16,7 +16,7 @@ from jetblack_options.european.black_scholes_merton import (
     charm,
     vomma,
 )
-from jetblack_options.numeric_greeks_with_dividend_yield import NumericGreeks
+from jetblack_options.numeric_greeks import NumericGreeks
 
 from ..utils import is_close_to
 
@@ -30,7 +30,8 @@ def test_price():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.7881685580252977),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 9.344461337871536),
     ]:
-        actual = price(is_call, S, K, T, r, q, v)
+        b = r - q
+        actual = price(is_call, S, K, T, r, b, v)
         assert is_close_to(actual, expected, 1e-12)
 
 def test_ivol():
@@ -43,7 +44,8 @@ def test_ivol():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.7881685580252977, 0.125),
         (False, 100, 110, 0.1, 0.08, 6/12, 9.344461337871536, 0.125),
     ]:
-        actual = ivol(is_call, S, K, T, r, q, p)
+        b = r - q
+        actual = ivol(is_call, S, K, T, r, b, p)
         assert is_close_to(actual, expected, 1e-9)
 
 def test_delta():
@@ -57,10 +59,11 @@ def test_delta():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.17153007262292186),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.7892593665294013),
     ]:
-        analytic = delta(is_call, S, K, T, r, q, v)
+        b = r - q
+        analytic = delta(is_call, S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.delta(is_call, S, K, T, r, q, v)
+        numeric = ng.delta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 def test_gamma():
@@ -73,10 +76,11 @@ def test_gamma():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376442324910798),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376442324910798),
     ]:
-        analytic = gamma(S, K, T, r, q, v)
+        b = r - q
+        analytic = gamma(S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gamma(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.gamma(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
@@ -90,10 +94,11 @@ def test_theta():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.006797679030347862),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.0008111104389378016),
     ]:
-        analytic = theta(is_call, S, K, T, r, q, v) / 365
+        b = r - q
+        analytic = theta(is_call, S, K, T, r, b, v) / 365
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.theta(is_call, S, K, T, r, q, v)
+        numeric = ng.theta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
@@ -107,10 +112,11 @@ def test_vega():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.1773527645306925),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.1773527645306925),
     ]:
-        analytic = vega(S, K, T, r, q, v) / 100
+        b = r - q
+        analytic = vega(S, K, T, r, b, v) / 100
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vega(is_call, S, K, T, r, q, v)
+        numeric = ng.vega(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-3)
 
 
@@ -124,10 +130,11 @@ def test_rho():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.08182419352133444),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.4413519899540583),
     ]:
-        analytic = rho(is_call, S, K, T, r, q, v) / 100
+        b = r - q
+        analytic = rho(is_call, S, K, T, r, b, v) / 100
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.rho(is_call, S, K, T, r, q, v)
+        numeric = ng.rho(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
@@ -141,10 +148,11 @@ def test_elasticity():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 21.763120448838848),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -8.446279972615066),
     ]:
-        analytic = elasticity(is_call, S, K, T, r, q, v)
+        b = r - q
+        analytic = elasticity(is_call, S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.elasticity(is_call, S, K, T, r, q, v)
+        numeric = ng.elasticity(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
@@ -158,10 +166,11 @@ def test_dgamma_dvol():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.00015979636723250932),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.00015979636723250932),
     ]:
-        analytic = dgamma_dvol(S, K, T, r, q, v) / 100
+        b = r - q
+        analytic = dgamma_dvol(S, K, T, r, b, v) / 100
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.dgamma_dvol(is_call, S, K, T, r, q, v)
+        numeric = ng.dgamma_dvol(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 def test_gammap():
@@ -174,10 +183,11 @@ def test_gammap():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376442324910798),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376442324910798),
     ]:
-        analytic = gammap(S, K, T, r, q, v)
+        b = r - q
+        analytic = gammap(S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gammap(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.gammap(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-5)
 
 def test_vanna():
@@ -190,10 +200,11 @@ def test_vanna():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.02025315899821502),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.02025315899821502),
     ]:
-        analytic = vanna(S, K, T, r, q, v) / 100
+        b = r - q
+        analytic = vanna(S, K, T, r, b, v) / 100
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vanna(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.vanna(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
@@ -207,10 +218,11 @@ def test_charm():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.2961949663176757),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.37305812144986156),
     ]:
-        analytic = charm(is_call, S, K, T, r, q, v)
+        b = r - q
+        analytic = charm(is_call, S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.charm(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.charm(is_call, S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
@@ -224,10 +236,11 @@ def test_vegap():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.22169095566336564),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.22169095566336564),
     ]:
-        analytic = vegap(S, K, T, r, q, v)
+        b = r - q
+        analytic = vegap(S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vegap(is_call, S, K, T, r, q, v)
+        numeric = ng.vegap(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-3)
 
 
@@ -241,8 +254,9 @@ def test_vomma():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.013189493867252218),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.013189493867252218),
     ]:
-        analytic = vomma(S, K, T, r, q, v) / 10000
+        b = r - q
+        analytic = vomma(S, K, T, r, b, v) / 10000
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.dvega_dvol(is_call, S, K, T, r, q, v)
+        numeric = ng.dvega_dvol(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-4)

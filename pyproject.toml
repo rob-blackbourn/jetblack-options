@@ -16,6 +16,7 @@ python = "^3.8"
 pandas = "1.5.2"
 jupyter = "^1.0.0"
 ipykernel = "^6.25.2"
+pytest = "^7.4.2"
 
 [build-system]
 requires = ["poetry-core"]

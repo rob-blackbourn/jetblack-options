@@ -4,7 +4,7 @@ from math import exp, log, sqrt
 from typing import Callable
 
 from ..distributions import CDF, PDF
-from ..european.black_scholes_merton import price as bs_price
+from ..european.generalised_black_scholes import price as bs_price
 
 
 def _kc(
