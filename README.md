@@ -2,22 +2,6 @@
 
 This repository contains reference implementations of option pricing formulae implemented in Python.
 
-The implementations are covered by tests in an attempt to demonstrate their veracity.
-
-Where possible analytic (or "closed form") solutions are tested against numerical (or "finite difference" algorithms) to establish
-the efficacy, accuracy and stability of the algorithms.
-
-## Contributions
-
-Contributions are welcome!
-
-The goals of the project are centred on clarity and accuracy, so optimisations or integrations are not useful.
-
-Valuable contributions include:
-
-* More tests. Note that tests are code too, and have to be maintained. We should aim for the smallest complete set possible. Requests to delete are as relevant as those to add.
-* More implementations. Pricing models should come with tests, and a numerical bumping framework (where there are no closed form solutions).
-
 ## Usage
 
 This library isn't published as a package, and is not meant to be used directly. Copy the code you want, or use a library that derives from this.
@@ -77,10 +61,21 @@ ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call
 numeric_delta = ng.delta(is_call, S, K, T, r, b, v)
 ```
 
-## Distributions
+## Probability Distributions
 
 Many option pricing formula require probability distribution functions. Sample  implementations are provided,
 but where possible that of the standard library `statistics.NormalDist` is used.
 
 Algorithms taking probability functions should provide these as optional arguments to allow the
 testing framework to establish the sensitivity to different distribution implementations.
+
+## Contributions
+
+Contributions are welcome!
+
+The goals of the project are centred on clarity and accuracy, so optimisations or integrations are not useful.
+
+Valuable contributions include:
+
+* More tests. Note that tests are code too, and have to be maintained. We should aim for the smallest complete set possible. Requests to delete are as relevant as those to add.
+* More implementations. Pricing models should come with tests, and a numerical bumping framework (where there are no closed form solutions).
