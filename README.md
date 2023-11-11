@@ -99,6 +99,35 @@ df = pd.DataFrame([
 price(True, df['S'], df['K'], df['T'], df['r'], df['r'] - df['q'], df['v'])
 ```
 
+Here's another implementation.
+
+```python
+import numpy as np
+import pandas as pd
+from scipy.stats import norm
+
+data = pd.DataFrame([
+    {'is_call': True, 'S': 110, 'K': 100, 'r': 0.1, 'q': 0.08, 'T': 6/12, 'v': 0.125},
+    {'is_call': False, 'S': 110, 'K': 100, 'r': 0.1, 'q': 0.08, 'T': 6/12, 'v': 0.125},
+    {'is_call': True, 'S': 100, 'K': 100, 'r': 0.1, 'q': 0.08, 'T': 6/12, 'v': 0.125},
+    {'is_call': False, 'S': 100, 'K': 100, 'r': 0.1, 'q': 0.08, 'T': 6/12, 'v': 0.125},
+    {'is_call': True, 'S': 100, 'K': 110, 'r': 0.1, 'q': 0.08, 'T': 6/12, 'v': 0.125},
+    {'is_call': False, 'S': 100, 'K': 110, 'r': 0.1, 'q': 0.08, 'T': 6/12, 'v': 0.125},
+])
+
+def price(df):
+    d1 = (np.log(df['S'] / df['K']) + df['T'] * (df['b'] + df['v'] ** 2 / 2)) / (df['v'] * np.sqrt(df['T']))
+    d2 = d1 - df['v'] * np.sqrt(df['T'])
+
+    return pd.Series(np.where(
+        df['is_call'],
+        df['S'] * np.exp((df['b'] - df['r']) * df['T']) * norm.cdf(d1) - df['K'] * np.exp(-df['r'] * df['T']) * norm.cdf(d2),
+        df['K'] * np.exp(-df['r'] * df['T']) * norm.cdf(-d2) - df['S'] * np.exp((df['b'] - df['r']) * df['T']) * norm.cdf(-d1)
+    ), name='price')
+
+data['b'] = data['r'] - data['q']
+x = price(data)
+```
 
 ## Contributions
 
