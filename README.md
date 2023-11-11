@@ -75,7 +75,7 @@ implementations are provided, but where possible the standard library
 
 Algorithms taking probability functions should provide these as optional
 arguments to allow the testing framework to establish the sensitivity to
-different distribution implementations.
+different implementations.
 
 ## Vectors
 
@@ -141,8 +141,7 @@ x = price(data)
 
 Contributions are welcome!
 
-The goals of the project are centred on clarity and accuracy, so optimisations
-or integrations are not useful.
+The goals of the project are centred on clarity and accuracy.
 
 Valuable contributions include:
 
@@ -151,3 +150,6 @@ Valuable contributions include:
     relevant as those to add.
 * More implementations. Pricing models should come with tests, and a numerical
     bumping framework.
+
+Optimisations or integrations with other packages should be included as
+examples.
