@@ -1,12 +1,18 @@
 # jetblack-options
 
-This repository contains reference implementations of option pricing formulae implemented in Python.
+This repository contains reference implementations of option pricing formulae
+implemented in Python.
+
+It has no dependencies.
 
 ## Usage
 
-This library isn't published as a package, and is not meant to be used directly. Copy the code you want, or use a library that derives from this.
+This library isn't published as a package, and is not meant to be used directly.
+Just copy the code you want, or create your own package.
 
-However trying the code is quite simple, no external libraries are required. Simply clone the repository, install, and create a new python file in the "scratch folder". An obvious place to start would be with Black-Scholes.
+However trying the code is quite simple, no external libraries are required.
+Simply clone the repository, install, and create a new python file in the
+"scratch folder". An obvious place to start would be with Black-Scholes.
 
 ```python
 from jetblack_options.european.black_scholes_merton import (
@@ -63,11 +69,13 @@ numeric_delta = ng.delta(is_call, S, K, T, r, b, v)
 
 ## Probability Distributions
 
-Many option pricing formula require probability distribution functions. Sample  implementations are provided,
-but where possible that of the standard library `statistics.NormalDist` is used.
+Many option pricing formula require probability distribution functions. Sample
+implementations are provided, but where possible the standard library
+`statistics.NormalDist` is used.
 
-Algorithms taking probability functions should provide these as optional arguments to allow the
-testing framework to establish the sensitivity to different distribution implementations.
+Algorithms taking probability functions should provide these as optional
+arguments to allow the testing framework to establish the sensitivity to
+different distribution implementations.
 
 ## Vectors
 
@@ -99,7 +107,7 @@ df = pd.DataFrame([
 price(True, df['S'], df['K'], df['T'], df['r'], df['r'] - df['q'], df['v'])
 ```
 
-Here's another implementation.
+Here's another implementation using a single data frame.
 
 ```python
 import numpy as np
@@ -133,9 +141,13 @@ x = price(data)
 
 Contributions are welcome!
 
-The goals of the project are centred on clarity and accuracy, so optimisations or integrations are not useful.
+The goals of the project are centred on clarity and accuracy, so optimisations
+or integrations are not useful.
 
 Valuable contributions include:
 
-* More tests. Note that tests are code too, and have to be maintained. We should aim for the smallest complete set possible. Requests to delete are as relevant as those to add.
-* More implementations. Pricing models should come with tests, and a numerical bumping framework (where there are no closed form solutions).
+* More tests. Note that tests are code too, and have to be maintained. We should
+    aim for the smallest complete set possible. Requests to delete are as
+    relevant as those to add.
+* More implementations. Pricing models should come with tests, and a numerical
+    bumping framework.
