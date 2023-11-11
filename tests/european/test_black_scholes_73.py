@@ -12,7 +12,7 @@ from jetblack_options.european.black_scholes_73 import (
     vomma,
     ivol
 )
-from jetblack_options.numeric_greeks_without_carry import NumericGreeksWithoutCarry
+from jetblack_options.numeric_greeks_without_carry import NumericGreeks
 
 from ..utils import is_close_to
 
@@ -43,7 +43,7 @@ def test_ivol():
         assert is_close_to(actual, expected, 1e-6)
 
 def test_delta():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
 
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 0.9543127330810848),
@@ -60,7 +60,7 @@ def test_delta():
         assert is_close_to(numeric, analytic, 1e-6)
 
 def test_gamma():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 0.009868587816478383),
         (False, 110, 100, 0.1, 6/12, 0.125, 0.009868587816478383),
@@ -77,7 +77,7 @@ def test_gamma():
 
 
 def test_theta():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, -0.02718824422986413),
         (False, 110, 100, 0.1, 6/12, 0.125, -0.0011271641065568971),
@@ -94,7 +94,7 @@ def test_theta():
 
 
 def test_vega():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 0.07463119536211778),
         (False, 110, 100, 0.1, 6/12, 0.125, 0.07463119536211778),
@@ -111,7 +111,7 @@ def test_vega():
 
 
 def test_rho():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 0.44954096009369676),
         (False, 110, 100, 0.1, 6/12, 0.125, -0.026073752156660236),
@@ -128,7 +128,7 @@ def test_rho():
 
 
 def test_vanna():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.012280022470048304),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.012280022470048304),
@@ -146,7 +146,7 @@ def test_vanna():
 
 
 def test_charm():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.044945814894341574),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.044945814894341574),
@@ -164,7 +164,7 @@ def test_charm():
 
 
 def test_vomma():
-    ng = NumericGreeksWithoutCarry(price)
+    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.016124953775897958),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.016124953775897958),

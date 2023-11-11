@@ -14,7 +14,7 @@ OptionValue = Callable[
     float # The option price
 ]
 
-class NumericGreeksWithoutCarry:
+class NumericGreeks:
 
     def __init__(
             self,
