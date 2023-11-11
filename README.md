@@ -21,12 +21,12 @@ from jetblack_options.european.black_scholes_merton import (
 )
 
 is_call = True
-S = 110 # Stock price.
+S = 110 # Asset price.
 K = 100 # Strike price.
 r = 0.1 # 10% risk free rate.
 q = 0.08 # 8% dividend.
 T = 6/12 # Half a year till expiry.
-v = 0.125 # 12,5% volatility.
+v = 0.125 # 12.5% volatility.
 
 b = r - q # Cost of carry for generalized Black-Scholes.
 
@@ -151,5 +151,8 @@ Valuable contributions include:
 * More implementations. Pricing models should come with tests, and a numerical
     bumping framework.
 
+The code is formatted with autopep8, and linted with pylint and mypy. Typing is
+used throughout to help the reader.
+
 Optimisations or integrations with other packages should be included as
-examples.
+examples only.
