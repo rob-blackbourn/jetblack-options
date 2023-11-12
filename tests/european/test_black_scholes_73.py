@@ -16,6 +16,7 @@ from jetblack_options.numeric_greeks.without_carry import NumericGreeks
 
 from ..utils import is_close_to
 
+
 def test_price():
 
     for is_call, S, K, r, T, v, expected in [
@@ -29,6 +30,7 @@ def test_price():
         actual = price(is_call, S, K, T, r, v)
         assert is_close_to(actual, expected, 1e-12)
 
+
 def test_ivol():
 
     for is_call, F, K, r, T, p, expected in [
@@ -41,6 +43,7 @@ def test_ivol():
     ]:
         actual = ivol(is_call, F, K, T, r, p)
         assert is_close_to(actual, expected, 1e-6)
+
 
 def test_delta():
     ng = NumericGreeks(price)
@@ -58,6 +61,7 @@ def test_delta():
 
         numeric = ng.delta(is_call, S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-6)
+
 
 def test_gamma():
     ng = NumericGreeks(price)
@@ -79,31 +83,31 @@ def test_gamma():
 def test_theta():
     ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
-        (True, 110, 100, 0.1, 6/12, 0.125, -0.02718824422986413),
-        (False, 110, 100, 0.1, 6/12, 0.125, -0.0011271641065568971),
-        (True, 100, 100, 0.1, 6/12, 0.125, -0.02623765345826792),
-        (False, 100, 100, 0.1, 6/12, 0.125, -0.00017657333496068564),
-        (True, 100, 110, 0.1, 6/12, 0.125, -0.0169367334782138),
-        (False, 100, 110, 0.1, 6/12, 0.125, 0.011730454657424153),
+        (True, 110, 100, 0.1, 6/12, 0.125, -9.923709143900409),
+        (False, 110, 100, 0.1, 6/12, 0.125, -0.41141489889326743),
+        (True, 100, 100, 0.1, 6/12, 0.125, -9.576743512267791),
+        (False, 100, 100, 0.1, 6/12, 0.125, -0.06444926726065026),
+        (True, 100, 110, 0.1, 6/12, 0.125, -6.181907719548038),
+        (False, 100, 110, 0.1, 6/12, 0.125, 4.281615949959816),
     ]:
-        analytic = theta(is_call, S, K, T, r, v) / 365
+        analytic = theta(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.theta(is_call, S, K, T, r, v)
-        assert is_close_to(numeric, analytic, 1e-6)
+        assert is_close_to(numeric, analytic, 1e-4)
 
 
 def test_vega():
     ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
-        (True, 110, 100, 0.1, 6/12, 0.125, 0.07463119536211778),
-        (False, 110, 100, 0.1, 6/12, 0.125, 0.07463119536211778),
-        (True, 100, 100, 0.1, 6/12, 0.125, 0.2342213463902533),
-        (False, 100, 100, 0.1, 6/12, 0.125, 0.2342213463902533),
-        (True, 100, 110, 0.1, 6/12, 0.125, 0.25278236210643035),
-        (False, 100, 110, 0.1, 6/12, 0.125, 0.25278236210643035),
+        (True, 110, 100, 0.1, 6/12, 0.125, 7.463119536211778),
+        (False, 110, 100, 0.1, 6/12, 0.125, 7.463119536211778),
+        (True, 100, 100, 0.1, 6/12, 0.125, 23.42213463902533),
+        (False, 100, 100, 0.1, 6/12, 0.125, 23.42213463902533),
+        (True, 100, 110, 0.1, 6/12, 0.125, 25.278236210643035),
+        (False, 100, 110, 0.1, 6/12, 0.125, 25.278236210643035),
     ]:
-        analytic = vega(S, K, T, r, v) / 100
+        analytic = vega(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.vega(is_call, S, K, T, r, v)
@@ -113,14 +117,14 @@ def test_vega():
 def test_rho():
     ng = NumericGreeks(price)
     for is_call, S, K, r, T, v, expected in [
-        (True, 110, 100, 0.1, 6/12, 0.125, 0.44954096009369676),
-        (False, 110, 100, 0.1, 6/12, 0.125, -0.026073752156660236),
-        (True, 100, 100, 0.1, 6/12, 0.125, 0.33244883411948123),
-        (False, 100, 100, 0.1, 6/12, 0.125, -0.14316587813087578),
-        (True, 100, 110, 0.1, 6/12, 0.125, 0.15110640966088296),
-        (False, 100, 110, 0.1, 6/12, 0.125, -0.3720697738145098),
+        (True, 110, 100, 0.1, 6/12, 0.125, 44.954096009369676),
+        (False, 110, 100, 0.1, 6/12, 0.125, -2.6073752156660236),
+        (True, 100, 100, 0.1, 6/12, 0.125, 33.244883411948123),
+        (False, 100, 100, 0.1, 6/12, 0.125, -14.316587813087578),
+        (True, 100, 110, 0.1, 6/12, 0.125, 15.110640966088296),
+        (False, 100, 110, 0.1, 6/12, 0.125, -37.20697738145098),
     ]:
-        analytic = rho(is_call, S, K, T, r, v) / 100
+        analytic = rho(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
         numeric = ng.rho(is_call, S, K, T, r, v)
