@@ -1,4 +1,4 @@
-"""implied volatility for Black-Scholes-Merton"""
+"""implied volatility"""
 
 from typing import Callable
 
@@ -13,7 +13,7 @@ def solve_ivol(
 ) -> float:
 
     v_lo = 0.005
-    v_hi = 4
+    v_hi = 4.0
     p_lo = price(v_lo)
     p_hi = price(v_hi)
 
