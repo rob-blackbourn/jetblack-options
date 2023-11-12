@@ -61,8 +61,10 @@ v = 0.125 # 12,5% volatility.
 b = r - q
 value, delta, gamma, theta = greeks(is_european, is_call, S, K, T, r, b, v, 200)
 
-# Make a lambda to handle `is_european``.
-ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0])
+# Make a lambda to handle is_european.
+ng = NumericGreeks(
+    lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0]
+)
 # The numeric delta should be close to the analytic.
 numeric_delta = ng.delta(is_call, S, K, T, r, b, v)
 ```
