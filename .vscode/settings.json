@@ -4,7 +4,7 @@
         "gitlens.codeLens.symbolScopes": [
             "!Module"
         ],
-        "editor.formatOnType": true,
+        "editor.formatOnSave": true,
         "editor.wordBasedSuggestions": false,
         "editor.rulers": [80]
     },
@@ -33,12 +33,14 @@
         "deltap",
         "dgamma",
         "dgammap",
+        "driftless",
         "dspot",
         "dtime",
         "dvega",
         "dvegap",
         "dvol",
         "dvomma",
+        "dzeta",
         "gammap",
         "Garman",
         "Haug",
@@ -48,6 +50,7 @@
         "Kolhhagen",
         "Leisen",
         "Margrabe",
+        "prob",
         "Reimer",
         "Stensland",
         "ultima",

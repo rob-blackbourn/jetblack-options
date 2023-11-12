@@ -1,10 +1,13 @@
 """Black (1976) Options on futures/forwards"""
 
 from math import exp, log, sqrt
-from typing import Callable
+from statistics import NormalDist
 
-from ..distributions import CDF, PDF
 from ..implied_volatility import solve_ivol
+
+norm = NormalDist()
+cdf = norm.cdf
+pdf = norm.pdf
 
 
 def price(
@@ -14,8 +17,6 @@ def price(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Fair value of a futures/forward using Black 76.
 
@@ -26,8 +27,6 @@ def price(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: The option price.
@@ -49,7 +48,6 @@ def ivol(
         r: float,
         p: float,
         *,
-        cdf: Callable[[float], float] = CDF,
         max_iterations: int = 20,
         epsilon = 1e-8
 ) -> float:
@@ -62,8 +60,6 @@ def ivol(
         T (float): The time to maturity of the option in years.
         r (float): The risk free rate.
         p (float): The option price.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
         max_iterations (int, Optional): The maximum number of iterations before
             a price is returned. Defaults to 20.
         epsilon (float, Optional): The largest acceptable error. Defaults to 1e-8.
@@ -73,7 +69,7 @@ def ivol(
     """
     return solve_ivol(
         p,
-        lambda v: price(is_call, F, K, T, r, v, cdf=cdf),
+        lambda v: price(is_call, F, K, T, r, v),
         max_iterations=max_iterations,
         epsilon=epsilon
     )
@@ -86,8 +82,6 @@ def delta(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The sensitivity of the option to a change in the asset price
     using Black 76.
@@ -99,8 +93,6 @@ def delta(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The volatility.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: The delta.
@@ -118,8 +110,6 @@ def gamma(
         T: float,
         r: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The second derivative to the change in asset price using Black 76.
 
@@ -129,8 +119,6 @@ def gamma(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The volatility.
-        pdf (Callable[[float], float], optional): The probability distribution
-            function. Defaults to PDF.
 
     Returns:
         float: The gamma.
@@ -147,9 +135,6 @@ def theta(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The change in the value of the option with respect to time to expiry
     using Black 76.
@@ -164,10 +149,6 @@ def theta(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The volatility.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
-        pdf (Callable[[float], float], optional): The probability distribution
-            function. Defaults to PDF.
 
     Returns:
         float: The theta.
@@ -195,8 +176,6 @@ def vega(
         T: float,
         r: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The sensitivity of the options price or a change in the asset volatility
     using Black 76.
@@ -210,8 +189,6 @@ def vega(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The volatility.
-        pdf (Callable[[float], float], optional): The probability distribution
-            function. Defaults to PDF.
 
     Returns:
         float: The vega.
@@ -227,8 +204,6 @@ def rho(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The sensitivity of the option price to a change in the risk free rate
     using Black 76.
@@ -243,8 +218,6 @@ def rho(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: The rho.
@@ -263,9 +236,6 @@ def vanna(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -278,9 +248,6 @@ def vomma(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)

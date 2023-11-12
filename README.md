@@ -67,16 +67,6 @@ ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call
 numeric_delta = ng.delta(is_call, S, K, T, r, b, v)
 ```
 
-## Probability Distributions
-
-Many option pricing formula require probability distribution functions. Sample
-implementations are provided, but where possible the standard library
-`statistics.NormalDist` is used.
-
-Algorithms taking probability functions should provide these as optional
-arguments to allow the testing framework to establish the sensitivity to
-different implementations.
-
 ## Vectors
 
 The code has been written without dependencies to keep the implementation clean.

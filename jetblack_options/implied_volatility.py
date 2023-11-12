@@ -2,14 +2,13 @@
 
 from typing import Callable
 
-from .distributions import CDF
 
 def solve_ivol(
         p: float,
         price: Callable[[float], float],
         *,
         max_iterations: int = 20,
-        epsilon = 1e-8
+        epsilon=1e-8
 ) -> float:
 
     v_lo = 0.005
@@ -22,7 +21,7 @@ def solve_ivol(
     p1 = price(v)
     while abs(p - p1) > epsilon and n < max_iterations:
         n += 1
-        
+
         if p1 < p:
             v_lo = v
         else:

@@ -1,10 +1,13 @@
 """Black-Scholes 1973"""
 
 from math import exp, log, sqrt
-from typing import Callable
+from statistics import NormalDist
 
-from ..distributions import CDF, PDF
 from ..implied_volatility import solve_ivol
+
+norm = NormalDist()
+cdf = norm.cdf
+pdf = norm.pdf
 
 
 def price(
@@ -14,8 +17,6 @@ def price(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Black-Scholes for a non-dividend paying stock.
 
@@ -26,8 +27,6 @@ def price(
         T (float): The time to expiry in years.
         r (float): The risk free rate.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: The price of the option.
@@ -48,7 +47,6 @@ def ivol(
         r: float,
         p: float,
         *,
-        cdf: Callable[[float], float] = CDF,
         max_iterations: int = 35,
         epsilon=1e-8
 ) -> float:
@@ -62,8 +60,6 @@ def ivol(
         T (float): The time to maturity of the option in years.
         r (float): The risk free rate.
         p (float): The option price.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
         max_iterations (int, Optional): The maximum number of iterations before
             a price is returned. Defaults to 35.
         epsilon (float, Optional): The largest acceptable error. Defaults to 1e-8.
@@ -73,7 +69,7 @@ def ivol(
     """
     return solve_ivol(
         p,
-        lambda v: price(is_call, S, K, T, r, v, cdf=cdf),
+        lambda v: price(is_call, S, K, T, r, v),
         max_iterations=max_iterations,
         epsilon=epsilon
     )
@@ -86,8 +82,6 @@ def delta(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     if is_call:
@@ -101,8 +95,6 @@ def gamma (
         T: float,
         r: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     "Calculates option gamma"
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -115,9 +107,6 @@ def theta(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     "Calculates option theta"
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -140,8 +129,6 @@ def vega (
         T: float,
         r: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     return S * sqrt(T) * pdf(d1)
@@ -154,8 +141,6 @@ def rho(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -172,8 +157,6 @@ def vanna(
         T: float,
         r: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as DdeltaDvol.
     d1 = (log(S / K) + (r + v * v / 2) * T) / (v * sqrt(T))
@@ -187,9 +170,6 @@ def charm(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as DdeltaDtime
 
@@ -208,10 +188,8 @@ def vomma(
         T: float,
         r: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as DvegaDvol
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return vega(S, K, T, r, v, pdf=pdf) * d1 * d2 / v
+    return vega(S, K, T, r, v) * d1 * d2 / v

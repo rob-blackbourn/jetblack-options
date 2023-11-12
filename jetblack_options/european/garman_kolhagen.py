@@ -1,9 +1,12 @@
 """Garman and Kolhagen (1983) Currency options"""
 
 from math import exp, log, sqrt
-from typing import Callable
+from statistics import NormalDist
 
-from ..distributions import CDF
+norm = NormalDist()
+cdf = norm.cdf
+pdf = norm.pdf
+inv_cdf = norm.inv_cdf
 
 
 def price(
@@ -14,7 +17,6 @@ def price(
         r: float,
         rf: float,
         v: float,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Garman and Kolhagen (1983) Currency options.
 
@@ -26,8 +28,6 @@ def price(
         r (float): The risk free rate of the base currency.
         rf (float): The risk free rate of the quote currency.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: _description_

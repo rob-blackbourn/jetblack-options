@@ -1,10 +1,14 @@
 """The Bjerksund and Stensland (2002)"""
 
 from math import exp, log, sqrt
+from statistics import NormalDist
 from typing import Callable
 
-from ..distributions import CDF, CBND
+from ..distributions import CBND as cbnd
 from ..european.generalised_black_scholes import price as bs_price
+
+norm = NormalDist()
+cdf = norm.cdf
 
 
 def _phi(
@@ -16,8 +20,6 @@ def _phi(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
 ) -> float:
     lambda_ = (-r + gamma_ * b + 0.5 * gamma_ * (gamma_ - 1) * v ** 2) * T
     d = -(log(S / h) + (b + (gamma_ - 0.5) * v ** 2) * T) / (v * sqrt(T))
@@ -40,8 +42,6 @@ def _ksi(
         r: float,
         b: float,
         v: float,
-        *,
-        cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     e1 = (log(S / I1) + (b + (gamma_ - 0.5) * v ** 2) * t1) / (v * sqrt(t1))
     e2 = (log(I2 ** 2 / (S * I1)) +
@@ -81,16 +81,13 @@ def _call_price(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
 
     t1 = 1 / 2 * (sqrt(5) - 1) * T
 
     if b >= r:
         # Use Black-Scholes as it is never optimal to exercise before maturity.
-        return bs_price(True, S, K, T, r, b, v, cdf=cdf)
+        return bs_price(True, S, K, T, r, b, v)
 
     beta = (
         (1 / 2 - b / v ** 2)
@@ -111,17 +108,17 @@ def _call_price(
     else:
         return (
             alfa2 * S ** beta
-            - alfa2 * _phi(S, t1, beta, I2, I2, r, b, v, cdf=cdf)
-            + _phi(S, t1, 1, I2, I2, r, b, v, cdf=cdf)
-            - _phi(S, t1, 1, I1, I2, r, b, v, cdf=cdf)
-            - K * _phi(S, t1, 0, I2, I2, r, b, v, cdf=cdf)
-            + K * _phi(S, t1, 0, I1, I2, r, b, v, cdf=cdf)
-            + alfa1 * _phi(S, t1, beta, I1, I2, r, b, v, cdf=cdf)
-            - alfa1 * _ksi(S, T, beta, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-            + _ksi(S, T, 1, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-            - _ksi(S, T, 1, K, I2, I1, t1, r, b, v, cbnd=cbnd)
-            - K * _ksi(S, T, 0, I1, I2, I1, t1, r, b, v, cbnd=cbnd)
-            + K * _ksi(S, T, 0, K, I2, I1, t1, r, b, v, cbnd=cbnd)
+            - alfa2 * _phi(S, t1, beta, I2, I2, r, b, v)
+            + _phi(S, t1, 1, I2, I2, r, b, v)
+            - _phi(S, t1, 1, I1, I2, r, b, v)
+            - K * _phi(S, t1, 0, I2, I2, r, b, v)
+            + K * _phi(S, t1, 0, I1, I2, r, b, v)
+            + alfa1 * _phi(S, t1, beta, I1, I2, r, b, v)
+            - alfa1 * _ksi(S, T, beta, I1, I2, I1, t1, r, b, v)
+            + _ksi(S, T, 1, I1, I2, I1, t1, r, b, v)
+            - _ksi(S, T, 1, K, I2, I1, t1, r, b, v)
+            - K * _ksi(S, T, 0, I1, I2, I1, t1, r, b, v)
+            + K * _ksi(S, T, 0, K, I2, I1, t1, r, b, v)
         )
 
 
@@ -133,9 +130,6 @@ def price(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        cbnd: Callable[[float, float, float], float] = CBND,
 ) -> float:
     """The Bjerksund and Stensland (2002) American approximation.
 
@@ -147,17 +141,13 @@ def price(
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
-        cbnd (Callable[[float, float, float], float], optional): The bivariate
-            cumulative normal distribution function. Defaults to CBND.
 
     Returns:
         float: The price of the option.
     """
 
     if is_call:
-        return _call_price(S, K, T, r, b, v, cdf=cdf, cbnd=cbnd)
+        return _call_price(S, K, T, r, b, v)
     else:
         # Use the Bjerksund and Stensland put-call transformation
-        return _call_price(K, S, T, r - b, -b, v, cdf=cdf, cbnd=cbnd)
+        return _call_price(K, S, T, r - b, -b, v)

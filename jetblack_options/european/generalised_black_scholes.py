@@ -11,12 +11,15 @@ The cost of carry rate (b) is:
 """
 
 from math import exp, log, pi, sqrt
-from typing import Literal, Callable
-
-from ..distributions import CDF, PDF, INV_CDF, CHIINV
+from statistics import NormalDist
+from typing import Literal
 
 from ..implied_volatility import solve_ivol
 
+norm = NormalDist()
+cdf = norm.cdf
+pdf = norm.pdf
+inv_cdf = norm.inv_cdf
 
 def price(
         is_call: bool,
@@ -25,9 +28,7 @@ def price(
         T: float,
         r: float,
         b: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
+        v: float
 ) -> float:
     """The fair value of a European option, using Black-Scholes-Merton.
 
@@ -39,8 +40,6 @@ def price(
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: The price of the options.
@@ -64,7 +63,6 @@ def ivol(
         b: float,
         p: float,
         *,
-        cdf: Callable[[float], float] = CDF,
         max_iterations: int = 20,
         epsilon = 1e-8
 ) -> float:
@@ -78,8 +76,6 @@ def ivol(
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         p (float): The option price.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
         max_iterations (int, Optional): The maximum number of iterations before
             a price is returned. Defaults to 20.
         epsilon (float, Optional): The largest acceptable error. Defaults to 1e-8.
@@ -89,7 +85,7 @@ def ivol(
     """
     return solve_ivol(
         p,
-        lambda v: price(is_call, S, K, T, r, b, v, cdf=cdf),
+        lambda v: price(is_call, S, K, T, r, b, v),
         max_iterations=max_iterations,
         epsilon=epsilon
     )
@@ -103,8 +99,6 @@ def delta(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The sensitivity of the option to a change in the asset price.
 
@@ -116,8 +110,6 @@ def delta(
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
-        cdf (Callable[[float], float], optional): The cumulative probability
-            distribution function. Defaults to CDF.
 
     Returns:
         float: The delta.
@@ -137,8 +129,6 @@ def gamma(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The second derivative to the change in the asset price.
 
@@ -149,8 +139,6 @@ def gamma(
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
-        pdf (Callable[[float], float], optional): The probability distribution
-            function. Defaults to PDF.
 
     Returns:
         float: The gamma.
@@ -168,9 +156,6 @@ def theta(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The theta or time decay of the value of the option.
 
@@ -185,8 +170,6 @@ def theta(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
-        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
 
     Returns:
         float: The theta.
@@ -212,9 +195,7 @@ def vega(
         T: float,
         r: float,
         b: float,
-        v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
+        v: float
 ) -> float:
     """The sensitivity of the options price or a change in the asset volatility.
 
@@ -228,8 +209,6 @@ def vega(
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
-        pdf (Callable[[float], float], optional): The probability distribution
-            function. Defaults to PDF.
 
     Returns:
         float: The vega
@@ -246,8 +225,6 @@ def rho(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The sensitivity of the option price to the risk free rate.
 
@@ -262,7 +239,6 @@ def rho(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
 
     Returns:
         float: The rho.
@@ -283,8 +259,6 @@ def carry(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Sensitivity to the cost of carry.
 
@@ -296,8 +270,6 @@ def carry(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
-        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
 
     Returns:
         float: The carry.
@@ -317,8 +289,6 @@ def elasticity(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
 ) -> float:
     """The percentage change in the option price for a percentage change in the
     asset price.
@@ -335,15 +305,13 @@ def elasticity(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density
-            function. Defaults to CDF.
 
     Returns:
         float: The elasticity.
     """
     return (
-        delta(is_call, S, K, T, r, b, v, cdf=cdf) * S
-        / price(is_call, S, K, T, r, b, v, cdf=cdf)
+        delta(is_call, S, K, T, r, b, v) * S
+        / price(is_call, S, K, T, r, b, v)
     )
 
 
@@ -354,10 +322,8 @@ def gammap(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
-    return S * gamma(S, K, T, r, b, v, pdf=pdf) / 100
+    return S * gamma(S, K, T, r, b, v) / 100
 
 
 def vegap(
@@ -367,10 +333,8 @@ def vegap(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
-    return v / 10 * vega(S, K, T, r, b, v, pdf=pdf)
+    return v / 10 * vega(S, K, T, r, b, v)
 
 
 def forward_delta(
@@ -381,10 +345,7 @@ def forward_delta(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
-
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
 
     if is_call:
@@ -400,8 +361,6 @@ def vanna(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """The second order derivative of the option price to a change in the asset
     price and a change in the volatility.
@@ -415,8 +374,6 @@ def vanna(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        pdf (Callable[[float], float], optional): The probability density
-            function. Defaults to PDF.
 
     Returns:
         float: The vanna.
@@ -433,13 +390,11 @@ def ddelta_dvol_dvol(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as DVannaDvol
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return vanna(S, K, T, r, b, v, pdf=pdf) / v * (d1 * d2 - d1 / d2 - 1)
+    return vanna(S, K, T, r, b, v) / v * (d1 * d2 - d1 / d2 - 1)
 
 
 def charm(
@@ -450,9 +405,6 @@ def charm(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     """Measures the instantaneous rate of change of delta over the passage of
     time.
@@ -467,10 +419,6 @@ def charm(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density
-            function. Defaults to CDF.
-        pdf (Callable[[float], float], optional): The probability density
-            function. Defaults to PDF.
 
     Returns:
         float: The charm.
@@ -506,12 +454,10 @@ def dgamma_dspot(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as Speed
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    return -gamma(S, K, T, r, b, v, pdf=pdf) * (1 + d1 / (v * sqrt(T))) / S
+    return -gamma(S, K, T, r, b, v) * (1 + d1 / (v * sqrt(T))) / S
 
 
 def dgamma_dvol(
@@ -521,13 +467,11 @@ def dgamma_dvol(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as zomma.
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return gamma(S, K, T, r, b, v, pdf=pdf) * ((d1 * d2 - 1) / v)
+    return gamma(S, K, T, r, b, v) * ((d1 * d2 - 1) / v)
 
 
 def dgamma_dtime(
@@ -537,12 +481,10 @@ def dgamma_dtime(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return gamma(S, K, T, r, b, v, pdf=pdf) * (
+    return gamma(S, K, T, r, b, v) * (
         r - b + b * d1 / (v * sqrt(T)) +
         (1 - d1 * d2) / (2 * T)
     )
@@ -555,12 +497,10 @@ def dgammap_dspot(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as SpeedP.
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
-    return -gamma(S, K, T, r, b, v, pdf=pdf) * (d1) / (100 * v * sqrt(T))
+    return -gamma(S, K, T, r, b, v) * (d1) / (100 * v * sqrt(T))
 
 
 def dgammap_dvol(
@@ -570,12 +510,10 @@ def dgammap_dvol(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return S / 100 * gamma(S, K, T, r, b, v, pdf=pdf) * ((d1 * d2 - 1) / v)
+    return S / 100 * gamma(S, K, T, r, b, v) * ((d1 * d2 - 1) / v)
 
 
 def dgammap_dtime(
@@ -585,13 +523,11 @@ def dgammap_dtime(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return (
-        gammap(S, K, T, r, b, v, pdf=pdf) *
+        gammap(S, K, T, r, b, v) *
         (r - b + b * d1 / (v * sqrt(T)) + (1 - d1 * d2) / (2 * T))
     )
 
@@ -603,13 +539,11 @@ def dvega_dtime(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return (
-        vega(S, K, T, r, b, v, pdf=pdf) *
+        vega(S, K, T, r, b, v) *
         (r - b + b * d1 / (v * sqrt(T)) - (1 + d1 * d2) / (2 * T))
     )
 
@@ -621,13 +555,11 @@ def vomma(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as DvegaDvol
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return vega(S, K, T, r, b, v, pdf=pdf) * d1 * d2 / v
+    return vega(S, K, T, r, b, v) * d1 * d2 / v
 
 
 def dvomma_dvol(
@@ -637,13 +569,11 @@ def dvomma_dvol(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return (
-        vomma(S, K, T, r, b, v, pdf=pdf) *
+        vomma(S, K, T, r, b, v) *
         1 / v * (d1 * d2 - d1 / d2 - d2 / d1 - 1)
     )
 
@@ -655,13 +585,11 @@ def dvegap_dvol(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     # Also known as VommaP.
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return vegap(S, K, T, r, b, v, pdf=pdf) * d1 * d2 / v
+    return vegap(S, K, T, r, b, v) * d1 * d2 / v
 
 
 def vega_leverage(
@@ -672,13 +600,10 @@ def vega_leverage(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     return (
-        vega(S, K, T, r, b, v, pdf=pdf) * v /
-        price(is_call, S, K, T, r, b, v, cdf=cdf)
+        vega(S, K, T, r, b, v) * v /
+        price(is_call, S, K, T, r, b, v)
     )
 
 
@@ -689,8 +614,6 @@ def variance_vega(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     return S * exp((b - r) * T) * pdf(d1) * sqrt(T) / (2 * v)
@@ -703,8 +626,6 @@ def variance_delta(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -718,8 +639,6 @@ def variance_vomma(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -733,8 +652,6 @@ def variance_ultima(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -754,8 +671,6 @@ def theta_driftless(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     return -S * exp((b - r) * T) * pdf(d1) * v / (2 * sqrt(T))
@@ -768,10 +683,8 @@ def futures_rho(
         T: float,
         r: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
-    return -T * price(is_call, S, K, T, r, 0, v, cdf=cdf)
+    return -T * price(is_call, S, K, T, r, 0, v)
 
 
 def phi(
@@ -782,8 +695,6 @@ def phi(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Also known as rho2.
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -800,8 +711,6 @@ def dzeta_dvol(
         T: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -818,8 +727,6 @@ def dzeta_dtime(
         T: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
@@ -837,16 +744,14 @@ def break_even_probability(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Risk neutral break even probability.
     if is_call:
-        K = K + price(True, S, K, T, r, b, v, cdf=cdf) * exp(r * T)
+        K = K + price(True, S, K, T, r, b, v) * exp(r * T)
         d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
         return cdf(d2)
     else:
-        K = K - price(False, S, K, T, r, b, v, cdf=cdf) * exp(r * T)
+        K = K - price(False, S, K, T, r, b, v) * exp(r * T)
         d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
         return cdf(-d2)
 
@@ -859,8 +764,6 @@ def strike_delta(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
     if is_call:
@@ -876,8 +779,6 @@ def risk_neutral_density(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
     return exp(-r * T) * pdf(d2) / (K * v * sqrt(T))
@@ -890,10 +791,8 @@ def gamma_from_delta(
         b: float,
         v: float,
         delta_: float,
-        *,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
-    return exp((b - r) * T) * PDF(
+    return exp((b - r) * T) * pdf(
         inv_cdf(exp((r - b) * T) * abs(delta_))
     ) / (S * v * sqrt(T))
 
@@ -905,10 +804,8 @@ def gammap_from_delta(
         b: float,
         v: float,
         delta_: float,
-        *,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
-    return S / 100 * gamma_from_delta(S, T, r, b, v, delta_, inv_cdf=inv_cdf)
+    return S / 100 * gamma_from_delta(S, T, r, b, v, delta_)
 
 
 def vega_from_delta(
@@ -917,9 +814,6 @@ def vega_from_delta(
         r: float,
         b: float,
         delta_: float,
-        *,
-        inv_cdf: Callable[[float], float] = INV_CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
     return S * exp((b - r) * T) * sqrt(T) * pdf(
         inv_cdf(exp((r - b) * T) * abs(delta_))
@@ -933,11 +827,8 @@ def vegap_from_delta(
         b: float,
         v: float,
         delta_: float,
-        *,
-        inv_cdf: Callable[[float], float] = INV_CDF,
-        pdf: Callable[[float], float] = PDF
 ) -> float:
-    return v / 10 * vega_from_delta(S, T, r, b, delta_, inv_cdf=inv_cdf, pdf=pdf)
+    return v / 10 * vega_from_delta(S, T, r, b, delta_)
 
 
 def strike_from_delta(
@@ -948,8 +839,6 @@ def strike_from_delta(
         b: float,
         v: float,
         delta_: float,
-        *,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     if is_call:
         return S * exp(
@@ -970,9 +859,6 @@ def in_the_money_prob_from_delta(
         b: float,
         v: float,
         delta_: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     if is_call:
         return cdf(inv_cdf(delta_ / exp((b - r) * T)) - v * sqrt(T))
@@ -987,8 +873,6 @@ def strike_from_in_the_money_prob(
         T: float,
         b: float,
         in_the_money_prob: float,
-        *,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     if is_call:
         return S * exp(
@@ -1006,9 +890,6 @@ def rnd_from_in_the_money_prob(
         r: float,
         v: float,
         in_the_money_prob: float,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     return exp(-r * T) * pdf(inv_cdf(in_the_money_prob)) / (K * v * sqrt(T))
 
@@ -1020,9 +901,6 @@ def delta_from_in_the_money_prob(
         b: float,
         v: float,
         in_the_money_prob: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        inv_cdf: Callable[[float], float] = INV_CDF
 ) -> float:
     if is_call:
         return cdf(inv_cdf(in_the_money_prob * exp((b - r) * T)) - v * sqrt(T))
@@ -1088,8 +966,6 @@ def in_the_money_probability(
         T: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
 ) -> float:
     d2 = (log(S / K) + (b - v ** 2 / 2) * T) / (v * sqrt(T))
 
@@ -1111,25 +987,6 @@ def delta_mirror_call_put_strike(S: float, K: float, T: float, b: float, v: floa
     return S ** 2 / K * exp((2 * b + v ** 2) * T)
 
 
-def confidence_interval_volatility(
-        Alfa: float,
-        n: int,
-        VolatilityEstimate: float,
-        is_lower: bool,
-        *,
-        chiinv: Callable[[float, int], float] = CHIINV,
-) -> float:
-    # Volatility estimate confidence interval
-
-    # is_lower == True gives the lower cofidence interval
-    # is_lower == False gives the upper cofidence interval
-    # n: number of observations
-    if is_lower:
-        return VolatilityEstimate * sqrt((n - 1) / (chiinv(Alfa / 2, n - 1)))
-    else:
-        return VolatilityEstimate * sqrt((n - 1) / (chiinv(1 - Alfa / 2, n - 1)))
-
-
 def profit_loss_std(
         TypeFlag: Literal['a', 'p'],
         is_call: bool,
@@ -1140,23 +997,20 @@ def profit_loss_std(
         b: float,
         v: float,
         NHedges: int,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     if TypeFlag == "a":  # in dollars
         return (
             sqrt(pi / 4) *
-            vega(S, K, T, r, b, v, pdf=pdf) *
+            vega(S, K, T, r, b, v) *
             v / sqrt(NHedges)
         )
     elif TypeFlag == "p":  # in percent
         return (
             sqrt(pi / 4) *
-            vega(S, K, T, r, b, v, pdf=pdf) *
+            vega(S, K, T, r, b, v) *
             v / sqrt(NHedges) /
-            price(is_call, S, K, T, r, b, v, cdf=cdf)
+            price(is_call, S, K, T, r, b, v)
         )
     else:
         raise ValueError('invalid type flag')

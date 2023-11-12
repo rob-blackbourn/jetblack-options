@@ -1,9 +1,14 @@
 """Black Scholes variance analytic solutions"""
 
 from math import exp, log, sqrt
+from statistics import NormalDist
 from typing import Callable
 
 from ..distributions import CDF
+
+norm = NormalDist()
+cdf = norm.cdf
+
 
 def price(
         is_call: bool,
@@ -13,8 +18,6 @@ def price(
         r: float,
         b: float,
         v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     # The generalized Black and Scholes formula on variance form
 

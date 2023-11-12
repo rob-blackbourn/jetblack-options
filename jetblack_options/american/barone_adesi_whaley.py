@@ -1,10 +1,14 @@
 """Barone-Adesi and Whaley"""
 
 from math import exp, log, sqrt
-from typing import Callable
+from statistics import NormalDist
 
-from ..distributions import CDF, PDF
 from ..european.generalised_black_scholes import price as bs_price
+
+norm = NormalDist()
+cdf = norm.cdf
+pdf = norm.pdf
+inv_cdf = norm.inv_cdf
 
 
 def _kc(
@@ -13,9 +17,6 @@ def _kc(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """Newton Raphson algorithm to solve for the critical commodity price for a
     Call.
@@ -26,10 +27,6 @@ def _kc(
         r (float): The risk free rate.
         b (float): The asset growth.
         v (float): The volatility.
-        pdf (Callable[[float], float], optional): A function returning the normal
-            distribution. Defaults to PDF.
-        cdf (Callable[[float], float], optional): A function returning the
-            cumulative normal distribution. Defaults to CDF.
 
     Returns:
         float: The price.
@@ -48,7 +45,7 @@ def _kc(
     q2 = (-(n - 1) + sqrt((n - 1) ** 2 + 4 * k)) / 2
     lhs = Si - K
     rhs = (
-        bs_price(True, Si, K, T, r, b, v, cdf=cdf) +
+        bs_price(True, Si, K, T, r, b, v) +
         (1 - exp((b - r) * T) * cdf(d1)) * Si / q2
     )
     bi = (
@@ -62,7 +59,7 @@ def _kc(
         d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
         lhs = Si - K
         rhs = (
-            bs_price(True, Si, K, T, r, b, v, cdf=cdf) +
+            bs_price(True, Si, K, T, r, b, v) +
             (1 - exp((b - r) * T) * cdf(d1)) * Si / q2
         )
         bi = (
@@ -80,15 +77,12 @@ def _call_price(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
 
     if b >= r:
-        return bs_price(True, S, K, T, r, b, v, cdf=cdf)
+        return bs_price(True, S, K, T, r, b, v)
 
-    Sk = _kc(K, T, r, b, v, pdf=pdf, cdf=cdf)
+    Sk = _kc(K, T, r, b, v)
     n = 2 * b / v ** 2
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
     d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -96,7 +90,7 @@ def _call_price(
     a2 = (Sk / q2) * (1 - exp((b - r) * T) * cdf(d1))
     if S < Sk:
         return (
-            bs_price(True, S, K, T, r, b, v, cdf=cdf)
+            bs_price(True, S, K, T, r, b, v)
             + a2 * (S / Sk) ** q2
         )
     else:
@@ -109,9 +103,6 @@ def _kp(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     # Newton Raphson algorithm to solve for the critical commodity price for a Put
 
@@ -128,7 +119,7 @@ def _kp(
     q1 = (-(n - 1) - sqrt((n - 1) ** 2 + 4 * k)) / 2
     lhs = K - Si
     rhs = (
-        bs_price(False, Si, K, T, r, b, v, cdf=cdf)
+        bs_price(False, Si, K, T, r, b, v)
         - (1 - exp((b - r) * T) * cdf(-d1)) * Si / q1
     )
     bi = (
@@ -142,7 +133,7 @@ def _kp(
         d1 = (log(Si / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
         lhs = K - Si
         rhs = (
-            bs_price(False, Si, K, T, r, b, v, cdf=cdf)
+            bs_price(False, Si, K, T, r, b, v)
             - (1 - exp((b - r) * T) * cdf(-d1)) * Si / q1
         )
         bi = (
@@ -160,12 +151,9 @@ def _put_price(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
 
-    Sk = _kp(K, T, r, b, v, pdf=pdf, cdf=cdf)
+    Sk = _kp(K, T, r, b, v)
     n = 2 * b / v ** 2
     k = 2 * r / (v ** 2 * (1 - exp(-r * T)))
     d1 = (log(Sk / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
@@ -173,7 +161,7 @@ def _put_price(
     a1 = -(Sk / q1) * (1 - exp((b - r) * T) * cdf(-d1))
 
     if S > Sk:
-        return bs_price(False, S, K, T, r, b, v, cdf=cdf) + a1 * (S / Sk) ** q1
+        return bs_price(False, S, K, T, r, b, v) + a1 * (S / Sk) ** q1
     else:
         return K - S
 
@@ -186,9 +174,6 @@ def price(
         r: float,
         b: float,
         v: float,
-        *,
-        pdf: Callable[[float], float] = PDF,
-        cdf: Callable[[float], float] = CDF
 ) -> float:
     """The Barone-Adesi and Whaley (1987) American approximation.
 
@@ -200,14 +185,12 @@ def price(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
-        pdf (Callable[[float], float], optional): The probability density function. Defaults to PDF.
 
     Returns:
         float: The price of the option.
     """
 
     if is_call:
-        return _call_price(S, K, T, r, b, v, pdf=pdf, cdf=cdf)
+        return _call_price(S, K, T, r, b, v)
     else:
-        return _put_price(S, K, T, r, b, v, pdf=pdf, cdf=cdf)
+        return _put_price(S, K, T, r, b, v)

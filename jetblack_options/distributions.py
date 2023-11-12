@@ -96,7 +96,7 @@ def CHIINV(p: float, df: int) -> float:
         for k in range(1, n+1):
             G = G * (y + k)
         A = p * G
-        u = 0
+        u = 0.0
         for _ in range(8):
             g = 1 + (u/(a+1)) * ( 1 + (u/(a+2)) * (1 + (u/(a+3)) ))
             u = pow((A * exp(u)/g), 1/a)
@@ -191,7 +191,7 @@ def CBND(x: float, y: float, rho: float) -> float:
     h = -x
     k = -y
     hk = h * k
-    BVN = 0
+    BVN = 0.0
           
     if abs(rho) < 0.925:
         if abs(rho) > 0:
