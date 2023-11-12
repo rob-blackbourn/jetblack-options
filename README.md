@@ -34,7 +34,7 @@ p = price(is_call, S, K, T, r, b, v)
 d = delta(is_call, S, K, T, r, b, v)
 
 # Calculate the delta by bumping the price.
-from jetblack_options.numeric_greeks import NumericGreeks
+from jetblack_options.numeric_greeks.with_carry import NumericGreeks
 ng = NumericGreeks(price)
 d1 = ng.delta(is_call, S, K, T, r, b, v)
 ```

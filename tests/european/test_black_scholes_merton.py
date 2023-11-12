@@ -16,7 +16,7 @@ from jetblack_options.european.black_scholes_merton import (
     charm,
     vomma,
 )
-from jetblack_options.numeric_greeks_with_dividend_yield import NumericGreeks
+from jetblack_options.numeric_greeks.with_dividend_yield import NumericGreeks
 
 from ..utils import is_close_to
 

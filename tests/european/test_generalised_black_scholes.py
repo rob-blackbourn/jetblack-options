@@ -16,7 +16,7 @@ from jetblack_options.european.generalised_black_scholes import (
     charm,
     vomma,
 )
-from jetblack_options.numeric_greeks import NumericGreeks
+from jetblack_options.numeric_greeks.with_carry import NumericGreeks
 
 from ..utils import is_close_to
 

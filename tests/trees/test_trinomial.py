@@ -1,7 +1,7 @@
 """Tests for Barone-Adesi-Whaley"""
 
 from jetblack_options.trees.trinomial import greeks
-from jetblack_options.numeric_greeks import NumericGreeks
+from jetblack_options.numeric_greeks.with_carry import NumericGreeks
 
 from ..utils import is_close_to
 

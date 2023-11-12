@@ -11,7 +11,7 @@ from jetblack_options.european.black_76 import (
     vomma,
     ivol
 )
-from jetblack_options.numeric_greeks_without_carry import NumericGreeks
+from jetblack_options.numeric_greeks.without_carry import NumericGreeks
 
 from ..utils import is_close_to
 
