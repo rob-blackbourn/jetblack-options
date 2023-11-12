@@ -1,7 +1,4 @@
 {
-    "[vb]": {
-        "editor.tabSize": 4
-    },
     "[python]": {
         "diffEditor.ignoreTrimWhitespace": false,
         "gitlens.codeLens.symbolScopes": [

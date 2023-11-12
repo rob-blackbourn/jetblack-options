@@ -36,8 +36,8 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-                self.price(is_call, S + dS, K, T, r, b, v) -
-                self.price(is_call, S - dS, K, T, r, b, v)
+            self.price(is_call, S + dS, K, T, r, b, v)
+            - self.price(is_call, S - dS, K, T, r, b, v)
         ) / (2 * dS)
 
     def gamma(
@@ -52,10 +52,11 @@ class NumericGreeks:
             *,
             dS: float = 0.01,
     ) -> float:
-        p1 = self.price(is_call, S + dS, K, T, r, b, v)
-        p2 = self.price(is_call, S, K, T, r, b, v)
-        p3 = self.price(is_call, S - dS, K, T, r, b, v)
-        return (p1 - 2 * p2 + p3) / dS ** 2
+        return (
+            self.price(is_call, S + dS, K, T, r, b, v)
+            - 2 * self.price(is_call, S, K, T, r, b, v)
+            + self.price(is_call, S - dS, K, T, r, b, v)
+        ) / dS ** 2
 
     def theta(
             self,
@@ -93,8 +94,8 @@ class NumericGreeks:
             dv: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S, K, T, r, b, v + dv) -
-            self.price(is_call, S, K, T, r, b, v - dv)
+            self.price(is_call, S, K, T, r, b, v + dv)
+            - self.price(is_call, S, K, T, r, b, v - dv)
         ) / 2
 
     def rho(
@@ -144,9 +145,9 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S + dS, K, T, r, b, v) -
-            self.price(is_call, S - dS, K, T, r, b, v)
-        ) / (2 * dS) * S / self.price(is_call, S, K, T, r, b, v)
+            self.delta(is_call, S, K, T, r, b, v, dS=dS) * S
+            / self.price(is_call, S, K, T, r, b, v)
+        )
 
     def speed(
             self,
@@ -197,11 +198,7 @@ class NumericGreeks:
             *,
             dS: float = 0.01,
     ) -> float:
-        return S / 100 * (
-            self.price(is_call, S + dS, K, T, r, b, v) -
-            2 * self.price(is_call, S, K, T, r, b, v) +
-            self.price(is_call, S - dS, K, T, r, b, v)
-        ) / dS ** 2
+        return S / 100 * self.gamma(is_call, S, K, T, r, b, v, dS=dS)
 
     def vegap(
             self,
@@ -215,10 +212,7 @@ class NumericGreeks:
             *,
             dv: float = 0.01,
     ) -> float:
-        return (
-            self.price(is_call, S, K, T, r, b, v + dv) -
-            self.price(is_call, S, K, T, r, b, v - dv)
-        ) * v / 0.1 / 2
+        return self.vega(is_call, S, K, T, r, b, v, dv=dv) * v / 0.1
 
     def vanna(
             self,
@@ -233,6 +227,23 @@ class NumericGreeks:
             dS: float = 0.01,
             dv: float = 0.01
     ) -> float:
+        """The second order derivative of the option price to a change in the asset
+        price and a change in the volatility.
+
+        Args:
+            is_call (bool): True if the option is a call, false for a put.
+            S (float): The asset price.
+            K (float): The strike price.
+            T (float): The time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The asset volatility.
+            dS (float, optional): The change in spot price. Defaults to 0.01.
+            dv (float, optional): The change in volatility. Defaults to 0.01.
+
+        Returns:
+            float: _description_
+        """
         # Also known as DdeltaDvol
         return (
             self.price(is_call, S + dS, K, T, r, b, v + dv) -
@@ -254,6 +265,25 @@ class NumericGreeks:
             dS: float = 0.01,
             dT: float = 1 / 365
     ) -> float:
+        """Measures the instantaneous rate of change of delta over the passage of
+        time.
+
+        Also known as DdeltaDtime.
+
+        Args:
+            is_call (bool): True if the option is a call, false for a put.
+            S (float): The asset price.
+            K (float): The strike price.
+            T (float): The time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The asset volatility.
+            dS (float, optional): Change in asset price. Defaults to 0.01.
+            dT (float, optional): Change in time. Defaults to 1/365.
+
+        Returns:
+            float: The charm.
+        """
         # Also known as DdeltaDtime
         return (
             self.price(is_call, S + dS, K, T + dT, r, b, v) -

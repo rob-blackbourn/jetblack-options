@@ -35,7 +35,7 @@ def price(
         is_call (bool): True for a call, false for a put.
         S (float): The current asset price.
         K (float): The option strike price
-        T (float): The time to maturity of the option in years.
+        T (float): The time to expiry of the option in years.
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
@@ -74,7 +74,7 @@ def ivol(
         is_call (bool): True for a call, false for a put.
         S (float): The current asset price.
         K (float): The option strike price
-        T (float): The time to maturity of the option in years.
+        T (float): The time to expiry of the option in years.
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         p (float): The option price.
@@ -106,13 +106,13 @@ def delta(
         *,
         cdf: Callable[[float], float] = CDF
 ) -> float:
-    """The sensitivity of the open to a change in the asset price.
+    """The sensitivity of the option to a change in the asset price.
 
     Args:
         is_call (bool): True for a call, false for a put.
         S (float): The current asset price.
         K (float): The option strike price
-        T (float): The time to maturity of the option in years.
+        T (float): The time to expiry of the option in years.
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
@@ -120,7 +120,7 @@ def delta(
             distribution function. Defaults to CDF.
 
     Returns:
-        float: the delta.
+        float: The delta.
     """
     d1 = (log(S / K) + T * (b + v ** 2 / 2)) / (v * sqrt(T))
 
@@ -145,7 +145,7 @@ def gamma(
     Args:
         S (float): The current asset price.
         K (float): The option strike price
-        T (float): The time to maturity of the option in years.
+        T (float): The time to expiry of the option in years.
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
@@ -218,10 +218,13 @@ def vega(
 ) -> float:
     """The sensitivity of the options price or a change in the asset volatility.
 
+    This value is typically reported by dividing by 100 (for a 1% change in
+    volatility)
+
     Args:
         S (float): The current asset price.
         K (float): The option strike price
-        T (float): The time to maturity of the option in years.
+        T (float): The time to expiry of the option in years.
         r (float): The risk free rate.
         b (float): The cost of carry of the asset.
         v (float): The volatility of the asset.
@@ -317,7 +320,12 @@ def elasticity(
         *,
         cdf: Callable[[float], float] = CDF,
 ) -> float:
-    """The option elasticity.
+    """The percentage change in the option price for a percentage change in the
+    asset price.
+
+    This is thought of as a measure of leverage, sometimes called gearing.
+
+    Also known as lambda or omega.
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -327,14 +335,15 @@ def elasticity(
         r (float): The risk free rate.
         b (float): The cost of carry.
         v (float): The asset volatility.
-        cdf (Callable[[float], float], optional): The cumulative density function. Defaults to CDF.
+        cdf (Callable[[float], float], optional): The cumulative density
+            function. Defaults to CDF.
 
     Returns:
         float: The elasticity.
     """
     return (
-        delta(is_call, S, K, T, r, b, v, cdf=cdf) * S /
-        price(is_call, S, K, T, r, b, v, cdf=cdf)
+        delta(is_call, S, K, T, r, b, v, cdf=cdf) * S
+        / price(is_call, S, K, T, r, b, v, cdf=cdf)
     )
 
 
@@ -394,7 +403,24 @@ def vanna(
         *,
         pdf: Callable[[float], float] = PDF
 ) -> float:
-    # Also known as DdeltaDvol.
+    """The second order derivative of the option price to a change in the asset
+    price and a change in the volatility.
+
+    Also known as DdeltaDvol.
+
+    Args:
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        pdf (Callable[[float], float], optional): The probability density
+            function. Defaults to PDF.
+
+    Returns:
+        float: The vanna.
+    """
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return -exp((b - r) * T) * d2 / v * pdf(d1)
@@ -413,7 +439,7 @@ def ddelta_dvol_dvol(
     # Also known as DVannaDvol
     d1 = (log(S / K) + (b + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return vanna(S, K, T, r, b, v, pdf=pdf) * 1 / v * (d1 * d2 - d1 / d2 - 1)
+    return vanna(S, K, T, r, b, v, pdf=pdf) / v * (d1 * d2 - d1 / d2 - 1)
 
 
 def charm(
@@ -428,7 +454,28 @@ def charm(
         cdf: Callable[[float], float] = CDF,
         pdf: Callable[[float], float] = PDF
 ) -> float:
-    # Also known as DdeltaDtime
+    """Measures the instantaneous rate of change of delta over the passage of
+    time.
+
+    Also known as DdeltaDtime.
+    
+    Args:
+        is_call (bool): True for a call, false for a put.
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative density
+            function. Defaults to CDF.
+        pdf (Callable[[float], float], optional): The probability density
+            function. Defaults to PDF.
+
+    Returns:
+        float: The charm.
+    """
+    # 
 
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)

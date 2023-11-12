@@ -41,96 +41,6 @@ def price(
         return exp(-r * T) * (K * cdf(-d2) - F * cdf(-d1))
 
 
-def delta(
-        is_call: bool,
-        F: float,
-        K: float,
-        T: float,
-        r: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
-) -> float:
-    d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
-    if is_call:
-        return exp(-r * T) * cdf(d1)
-    else:
-        return -exp(-r * T) * cdf(-d1)
-
-
-def gamma(
-        F: float,
-        K: float,
-        T: float,
-        r: float,
-        v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
-
-    return exp(-r * T) * pdf(d1) / (F * v * sqrt(T))
-
-
-def theta(
-        is_call: bool,
-        F: float,
-        K: float,
-        T: float,
-        r: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
-    d2 = d1 - v * sqrt(T)
-
-    if is_call:
-        return (
-            -F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
-            + r * F * exp(-r * T) * cdf(d1)
-            - r * K * exp(-r * T) * cdf(d2)
-        )
-    else:
-        return (
-            -F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
-            - r * F * exp(-r * T) * cdf(-d1)
-            + r * K * exp(-r * T) * cdf(-d2)
-        )
-
-
-def vega(
-        F: float,
-        K: float,
-        T: float,
-        r: float,
-        v: float,
-        *,
-        pdf: Callable[[float], float] = PDF
-) -> float:
-    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
-    return F * exp(-r * T) * pdf(d1) * sqrt(T)
-
-
-def rho(
-        is_call: bool,
-        F: float,
-        K: float,
-        T: float,
-        r: float,
-        v: float,
-        *,
-        cdf: Callable[[float], float] = CDF
-) -> float:
-    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
-    d2 = d1 - v * sqrt(T)
-    if is_call:
-        return -T * exp(-r * T) * (F * cdf(d1) - K * cdf(d2))
-    else:
-        return -T * exp(-r * T) * (K * cdf(-d2) - F * cdf(-d1))
-
-
 def ivol(
         is_call: bool,
         F: float,
@@ -167,6 +77,184 @@ def ivol(
         max_iterations=max_iterations,
         epsilon=epsilon
     )
+
+
+def delta(
+        is_call: bool,
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    """The sensitivity of the option to a change in the asset price
+    using Black 76.
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        F (float): The current futures price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        v (float): The volatility.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CDF.
+
+    Returns:
+        float: The delta.
+    """
+    d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
+    if is_call:
+        return exp(-r * T) * cdf(d1)
+    else:
+        return -exp(-r * T) * cdf(-d1)
+
+
+def gamma(
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    """The second derivative to the change in asset price using Black 76.
+
+    Args:
+        F (float): The current futures price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        v (float): The volatility.
+        pdf (Callable[[float], float], optional): The probability distribution
+            function. Defaults to PDF.
+
+    Returns:
+        float: The gamma.
+    """
+    d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
+
+    return exp(-r * T) * pdf(d1) / (F * v * sqrt(T))
+
+
+def theta(
+        is_call: bool,
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    """The change in the value of the option with respect to time to expiry
+    using Black 76.
+
+    This value is typically reported by dividing by 365 (for a one calendar day
+    movement) or 252 (for a 1 trading day movement).
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        F (float): The current futures price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        v (float): The volatility.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CDF.
+        pdf (Callable[[float], float], optional): The probability distribution
+            function. Defaults to PDF.
+
+    Returns:
+        float: The theta.
+    """
+    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+
+    if is_call:
+        return (
+            -F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
+            + r * F * exp(-r * T) * cdf(d1)
+            - r * K * exp(-r * T) * cdf(d2)
+        )
+    else:
+        return (
+            -F * exp(-r * T) * pdf(d1) * v / (2 * sqrt(T))
+            - r * F * exp(-r * T) * cdf(-d1)
+            + r * K * exp(-r * T) * cdf(-d2)
+        )
+
+
+def vega(
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        pdf: Callable[[float], float] = PDF
+) -> float:
+    """The sensitivity of the options price or a change in the asset volatility
+    using Black 76.
+
+    This value is typically reported by dividing by 100 (for a 1% change in
+    volatility)
+
+    Args:
+        F (float): The current futures price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        v (float): The volatility.
+        pdf (Callable[[float], float], optional): The probability distribution
+            function. Defaults to PDF.
+
+    Returns:
+        float: The vega.
+    """
+    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
+    return F * exp(-r * T) * pdf(d1) * sqrt(T)
+
+
+def rho(
+        is_call: bool,
+        F: float,
+        K: float,
+        T: float,
+        r: float,
+        v: float,
+        *,
+        cdf: Callable[[float], float] = CDF
+) -> float:
+    """The sensitivity of the option price to a change in the risk free rate
+    using Black 76.
+
+    This value is typically reported by dividing by 100 (for a 1% change
+    in the risk free rate)
+
+    Args:
+        is_call (bool): True for a call, false for a put.
+        F (float): The price of the future.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        v (float): The asset volatility.
+        cdf (Callable[[float], float], optional): The cumulative probability
+            distribution function. Defaults to CDF.
+
+    Returns:
+        float: The rho.
+    """
+    d1 = (log(F / K) + (v ** 2 / 2) * T) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
+    if is_call:
+        return -T * exp(-r * T) * (F * cdf(d1) - K * cdf(d2))
+    else:
+        return -T * exp(-r * T) * (K * cdf(-d2) - F * cdf(-d1))
 
 
 def vanna(
