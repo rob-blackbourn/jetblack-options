@@ -4,16 +4,17 @@ from typing import Callable
 
 OptionValue = Callable[
     [
-        bool, # is_call
-        float, # Asset price.
-        float, # Strike.
-        float, # Time to expiry in years.
-        float, # Risk free rate.
-        float, # Dividend yield.
-        float # Asset volatility
+        bool,  # is_call
+        float,  # Asset price.
+        float,  # Strike.
+        float,  # Time to expiry in years.
+        float,  # Risk free rate.
+        float,  # Dividend yield.
+        float  # Asset volatility
     ],
-    float # The option price
+    float  # The option price
 ]
+
 
 class NumericGreeks:
 
@@ -36,8 +37,8 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-                self.price(is_call, S + dS, K, T, r, q, v) -
-                self.price(is_call, S - dS, K, T, r, q, v)
+            self.price(is_call, S + dS, K, T, r, q, v) -
+            self.price(is_call, S - dS, K, T, r, q, v)
         ) / (2 * dS)
 
     def gamma(
@@ -67,7 +68,7 @@ class NumericGreeks:
             q: float,
             v: float,
             *,
-            dT: float = 1 /365,
+            dT: float = 1 / 365,
     ) -> float:
         if T <= dT:
             return (
@@ -95,7 +96,7 @@ class NumericGreeks:
         return (
             self.price(is_call, S, K, T, r, q, v + dv) -
             self.price(is_call, S, K, T, r, q, v - dv)
-        ) / 2
+        ) / (2 * dv) / 100
 
     def rho(
             self,
@@ -166,7 +167,6 @@ class NumericGreeks:
             + 3 * self.price(is_call, S, K, T, r, q, v)
             - self.price(is_call, S - dS, K, T, r, q, v)
         ) / dS ** 3
-
 
     def deltap(
             self,

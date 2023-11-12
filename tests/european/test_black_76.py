@@ -15,6 +15,7 @@ from jetblack_options.numeric_greeks.without_carry import NumericGreeks
 
 from ..utils import is_close_to
 
+
 def test_price():
 
     for is_call, F, K, r, T, v, expected in [
@@ -28,6 +29,7 @@ def test_price():
         actual = price(is_call, F, K, T, r, v)
         assert is_close_to(actual, expected, 1e-12)
 
+
 def test_ivol():
 
     for is_call, F, K, r, T, p, expected in [
@@ -40,6 +42,7 @@ def test_ivol():
     ]:
         actual = ivol(is_call, F, K, T, r, p)
         assert is_close_to(actual, expected, 1e-9)
+
 
 def test_delta():
     ng = NumericGreeks(price)
@@ -57,6 +60,7 @@ def test_delta():
 
         numerical = ng.delta(is_call, F, K, T, r, v)
         assert is_close_to(numerical, analytic, 1e-6)
+
 
 def test_gamma():
     ng = NumericGreeks(price)
@@ -124,6 +128,7 @@ def test_rho():
 
         numerical = ng.rho(is_call, F, K, T, r, v)
         assert is_close_to(numerical, analytic, 1e-6)
+
 
 def test_vanna():
     ng = NumericGreeks(price)

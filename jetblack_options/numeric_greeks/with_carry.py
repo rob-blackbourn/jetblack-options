@@ -4,16 +4,17 @@ from typing import Callable
 
 OptionValue = Callable[
     [
-        bool, # is_call
-        float, # Asset price.
-        float, # Strike.
-        float, # Time to expiry in years.
-        float, # Risk free rate.
-        float, # Cost of carry.
-        float # Asset volatility
+        bool,  # is_call
+        float,  # Asset price.
+        float,  # Strike.
+        float,  # Time to expiry in years.
+        float,  # Risk free rate.
+        float,  # Cost of carry.
+        float  # Asset volatility
     ],
-    float # The option price
+    float  # The option price
 ]
+
 
 class NumericGreeks:
 
@@ -68,7 +69,7 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dT: float = 1 /365,
+            dT: float = 1 / 365,
     ) -> float:
         if T <= dT:
             return (
@@ -96,7 +97,7 @@ class NumericGreeks:
         return (
             self.price(is_call, S, K, T, r, b, v + dv)
             - self.price(is_call, S, K, T, r, b, v - dv)
-        ) / 2
+        ) / (2 * dv) / 100
 
     def rho(
             self,
@@ -167,7 +168,6 @@ class NumericGreeks:
             + 3 * self.price(is_call, S, K, T, r, b, v)
             - self.price(is_call, S - dS, K, T, r, b, v)
         ) / dS ** 3
-
 
     def deltap(
             self,
