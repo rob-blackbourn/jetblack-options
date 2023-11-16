@@ -21,6 +21,7 @@ cdf = norm.cdf
 pdf = norm.pdf
 inv_cdf = norm.inv_cdf
 
+
 def price(
         is_call: bool,
         S: float,
@@ -64,7 +65,7 @@ def ivol(
         p: float,
         *,
         max_iterations: int = 20,
-        epsilon = 1e-8
+        epsilon=1e-8
 ) -> float:
     """Calculate the volatility of an option that is implied by the price.
 
@@ -323,7 +324,7 @@ def gammap(
         b: float,
         v: float,
 ) -> float:
-    return S * gamma(S, K, T, r, b, v) / 100
+    return gamma(S, K, T, r, b, v) * S / 100
 
 
 def vegap(
@@ -334,7 +335,7 @@ def vegap(
         b: float,
         v: float,
 ) -> float:
-    return v / 10 * vega(S, K, T, r, b, v)
+    return vega(S, K, T, r, b, v) * v * 10
 
 
 def forward_delta(
@@ -410,7 +411,7 @@ def charm(
     time.
 
     Also known as DdeltaDtime.
-    
+
     Args:
         is_call (bool): True for a call, false for a put.
         S (float): The asset price.
@@ -423,7 +424,7 @@ def charm(
     Returns:
         float: The charm.
     """
-    # 
+    #
 
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)

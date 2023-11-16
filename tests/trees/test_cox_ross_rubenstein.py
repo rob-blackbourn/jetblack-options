@@ -6,7 +6,6 @@ from jetblack_options.numeric_greeks.with_carry import NumericGreeks
 from ..utils import is_close_to
 
 
-
 def test_price():
 
     for is_european, is_call, S, K, r, q, T, v, expected in [
@@ -24,8 +23,10 @@ def test_price():
         (False, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 10.100588559015748),
     ]:
         b = r - q
-        value, delta, gamma, theta = greeks(is_european, is_call, S, K, T, r, b, v, 200)
+        value, delta, gamma, theta = greeks(
+            is_european, is_call, S, K, T, r, b, v, 200)
         assert is_close_to(value, expected, 1e-12)
+
 
 def test_delta():
 
@@ -38,9 +39,11 @@ def test_delta():
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.7946365471511285),
     ]:
         b = r - q
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
+            is_european, is_call, S, K, T, r, b, v, 100)[0])
         numeric = ng.delta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
+
 
 def test_gamma():
     for is_european, is_call, S, K, r, q, T, v, expected in [
@@ -52,21 +55,22 @@ def test_gamma():
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 1.0658141036401503e-10),
     ]:
         b = r - q
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
+            is_european, is_call, S, K, T, r, b, v, 100)[0])
         numeric = ng.gamma(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_theta():
     for is_european, is_call, S, K, r, q, T, v, expected in [
-        (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.006793772874507553),
-        (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.003895899679320025),
-        (True, True, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.011062933026733557),
-        (True, False, 100, 100, 0.1, 0.08, 6/12, 0.125, -0.0060589891710591814),
-        (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.006669281589761655),
-        (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.0009411273119681596),
+        (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, -2.479727099195257),
+        (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, -1.422003382951809),
+        (True, True, 100, 100, 0.1, 0.08, 6/12, 0.125, -4.037970554757748),
+        (True, False, 100, 100, 0.1, 0.08, 6/12, 0.125, -2.2115310474366012),
+        (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.34351146886837824),
     ]:
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
+            is_european, is_call, S, K, T, r, b, v, 100)[0])
         b = r - q
         numeric = ng.theta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
@@ -74,14 +78,15 @@ def test_theta():
 
 def test_vega():
     for is_european, is_call, S, K, r, q, T, v, expected in [
-        (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.13611230457699985),
-        (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.13611230457699058),
-        (True, True, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.2670198719678558),
-        (True, False, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.2670198719678494),
-        (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.1739838829453611),
-        (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.17398388294535572),
+        (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, 13.589147303977533),
+        (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, 13.589147303972009),
+        (True, True, 100, 100, 0.1, 0.08, 6/12, 0.125, 26.703128947528132),
+        (True, False, 100, 100, 0.1, 0.08, 6/12, 0.125, 26.70312894752369),
+        (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 17.34480813834477),
+        (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 17.34480813833894),
     ]:
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
+            is_european, is_call, S, K, T, r, b, v, 100)[0])
         b = r - q
         numeric = ng.vega(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
@@ -96,7 +101,8 @@ def test_rho():
         (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.0817070259188224),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.44147133746021705),
     ]:
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
+            is_european, is_call, S, K, T, r, b, v, 100)[0])
         b = r - q
         numeric = ng.rho(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)

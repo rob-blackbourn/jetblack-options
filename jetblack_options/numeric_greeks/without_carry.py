@@ -104,12 +104,12 @@ class NumericGreeks:
                 self.price(is_call, S, K, T - dT, r, v)
                 - self.price(is_call, S, K, T + dT, r, v)
             ) / (2 * dT)
-        elif method == 'central':
+        elif method == 'forward':
             return (
                 self.price(is_call, S, K, T, r, v)
                 - self.price(is_call, S, K, T + dT, r, v)
             ) / dT
-        elif method == 'central':
+        elif method == 'backward':
             return (
                 self.price(is_call, S, K, T - dT, r, v)
                 - self.price(is_call, S, K, T, r, v)

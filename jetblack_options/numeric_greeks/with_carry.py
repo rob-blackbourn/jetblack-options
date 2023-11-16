@@ -1,6 +1,6 @@
 """Class for calculating numeric greeks for an option"""
 
-from typing import Callable
+from typing import Callable, Literal
 
 OptionValue = Callable[
     [
@@ -14,6 +14,7 @@ OptionValue = Callable[
     ],
     float  # The option price
 ]
+DifferenceMethod = Literal['central', 'forward', 'backward']
 
 
 class NumericGreeks:
@@ -35,11 +36,25 @@ class NumericGreeks:
             v: float,
             *,
             dS: float = 0.01,
+            method: DifferenceMethod = 'central'
     ) -> float:
-        return (
-            self.price(is_call, S + dS, K, T, r, b, v)
-            - self.price(is_call, S - dS, K, T, r, b, v)
-        ) / (2 * dS)
+        if method == 'central':
+            return (
+                self.price(is_call, S + dS, K, T, r, b, v)
+                - self.price(is_call, S - dS, K, T, r, b, v)
+            ) / (2 * dS)
+        elif method == 'forward':
+            return (
+                self.price(is_call, S + dS, K, T, r, b, v)
+                - self.price(is_call, S, K, T, r, b, v)
+            ) / dS
+        elif method == 'backward':
+            return (
+                self.price(is_call, S, K, T, r, b, v)
+                - self.price(is_call, S - dS, K, T, r, b, v)
+            ) / dS
+        else:
+            raise ValueError("Invalid method")
 
     def gamma(
             self,
@@ -52,12 +67,28 @@ class NumericGreeks:
             v: float,
             *,
             dS: float = 0.01,
+            method: DifferenceMethod = 'central'
     ) -> float:
-        return (
-            self.price(is_call, S + dS, K, T, r, b, v)
-            - 2 * self.price(is_call, S, K, T, r, b, v)
-            + self.price(is_call, S - dS, K, T, r, b, v)
-        ) / dS ** 2
+        if method == 'central':
+            return (
+                self.price(is_call, S + dS, K, T, r, b, v)
+                - 2 * self.price(is_call, S, K, T, r, b, v)
+                + self.price(is_call, S - dS, K, T, r, b, v)
+            ) / dS ** 2
+        elif method == 'forward':
+            return (
+                self.price(is_call, S + 2 * dS, K, T, r, b, v)
+                - 2 * self.price(is_call, S + dS, K, T, r, b, v)
+                + self.price(is_call, S, K, T, r, b, v)
+            ) / dS ** 2
+        elif method == 'backward':
+            return (
+                self.price(is_call, S, K, T, r, b, v)
+                - 2 * self.price(is_call, S - dS, K, T, r, b, v)
+                + self.price(is_call, S - 2 * dS, K, T, r, b, v)
+            ) / dS ** 2
+        else:
+            raise ValueError("Invalid method")
 
     def theta(
             self,
@@ -70,17 +101,25 @@ class NumericGreeks:
             v: float,
             *,
             dT: float = 1 / 365,
+            method: DifferenceMethod = 'central'
     ) -> float:
-        if T <= dT:
+        if method == 'central':
             return (
-                self.price(is_call, S, K, 0.00001, r, b, v)
-                - self.price(is_call, S, K, T, r, b, v)
-            )
-        else:
+                self.price(is_call, S, K, T - dT, r, b, v)
+                - self.price(is_call, S, K, T + dT, r, b, v)
+            ) / (2 * dT)
+        elif method == 'forward':
+            return (
+                self.price(is_call, S, K, T, r, b, v)
+                - self.price(is_call, S, K, T + dT, r, b, v)
+            ) / dT
+        if method == 'backward':
             return (
                 self.price(is_call, S, K, T - dT, r, b, v)
                 - self.price(is_call, S, K, T, r, b, v)
-            )
+            ) / dT
+        else:
+            raise ValueError("Invalid method")
 
     def vega(
             self,
@@ -92,12 +131,26 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dv: float = 0.01,
+            dv: float = 0.001,
+            method: DifferenceMethod = 'central'
     ) -> float:
-        return (
-            self.price(is_call, S, K, T, r, b, v + dv)
-            - self.price(is_call, S, K, T, r, b, v - dv)
-        ) / (2 * dv) / 100
+        if method == 'central':
+            return (
+                self.price(is_call, S, K, T, r, b, v + dv)
+                - self.price(is_call, S, K, T, r, b, v - dv)
+            ) / (2 * dv)
+        elif method == 'forward':
+            return (
+                self.price(is_call, S, K, T, r, b, v + dv)
+                - self.price(is_call, S, K, T, r, b, v)
+            ) / dv
+        elif method == 'backward':
+            return (
+                self.price(is_call, S, K, T, r, b, v)
+                - self.price(is_call, S, K, T, r, b, v - dv)
+            ) / dv
+        else:
+            raise ValueError('Invalid method')
 
     def rho(
             self,
@@ -109,12 +162,26 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dr: float = 0.01,
+            dr: float = 0.001,
+            method: DifferenceMethod = 'central'
     ) -> float:
-        return (
-            self.price(is_call, S, K, T, r + dr, b + dr, v)
-            - self.price(is_call, S, K, T, r - dr, b - dr, v)
-        ) / 2
+        if method == 'central':
+            return (
+                self.price(is_call, S, K, T, r + dr, b + dr, v)
+                - self.price(is_call, S, K, T, r - dr, b - dr, v)
+            ) / (2 * dr)
+        elif method == 'central':
+            return (
+                self.price(is_call, S, K, T, r + dr, b + dr, v)
+                - self.price(is_call, S, K, T, r - dr, b, v)
+            ) / dr
+        if method == 'backward':
+            return (
+                self.price(is_call, S, K, T, r + dr, b, v)
+                - self.price(is_call, S, K, T, r - dr, b - dr, v)
+            ) / dr
+        else:
+            raise ValueError('Invalid method')
 
     def carry(
             self,
@@ -210,9 +277,9 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dv: float = 0.01,
+            dv: float = 0.001,
     ) -> float:
-        return self.vega(is_call, S, K, T, r, b, v, dv=dv) * v / 0.1
+        return self.vega(is_call, S, K, T, r, b, v, dv=dv) * v * 10
 
     def vanna(
             self,
