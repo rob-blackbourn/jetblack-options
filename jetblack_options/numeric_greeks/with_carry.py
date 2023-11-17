@@ -193,12 +193,26 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            db: float = 0.01,
+            db: float = 0.001,
+            method: DifferenceMethod = 'central'
     ) -> float:
-        return (
-            self.price(is_call, S, K, T, r, b + db, v)
-            - self.price(is_call, S, K, T, r, b - db, v)
-        ) / 2
+        if method == 'central':
+            return (
+                self.price(is_call, S, K, T, r, b + db, v)
+                - self.price(is_call, S, K, T, r, b - db, v)
+            ) / (2 * db)
+        if method == 'forward':
+            return (
+                self.price(is_call, S, K, T, r, b + db, v)
+                - self.price(is_call, S, K, T, r, b, v)
+            ) / db
+        if method == 'central':
+            return (
+                self.price(is_call, S, K, T, r, b, v)
+                - self.price(is_call, S, K, T, r, b - db, v)
+            ) / db
+        else:
+            raise ValueError('Invalid method')
 
     def elasticity(
             self,
