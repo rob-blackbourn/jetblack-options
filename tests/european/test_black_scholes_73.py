@@ -141,7 +141,6 @@ def test_vanna():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 1.5924538086889684),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 1.5924538086889684),
     ]:
-        b = r - q
         analytic = vanna(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
@@ -159,7 +158,6 @@ def test_charm():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.6035085054564097),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.6035085054564097),
     ]:
-        b = r - q
         analytic = charm(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
@@ -170,16 +168,15 @@ def test_charm():
 def test_vomma():
     ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
-        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.016124953775897958),
-        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.016124953775897958),
-        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.005959469382217008),
-        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, 0.005959469382217008),
-        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.0052747076569270275),
-        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.0052747076569270275),
+        (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 161.24953775897959),
+        (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 161.24953775897959),
+        (True, 100, 100, 0.1, 0.08, 6/12, 0.125, 59.59469382217008),
+        (False, 100, 100, 0.1, 0.08, 6/12, 0.125, 59.59469382217008),
+        (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 52.74707656927028),
+        (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 52.74707656927028),
     ]:
-        b = r - q
-        analytic = vomma(S, K, T, r, v) / 10000
+        analytic = vomma(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.dvega_dvol(is_call, S, K, T, r, v)
-        assert is_close_to(numeric, analytic, 1e-4)
+        numeric = ng.vomma(is_call, S, K, T, r, v)
+        assert is_close_to(numeric, analytic, 1e-2)

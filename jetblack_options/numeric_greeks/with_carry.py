@@ -395,24 +395,6 @@ class NumericGreeks:
             self.price(is_call, S - dS, K, T, r, b, v - dv)
         ) / (2 * dv * dS ** 2) / 100
 
-    def dvega_dvol(
-            self,
-            is_call: bool,
-            S: float,
-            K: float,
-            T: float,
-            r: float,
-            b: float,
-            v: float,
-            *,
-            dv: float = 0.01,
-    ) -> float:
-        return (
-            self.price(is_call, S, K, T, r, b, v + dv) -
-            2 * self.price(is_call, S, K, T, r, b, v) +
-            self.price(is_call, S, K, T, r, b, v - dv)
-        )
-
     def vomma(
             self,
             is_call: bool,
@@ -423,18 +405,14 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dv: float = 0.01,
+            dv: float = 0.001,
     ) -> float:
-        return self.dvega_dvol(
-            is_call,
-            S,
-            K,
-            T,
-            r,
-            b,
-            v,
-            dv=dv
-        ) / dv ** 2 / 10000
+        # DvegaDvol
+        return (
+            self.price(is_call, S, K, T, r, b, v + dv) -
+            2 * self.price(is_call, S, K, T, r, b, v) +
+            self.price(is_call, S, K, T, r, b, v - dv)
+        ) / dv ** 2
 
     def time_gamma(
             self,
