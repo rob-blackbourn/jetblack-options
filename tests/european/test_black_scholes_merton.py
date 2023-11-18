@@ -80,7 +80,7 @@ def test_gamma():
         analytic = gamma(S, K, T, r, q, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gamma(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.gamma(is_call, S, K, T, r, q, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
@@ -182,7 +182,7 @@ def test_gammap():
         analytic = gammap(S, K, T, r, q, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gammap(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.gammap(is_call, S, K, T, r, q, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
@@ -216,7 +216,7 @@ def test_charm():
         analytic = charm(is_call, S, K, T, r, q, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.charm(is_call, S, K, T, r, q, v, dS=0.01)
+        numeric = ng.charm(is_call, S, K, T, r, q, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 

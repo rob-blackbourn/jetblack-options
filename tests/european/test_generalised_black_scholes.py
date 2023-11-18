@@ -84,7 +84,7 @@ def test_gamma():
         analytic = gamma(S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gamma(is_call, S, K, T, r, b, v, dS=0.01)
+        numeric = ng.gamma(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
@@ -102,7 +102,7 @@ def test_theta():
         analytic = theta(is_call, S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.theta(is_call, S, K, T, r, b, v, method='central')
+        numeric = ng.theta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
@@ -192,7 +192,7 @@ def test_gammap():
         analytic = gammap(S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gammap(is_call, S, K, T, r, b, v, dS=0.01)
+        numeric = ng.gammap(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
@@ -228,7 +228,7 @@ def test_charm():
         analytic = charm(is_call, S, K, T, r, b, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.charm(is_call, S, K, T, r, b, v, dS=0.01)
+        numeric = ng.charm(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 

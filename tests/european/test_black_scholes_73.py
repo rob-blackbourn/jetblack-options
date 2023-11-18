@@ -144,7 +144,7 @@ def test_vanna():
         analytic = vanna(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vanna(is_call, S, K, T, r, v, dS=0.01)
+        numeric = ng.vanna(is_call, S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
@@ -161,7 +161,7 @@ def test_charm():
         analytic = charm(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.charm(is_call, S, K, T, r, v, dS=0.01)
+        numeric = ng.charm(is_call, S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
