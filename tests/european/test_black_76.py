@@ -140,7 +140,6 @@ def test_vanna():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 1.996442942803649),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 1.996442942803649),
     ]:
-        b = r - q
         analytic = vanna(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
@@ -158,7 +157,6 @@ def test_vomma():
         (True, 100, 110, 0.1, 0.08, 6/12, 0.125, 145.98618448189166),
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 145.98618448189166),
     ]:
-        b = r - q
         analytic = vomma(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
