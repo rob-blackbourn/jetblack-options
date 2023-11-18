@@ -1,4 +1,4 @@
-"""Vector style"""
+"""Example implementation using pandas and numpy for vector calculation"""
 
 from typing import Callable, Union
 
@@ -8,21 +8,22 @@ import numpy as np
 import pandas as pd
 from scipy.stats import norm
 
-Vector = Union[pd.Series, NDArray]
+BoolVector = Union["pd.Series[bool]", NDArray[np.bool_]]
+FloatVector = Union["pd.Series[float]", NDArray[np.float_]]
 
 cdf = norm.cdf
 pdf = norm.pdf
 
 
 def price(
-        is_call: Vector,
-        S: Vector,
-        K: Vector,
-        T: Vector,
-        r: Vector,
-        b: Vector,
-        v: Vector
-) -> NDArray:
+        is_call: BoolVector,
+        S: FloatVector,
+        K: FloatVector,
+        T: FloatVector,
+        r: FloatVector,
+        b: FloatVector,
+        v: FloatVector
+) -> FloatVector:
     d1 = (log(S / K) + T * (b + v ** 2 / 2)) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
 
@@ -46,16 +47,16 @@ def price_df(df, is_call='is_call', S='S', K='K', T='T', r='r', b='b', v='v'):
 
 
 def solve_ivol(
-        p: Vector,
-        price: Callable[[Vector], Vector],
+        p: FloatVector,
+        price: Callable[[FloatVector], FloatVector],
         *,
         max_iterations: int = 20,
         epsilon=1e-8
-) -> NDArray:
+) -> NDArray[np.float_]:
     epsilon_ = np.full(len(p), epsilon)
 
-    v_lo = np.full(len(p), 0.005)
-    v_hi = np.full(len(p), 4.0)
+    v_lo: NDArray[np.float_] = np.full(len(p), 0.005)
+    v_hi: NDArray[np.float_] = np.full(len(p), 4.0)
     p_lo = price(v_lo)
     p_hi = price(v_hi)
 
@@ -88,7 +89,7 @@ def ivol(
         *,
         max_iterations: int = 20,
         epsilon=1e-8
-) -> Vector:
+) -> FloatVector:
     return solve_ivol(
         df[p],
         lambda v: price(df[is_call], df[S], df[K], df[T], df[r], df[b], v),
