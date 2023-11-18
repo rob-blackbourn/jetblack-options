@@ -306,7 +306,7 @@ class NumericGreeks:
             v: float,
             *,
             dS: float = 0.01,
-            dv: float = 0.01
+            dv: float = 0.001
     ) -> float:
         """The second order derivative of the option price to a change in the asset
         price and a change in the volatility.
@@ -331,7 +331,7 @@ class NumericGreeks:
             self.price(is_call, S + dS, K, T, r, b, v - dv) -
             self.price(is_call, S - dS, K, T, r, b, v + dv) +
             self.price(is_call, S - dS, K, T, r, b, v - dv)
-        ) / (4 * dS)
+        ) / (4 * dS) / dv
 
     def charm(
             self,

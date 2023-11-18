@@ -269,7 +269,7 @@ class NumericGreeks:
             v: float,
             *,
             dS: float = 0.01,
-            dv: float = 0.01
+            dv: float = 0.001
     ) -> float:
         # Also known as DdeltaDvol
         return (
@@ -277,7 +277,7 @@ class NumericGreeks:
             self.price(is_call, S + dS, K, T, r, v - dv) -
             self.price(is_call, S - dS, K, T, r, v + dv) +
             self.price(is_call, S - dS, K, T, r, v - dv)
-        ) / (4 * dS)
+        ) / (4 * dS) / dv
 
     def charm(
             self,
