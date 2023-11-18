@@ -384,7 +384,7 @@ class NumericGreeks:
             v: float,
             *,
             dS: float = 0.01,
-            dv: float = 0.01
+            dv: float = 0.001
     ) -> float:
         return (
             self.price(is_call, S + dS, K, T, r, b, v + dv) -
@@ -393,7 +393,7 @@ class NumericGreeks:
             self.price(is_call, S + dS, K, T, r, b, v - dv) +
             2 * self.price(is_call, S, K, T, r, b, v - dv) -
             self.price(is_call, S - dS, K, T, r, b, v - dv)
-        ) / (2 * dv * dS ** 2) / 100
+        ) / (2 * dv * dS ** 2)
 
     def vomma(
             self,
