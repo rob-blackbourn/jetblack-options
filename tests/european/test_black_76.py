@@ -109,8 +109,8 @@ def test_vega():
         analytic = vega(F, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numerical = ng.vega(is_call, F, K, T, r, v, dv=0.005, method='central')
-        assert is_close_to(numerical, analytic, 1e-2)
+        numerical = ng.vega(is_call, F, K, T, r, v)
+        assert is_close_to(numerical, analytic, 1e-3)
 
 
 def test_rho():
