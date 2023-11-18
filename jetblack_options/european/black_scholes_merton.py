@@ -13,6 +13,7 @@ cdf = norm.cdf
 pdf = norm.pdf
 inv_cdf = norm.inv_cdf
 
+
 def price(
         is_call: bool,
         S: float,
@@ -57,7 +58,7 @@ def ivol(
         p: float,
         *,
         max_iterations: int = 20,
-        epsilon = 1e-8
+        epsilon=1e-8
 ) -> float:
     """Calculate the volatility of an option that is implied by the price.
 
