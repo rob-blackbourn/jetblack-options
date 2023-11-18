@@ -1,29 +1,40 @@
 """Vector style"""
 
-from typing import Union, Any, Callable
+from typing import Callable, Union
 
+from numpy import exp, log, sqrt
+from numpy.typing import NDArray
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
 
-Vector = Union[pd.Series, np.ndarray]
+Vector = Union[pd.Series, NDArray]
+
+cdf = norm.cdf
+pdf = norm.pdf
 
 
-def _price(is_call: Vector, S: Vector, K: Vector, T: Vector, r: Vector, b: Vector, v: Vector) -> np.ndarray:
-    d1 = (np.log(S / K) + T * (b + v ** 2 / 2)) / (v * np.sqrt(T))
-    d2 = d1 - v * np.sqrt(T)
+def price(
+        is_call: Vector,
+        S: Vector,
+        K: Vector,
+        T: Vector,
+        r: Vector,
+        b: Vector,
+        v: Vector
+) -> NDArray:
+    d1 = (log(S / K) + T * (b + v ** 2 / 2)) / (v * sqrt(T))
+    d2 = d1 - v * sqrt(T)
 
     return np.where(
         is_call,
-        S * np.exp((b - r) * T) * norm.cdf(d1) -
-        K * np.exp(-r * T) * norm.cdf(d2),
-        K * np.exp(-r * T) * norm.cdf(-d2) - S *
-        np.exp((b - r) * T) * norm.cdf(-d1)
+        S * exp((b - r) * T) * cdf(d1) - K * exp(-r * T) * cdf(d2),
+        K * exp(-r * T) * cdf(-d2) - S * exp((b - r) * T) * cdf(-d1)
     )
 
 
-def price(df, is_call='is_call', S='S', K='K', T='T', r='r', b='b', v='v'):
-    return _price(
+def price_df(df, is_call='is_call', S='S', K='K', T='T', r='r', b='b', v='v'):
+    return price(
         df[is_call],
         df[S],
         df[K],
@@ -40,7 +51,7 @@ def solve_ivol(
         *,
         max_iterations: int = 20,
         epsilon=1e-8
-) -> Vector:
+) -> NDArray:
     epsilon_ = np.full(len(p), epsilon)
 
     v_lo = np.full(len(p), 0.005)
@@ -80,7 +91,7 @@ def ivol(
 ) -> Vector:
     return solve_ivol(
         df[p],
-        lambda v: _price(df[is_call], df[S], df[K], df[T], df[r], df[b], v),
+        lambda v: price(df[is_call], df[S], df[K], df[T], df[r], df[b], v),
         max_iterations=max_iterations,
         epsilon=epsilon
     )
@@ -102,7 +113,7 @@ price_data = pd.DataFrame([
 ])
 
 price_data['b'] = price_data['r'] - price_data['q']
-price_result = price(price_data)
+price_result = price_df(price_data)
 print(price_result)
 
 ivol_data = price_data.copy()
