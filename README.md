@@ -5,14 +5,19 @@ implemented in Python.
 
 It has no dependencies.
 
+## Status
+
+This is currently considered alpha.
+
 ## Usage
 
-This library isn't published as a package, and is not meant to be used directly.
-Just copy the code you want, or create your own package.
+The library can be installed as a package.
 
-However trying the code is quite simple, no external libraries are required.
-Simply clone the repository, install, and create a new python file in the
-"scratch folder". An obvious place to start would be with Black-Scholes.
+```bash
+pip install jetblack-options
+```
+
+An obvious place to start would be with Black-Scholes.
 
 ```python
 from jetblack_options.european.black_scholes_merton import (
@@ -39,11 +44,13 @@ ng = NumericGreeks(price)
 d1 = ng.delta(is_call, S, K, T, r, b, v)
 ```
 
-Typically each module has a function called `price` which calculates the price of the model. Where closed form
-solutions are available, they have their canonical name (e.g. `delta`). In this case a general numeric
-class was also available.
+Typically each module has a function called `price` which calculates the price
+of the model. Where closed form solutions are available, they have their
+canonical name (e.g. `delta`). In this case a general numeric class was also
+available.
 
-A tree solution only provides a price. However the numeric class can provide support for the greeks.
+A tree solution only provides a price. However the numeric class can provide
+support for the greeks.
 
 ```python
 from jetblack_options.trees.cox_ross_rubinstein import greeks

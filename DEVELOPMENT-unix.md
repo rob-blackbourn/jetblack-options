@@ -1,0 +1,25 @@
+# Development - Unix
+
+1. Clone the project
+
+2. Create the virtual environment.
+
+    ```bash
+    python -m .venv
+    . .venv/bin/activate
+    ```
+
+3. Update pip and install build and twine in the virtual environment.
+    Install the requirements for testing.
+
+    ```bash
+    pip install --upgrade pip
+    pip install build twine
+    pip install -r requirements-test.txt
+    ```
+
+4. Install the project locally.
+
+    ```bash
+    pip install --editable .
+    ```

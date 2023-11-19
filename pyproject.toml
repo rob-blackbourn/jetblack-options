@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jetblack-options"
+version = "1.0.0a0"
+authors = [
+  { name="Rob Blackbourn", email="rob.blackbourn@gmail.com" },
+]
+description = "Reference implementations for option pricing formula"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/rob-blackbourn/jetblack-options"
+Issues = "https://github.com/rob-blackbourn/jetblack-options/issues"
