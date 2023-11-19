@@ -1,5 +1,7 @@
 # Development - Unix
 
+## Setup
+
 1. Clone the project
 
 2. Create the virtual environment.
@@ -22,4 +24,19 @@
 
     ```bash
     pip install --editable .
+    ```
+
+## Publishing
+
+1. Clean the build folder and build the package.
+
+    ```bash
+    rm dist/*
+    python -m build
+    ```
+
+2. Publish the package.
+
+    ```bash
+    twine upload dist/*
     ```

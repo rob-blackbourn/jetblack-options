@@ -76,7 +76,7 @@ ng = NumericGreeks(
 numeric_delta = ng.delta(is_call, S, K, T, r, b, v)
 ```
 
-## Vectors
+## Pandas
 
 The code has been written without dependencies to keep the implementation clean.
 
