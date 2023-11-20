@@ -10,15 +10,9 @@ import FormLabel from '@mui/material/FormLabel'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 
-interface Greeks {
-  price: number
-  delta: number
-  gamma: number
-  theta: number
-  vega: number
-  rho: number
-}
+import OptionResultView from './OptionResultView'
 
+import type { OptionResults } from './types'
 export interface BlackScholesProps {
   pyodide: PyodideInterface
 }
@@ -33,7 +27,7 @@ const BlackScholes: React.FC<BlackScholesProps> = ({ pyodide }) => {
   const [riskFreeRate, setRiskFreeRate] = useState<number | undefined>(0.05)
   const [volatility, setVolatility] = useState<number | undefined>(0.25)
   const [optionType, setOptionType] = React.useState<'call' | 'put'>('call')
-  const [greeks, setGreeks] = useState<Greeks>()
+  const [greeks, setGreeks] = useState<OptionResults>()
 
   const handleSetOptionType = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOptionType((event.target as HTMLInputElement).value as 'call' | 'put')
@@ -75,6 +69,7 @@ from jetblack_options.european.black_scholes_73 import (
   vega,
   rho
 )
+from jetblack_options.numeric_greeks.without_carry import NumericGreeks
 
 is_call = args['is_call']
 S = args['S']
@@ -83,27 +78,49 @@ T = args['T']
 r = args['r']
 v = args['v']
 
+ng = NumericGreeks(price)
 {
     'price': price(is_call, S, K, T, r, v),
-    'delta': delta(is_call, S, K, T, r, v),
-    'gamma': gamma(S, K, T, r, v),
-    'theta': theta(is_call, S, K, T, r, v),
-    'vega': vega(S, K, T, r, v),
-    'rho': rho(is_call, S, K, T, r, v),
+    'analytic': {
+        'delta': delta(is_call, S, K, T, r, v),
+        'gamma': gamma(S, K, T, r, v),
+        'theta': theta(is_call, S, K, T, r, v),
+        'vega': vega(S, K, T, r, v),
+        'rho': rho(is_call, S, K, T, r, v),
+    },
+    'numeric': {
+        'delta': ng.delta(is_call, S, K, T, r, v),
+        'gamma': ng.gamma(is_call, S, K, T, r, v),
+        'theta': ng.theta(is_call, S, K, T, r, v),
+        'vega': ng.vega(is_call, S, K, T, r, v),
+        'rho': ng.rho(is_call, S, K, T, r, v),
+    },
 }
     `,
         { locals }
       )
       .then(results => {
         const dct = results.toJs()
-        setGreeks({
+        const analytic = dct.get('analytic')
+        const numeric = dct.get('numeric')
+        const optionResults: OptionResults = {
           price: dct.get('price'),
-          delta: dct.get('delta'),
-          gamma: dct.get('gamma'),
-          theta: dct.get('theta'),
-          vega: dct.get('vega'),
-          rho: dct.get('rho')
-        })
+          analytic: {
+            delta: analytic.get('delta'),
+            gamma: analytic.get('gamma'),
+            theta: analytic.get('theta'),
+            vega: analytic.get('vega'),
+            rho: analytic.get('rho')
+          },
+          numeric: {
+            delta: numeric.get('delta'),
+            gamma: numeric.get('gamma'),
+            theta: numeric.get('theta'),
+            vega: numeric.get('vega'),
+            rho: numeric.get('rho')
+          }
+        }
+        setGreeks(optionResults)
       })
       .catch(error => {
         console.log(error)
@@ -175,64 +192,7 @@ v = args['v']
         />
       </Stack>
       <Stack direction="column" spacing={2}>
-        {greeks && (
-          <>
-            <TextField
-              label="Price"
-              type="number"
-              value={greeks.price}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{ width: 200 }}
-            />
-            <TextField
-              label="Delta"
-              type="number"
-              value={greeks.delta}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{ width: 200 }}
-            />
-            <TextField
-              label="Gamma"
-              type="number"
-              value={greeks.gamma}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{ width: 200 }}
-            />
-            <TextField
-              label="Theta"
-              type="number"
-              value={greeks.theta}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{ width: 200 }}
-            />
-            <TextField
-              label="Vega"
-              type="number"
-              value={greeks.vega}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{ width: 200 }}
-            />
-            <TextField
-              label="Rho"
-              type="number"
-              value={greeks.rho}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{ width: 200 }}
-            />
-          </>
-        )}
+        {greeks && <OptionResultView optionResults={greeks} />}
       </Stack>
     </Stack>
   )
