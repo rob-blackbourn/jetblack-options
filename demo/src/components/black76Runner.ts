@@ -1,8 +1,7 @@
 import { PyodideInterface } from 'pyodide'
-
 import { OptionResults } from './types'
 
-export function runBlackScholes73(
+export function runBlack76(
   pyodide: PyodideInterface,
   is_call: boolean,
   S: number,
@@ -24,7 +23,7 @@ export function runBlackScholes73(
 
   const results = pyodide.runPython(
     `
-from jetblack_options.european.black_scholes_73 import (
+from jetblack_options.european.black_76 import (
   price,
   delta,
   gamma,

@@ -10,17 +10,17 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 
 import OptionResultView from './OptionResultView'
-import { runBlackScholes73 } from './blackScholes73Runner'
+import { runBlack76 } from './black76Runner'
 
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
 
-export interface BlackScholes73Props {}
+export interface Black76Props {}
 
 const toOptionalNumber = (value: string | undefined) =>
   value ? Number.parseFloat(value) : undefined
 
-const BlackScholes73: React.FC<BlackScholes73Props> = () => {
+const Black76: React.FC<Black76Props> = () => {
   const [assetPrice, setAssetPrice] = useState<number | undefined>(100)
   const [strikePrice, setStrikePrice] = useState<number | undefined>(100)
   const [timeToExpiry, setTimeToExpiry] = useState<number | undefined>(0.5)
@@ -50,7 +50,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
     }
 
     try {
-      const optionResults = runBlackScholes73(
+      const optionResults = runBlack76(
         pyodide,
         optionType === 'call',
         assetPrice,
@@ -103,7 +103,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
           onChange={event =>
             setAssetPrice(toOptionalNumber(event.target.value))
           }
-          sx={{ width: 150 }}
+          sx={{ width: 200 }}
         />
         <TextField
           label="Strike Price"
@@ -112,7 +112,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
           onChange={event =>
             setStrikePrice(toOptionalNumber(event.target.value))
           }
-          sx={{ width: 150 }}
+          sx={{ width: 200 }}
         />
         <TextField
           label="Time to Expiry"
@@ -121,7 +121,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
           onChange={event =>
             setTimeToExpiry(toOptionalNumber(event.target.value))
           }
-          sx={{ width: 150 }}
+          sx={{ width: 200 }}
         />
         <TextField
           label="Risk Free Rate"
@@ -130,7 +130,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
           onChange={event =>
             setRiskFreeRate(toOptionalNumber(event.target.value))
           }
-          sx={{ width: 150 }}
+          sx={{ width: 200 }}
         />
         <TextField
           label="Volatility"
@@ -139,7 +139,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
           onChange={event =>
             setVolatility(toOptionalNumber(event.target.value))
           }
-          sx={{ width: 150 }}
+          sx={{ width: 200 }}
         />
       </Stack>
       <Stack direction="column" spacing={2}>
@@ -149,4 +149,4 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
   )
 }
 
-export default BlackScholes73
+export default Black76

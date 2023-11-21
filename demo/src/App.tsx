@@ -1,8 +1,10 @@
 import CssBaseline from '@mui/material/CssBaseline'
 
-import PythonApp from './components/PythonApp'
+import { PyodideProvider } from './components/PythonContext'
 
 import { PyodideInterface } from 'pyodide'
+
+import OptionValuer from './components/OptionValuer'
 
 declare global {
   interface Window {
@@ -14,7 +16,9 @@ function App() {
   return (
     <div>
       <CssBaseline />
-      <PythonApp requirements={['jetblack-options']} />
+      <PyodideProvider requirements={['jetblack-options']}>
+        <OptionValuer />
+      </PyodideProvider>
     </div>
   )
 }

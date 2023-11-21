@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+import PyodideContext from './PyodideContext'
 import { PyProxy, PyodideInterface } from 'pyodide'
-
-import { Stack, CircularProgress } from '@mui/material'
-import BlackScholes73 from './BlackScholes73'
 
 declare global {
   interface Window {
@@ -11,14 +9,18 @@ declare global {
   }
 }
 
-export interface PythonAppProps {
-  requirements: string | string[]
+export interface PyodideProviderProps {
+  requirements?: string | string[]
+  children?: React.ReactNode
 }
 
-const PythonApp: React.FC<PythonAppProps> = ({ requirements }) => {
+const PyodideProvider: React.FC<PyodideProviderProps> = ({
+  requirements,
+  children
+}) => {
   const [pyodide, setPyodide] = useState<PyodideInterface>()
   const [micropip, setMicropip] = useState<PyProxy>()
-  const [isOptionsLoaded, setIsOptionsLoaded] = useState(false)
+  const [isRequirementsLoaded, setIsRequirementsLoaded] = useState(false)
 
   useEffect(() => {
     window
@@ -49,32 +51,33 @@ const PythonApp: React.FC<PythonAppProps> = ({ requirements }) => {
       return
     }
 
+    if (!requirements) {
+      setIsRequirementsLoaded(true)
+      return
+    }
+
     micropip
       .install(requirements)
       .then(() => {
         console.log('Requirements installed')
-        setIsOptionsLoaded(true)
+        setIsRequirementsLoaded(true)
       })
       .catch((error: Error) => {
         console.log(error)
       })
   }, [micropip, requirements])
 
-  if (!(pyodide && micropip && isOptionsLoaded)) {
-    return (
-      <Stack>
-        <CircularProgress />
-      </Stack>
-    )
-  }
-
-  console.log({ pyodide })
-
   return (
-    <div>
-      <BlackScholes73 pyodide={pyodide} />
-    </div>
+    <PyodideContext.Provider
+      value={{
+        pyodide,
+        micropip,
+        isRequirementsLoaded
+      }}
+    >
+      {children}
+    </PyodideContext.Provider>
   )
 }
 
-export default PythonApp
+export default PyodideProvider

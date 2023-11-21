@@ -75,6 +75,7 @@
         "ndarray",
         "numpy",
         "prob",
+        "pyimport",
         "pylint",
         "pyodide",
         "Reimer",
