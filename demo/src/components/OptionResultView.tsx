@@ -20,6 +20,21 @@ const formatPercent = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 5
 }).format
 
+const formatOptionalNumber = (value: number | undefined) =>
+  value == null ? '' : formatNumber(value)
+const formatOptionalPercent = (value: number | undefined) =>
+  value == null ? '' : formatPercent(value)
+const calcDiff = (
+  lhs: number | undefined,
+  rhs: number | undefined
+): number | undefined =>
+  lhs === undefined || rhs === undefined ? undefined : rhs - lhs
+const calcPercentageDiff = (
+  lhs: number | undefined,
+  rhs: number | undefined
+): number | undefined =>
+  lhs === undefined || rhs === undefined ? undefined : (rhs - lhs) / lhs
+
 export interface OptionResultViewProps {
   optionResults: OptionResults
 }
@@ -45,7 +60,7 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
               Price
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.price)}
+              {formatOptionalNumber(optionResults.price)}
             </TableCell>
             <TableCell align="right"></TableCell>
           </TableRow>
@@ -54,20 +69,25 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
               Delta
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.analytic.delta)}
+              {formatOptionalNumber(optionResults.analytic.delta)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.numeric.delta)}
+              {formatOptionalNumber(optionResults.numeric.delta)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(
-                optionResults.numeric.delta - optionResults.numeric.delta
+              {formatOptionalNumber(
+                calcDiff(
+                  optionResults.numeric.delta,
+                  optionResults.numeric.delta
+                )
               )}
             </TableCell>
             <TableCell align="right">
-              {formatPercent(
-                (optionResults.numeric.delta - optionResults.analytic.delta) /
+              {formatOptionalPercent(
+                calcPercentageDiff(
+                  optionResults.numeric.delta,
                   optionResults.analytic.delta
+                )
               )}
             </TableCell>
           </TableRow>
@@ -76,20 +96,25 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
               Gamma
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.analytic.gamma)}
+              {formatOptionalNumber(optionResults.analytic.gamma)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.numeric.gamma)}
+              {formatOptionalNumber(optionResults.numeric.gamma)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(
-                optionResults.analytic.gamma - optionResults.numeric.gamma
+              {formatOptionalNumber(
+                calcDiff(
+                  optionResults.analytic.gamma,
+                  optionResults.numeric.gamma
+                )
               )}
             </TableCell>
             <TableCell align="right">
-              {formatPercent(
-                (optionResults.numeric.gamma - optionResults.analytic.gamma) /
+              {formatOptionalPercent(
+                calcPercentageDiff(
+                  optionResults.numeric.gamma,
                   optionResults.analytic.gamma
+                )
               )}
             </TableCell>
           </TableRow>
@@ -98,20 +123,25 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
               Theta
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.analytic.theta)}
+              {formatOptionalNumber(optionResults.analytic.theta)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.numeric.theta)}
+              {formatOptionalNumber(optionResults.numeric.theta)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(
-                optionResults.analytic.theta - optionResults.numeric.theta
+              {formatOptionalNumber(
+                calcDiff(
+                  optionResults.analytic.theta,
+                  optionResults.numeric.theta
+                )
               )}
             </TableCell>
             <TableCell align="right">
-              {formatPercent(
-                (optionResults.numeric.theta - optionResults.analytic.theta) /
+              {formatOptionalPercent(
+                calcPercentageDiff(
+                  optionResults.numeric.theta,
                   optionResults.analytic.theta
+                )
               )}
             </TableCell>
           </TableRow>
@@ -120,20 +150,25 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
               Vega
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.analytic.vega)}
+              {formatOptionalNumber(optionResults.analytic.vega)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.numeric.vega)}
+              {formatOptionalNumber(optionResults.numeric.vega)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(
-                optionResults.analytic.vega - optionResults.numeric.vega
+              {formatOptionalNumber(
+                calcDiff(
+                  optionResults.analytic.vega,
+                  optionResults.numeric.vega
+                )
               )}
             </TableCell>
             <TableCell align="right">
-              {formatPercent(
-                (optionResults.numeric.vega - optionResults.analytic.vega) /
+              {formatOptionalPercent(
+                calcPercentageDiff(
+                  optionResults.numeric.vega,
                   optionResults.analytic.vega
+                )
               )}
             </TableCell>
           </TableRow>
@@ -142,20 +177,22 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
               Rho
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.analytic.rho)}
+              {formatOptionalNumber(optionResults.analytic.rho)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(optionResults.numeric.rho)}
+              {formatOptionalNumber(optionResults.numeric.rho)}
             </TableCell>
             <TableCell align="right">
-              {formatNumber(
-                optionResults.analytic.rho - optionResults.numeric.rho
+              {formatOptionalNumber(
+                calcDiff(optionResults.analytic.rho, optionResults.numeric.rho)
               )}
             </TableCell>
             <TableCell align="right">
-              {formatPercent(
-                (optionResults.numeric.rho - optionResults.analytic.rho) /
+              {formatOptionalPercent(
+                calcPercentageDiff(
+                  optionResults.numeric.rho,
                   optionResults.analytic.rho
+                )
               )}
             </TableCell>
           </TableRow>
