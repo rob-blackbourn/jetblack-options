@@ -38,6 +38,7 @@ const Black76: React.FC<Black76Props> = () => {
     if (
       !(
         pyodide &&
+        isRequirementsLoaded &&
         optionType &&
         assetPrice &&
         strikePrice &&
@@ -46,6 +47,7 @@ const Black76: React.FC<Black76Props> = () => {
         volatility
       )
     ) {
+      setGreeks(undefined)
       return
     }
 
@@ -65,6 +67,7 @@ const Black76: React.FC<Black76Props> = () => {
     }
   }, [
     pyodide,
+    isRequirementsLoaded,
     optionType,
     assetPrice,
     strikePrice,

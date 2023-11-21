@@ -38,6 +38,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
     if (
       !(
         pyodide &&
+        isRequirementsLoaded &&
         optionType &&
         assetPrice &&
         strikePrice &&
@@ -46,6 +47,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
         volatility
       )
     ) {
+      setGreeks(undefined)
       return
     }
 
@@ -65,6 +67,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
     }
   }, [
     pyodide,
+    isRequirementsLoaded,
     optionType,
     assetPrice,
     strikePrice,
@@ -142,9 +145,7 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
           sx={{ width: 150 }}
         />
       </Stack>
-      <Stack direction="column" spacing={2}>
-        {greeks && <OptionResultView optionResults={greeks} />}
-      </Stack>
+      {greeks && <OptionResultView optionResults={greeks} />}
     </Stack>
   )
 }

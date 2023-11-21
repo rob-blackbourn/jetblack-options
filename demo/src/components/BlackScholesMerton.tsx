@@ -39,6 +39,7 @@ const BlackScholesMerton: React.FC<BlackScholesMertonProps> = () => {
     if (
       !(
         pyodide &&
+        isRequirementsLoaded &&
         optionType &&
         assetPrice &&
         strikePrice &&
@@ -48,6 +49,7 @@ const BlackScholesMerton: React.FC<BlackScholesMertonProps> = () => {
         volatility
       )
     ) {
+      setGreeks(undefined)
       return
     }
 
@@ -68,6 +70,7 @@ const BlackScholesMerton: React.FC<BlackScholesMertonProps> = () => {
     }
   }, [
     pyodide,
+    isRequirementsLoaded,
     optionType,
     assetPrice,
     strikePrice,
