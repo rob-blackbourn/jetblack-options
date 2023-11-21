@@ -11,17 +11,18 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 
 import OptionResultView from './OptionResultView'
-import { runBlackScholes } from './blackScholesRunner'
+import { runBlackScholes73 } from './blackScholes73Runner'
 
 import type { OptionResults } from './types'
-export interface BlackScholesProps {
+
+export interface BlackScholes73Props {
   pyodide: PyodideInterface
 }
 
 const toOptionalNumber = (value: string | undefined) =>
   value ? Number.parseFloat(value) : undefined
 
-const BlackScholes: React.FC<BlackScholesProps> = ({ pyodide }) => {
+const BlackScholes73: React.FC<BlackScholes73Props> = ({ pyodide }) => {
   const [assetPrice, setAssetPrice] = useState<number | undefined>(100)
   const [strikePrice, setStrikePrice] = useState<number | undefined>(100)
   const [timeToExpiry, setTimeToExpiry] = useState<number | undefined>(0.5)
@@ -50,7 +51,7 @@ const BlackScholes: React.FC<BlackScholesProps> = ({ pyodide }) => {
     }
 
     try {
-      const optionResults = runBlackScholes(
+      const optionResults = runBlackScholes73(
         pyodide,
         optionType === 'call',
         assetPrice,
@@ -136,4 +137,4 @@ const BlackScholes: React.FC<BlackScholesProps> = ({ pyodide }) => {
   )
 }
 
-export default BlackScholes
+export default BlackScholes73

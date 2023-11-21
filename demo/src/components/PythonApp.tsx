@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { PyProxy, PyodideInterface } from 'pyodide'
 
 import { Stack, CircularProgress } from '@mui/material'
-import BlackScholes from './BlackScholes'
+import BlackScholes73 from './BlackScholes73'
 
 declare global {
   interface Window {
@@ -72,7 +72,7 @@ const PythonApp: React.FC<PythonAppProps> = ({ requirements }) => {
 
   return (
     <div>
-      <BlackScholes pyodide={pyodide} />
+      <BlackScholes73 pyodide={pyodide} />
     </div>
   )
 }

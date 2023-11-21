@@ -1,7 +1,7 @@
 import { PyodideInterface } from 'pyodide'
 import { OptionResults } from './types'
 
-export function runBlackScholes(
+export function runBlackScholes73(
   pyodide: PyodideInterface,
   is_call: boolean,
   S: number,
