@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab'
 
 import BlackScholes73 from './BlackScholes73'
 import Black76 from './Black76'
+import BlackScholesMerton from './BlackScholesMerton'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -56,6 +57,7 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
         <Tabs value={tabIndex} onChange={handleTabIndexChange}>
           <Tab label="Black-Scholes 73" {...a11yProps(0)} />
           <Tab label="Black 76" {...a11yProps(1)} />
+          <Tab label="Black-Scholes-Merton" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={tabIndex} index={0}>
@@ -63,6 +65,9 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
       </TabPanel>
       <TabPanel value={tabIndex} index={1}>
         <Black76 />
+      </TabPanel>
+      <TabPanel value={tabIndex} index={2}>
+        <BlackScholesMerton />
       </TabPanel>
     </Container>
   )
