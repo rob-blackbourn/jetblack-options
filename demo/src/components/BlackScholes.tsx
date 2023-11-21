@@ -11,6 +11,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 
 import OptionResultView from './OptionResultView'
+import { runBlackScholes } from './blackScholesRunner'
 
 import type { OptionResults } from './types'
 export interface BlackScholesProps {
@@ -48,83 +49,20 @@ const BlackScholes: React.FC<BlackScholesProps> = ({ pyodide }) => {
       return
     }
 
-    const locals = pyodide.toPy({
-      args: {
-        is_call: optionType === 'call',
-        S: assetPrice,
-        K: strikePrice,
-        T: timeToExpiry,
-        r: riskFreeRate,
-        v: volatility
-      }
-    })
-    pyodide
-      .runPythonAsync(
-        `
-from jetblack_options.european.black_scholes_73 import (
-  price,
-  delta,
-  gamma,
-  theta,
-  vega,
-  rho
-)
-from jetblack_options.numeric_greeks.without_carry import NumericGreeks
-
-is_call = args['is_call']
-S = args['S']
-K = args['K']
-T = args['T']
-r = args['r']
-v = args['v']
-
-ng = NumericGreeks(price)
-{
-    'price': price(is_call, S, K, T, r, v),
-    'analytic': {
-        'delta': delta(is_call, S, K, T, r, v),
-        'gamma': gamma(S, K, T, r, v),
-        'theta': theta(is_call, S, K, T, r, v),
-        'vega': vega(S, K, T, r, v),
-        'rho': rho(is_call, S, K, T, r, v),
-    },
-    'numeric': {
-        'delta': ng.delta(is_call, S, K, T, r, v),
-        'gamma': ng.gamma(is_call, S, K, T, r, v),
-        'theta': ng.theta(is_call, S, K, T, r, v),
-        'vega': ng.vega(is_call, S, K, T, r, v),
-        'rho': ng.rho(is_call, S, K, T, r, v),
-    },
-}
-    `,
-        { locals }
+    try {
+      const optionResults = runBlackScholes(
+        pyodide,
+        optionType === 'call',
+        assetPrice,
+        strikePrice,
+        timeToExpiry,
+        riskFreeRate,
+        volatility
       )
-      .then(results => {
-        const dct = results.toJs()
-        const analytic = dct.get('analytic')
-        const numeric = dct.get('numeric')
-        const optionResults: OptionResults = {
-          price: dct.get('price'),
-          analytic: {
-            delta: analytic.get('delta'),
-            gamma: analytic.get('gamma'),
-            theta: analytic.get('theta'),
-            vega: analytic.get('vega'),
-            rho: analytic.get('rho')
-          },
-          numeric: {
-            delta: numeric.get('delta'),
-            gamma: numeric.get('gamma'),
-            theta: numeric.get('theta'),
-            vega: numeric.get('vega'),
-            rho: numeric.get('rho')
-          }
-        }
-        setGreeks(optionResults)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+      setGreeks(optionResults)
+    } catch (error) {
+      console.log(error)
+    }
   }, [
     pyodide,
     optionType,

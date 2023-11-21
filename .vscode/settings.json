@@ -6,7 +6,8 @@
         ],
         "editor.formatOnSave": true,
         "editor.wordBasedSuggestions": false,
-        "editor.rulers": [80]
+        "editor.rulers": [80],
+        "editor.tabSize": 4
     },
     "[markdown]": {
         "editor.unicodeHighlight.ambiguousCharacters": false,
@@ -22,6 +23,22 @@
         "cSpell.advanced.feature.useReferenceProviderWithRename": true,
         "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
         "editor.rulers": [80]
+    },
+    "[typescript]": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2
+    },
+    "[typescriptreact]": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2
+    },
+    "[json]": {
+        "editor.quickSuggestions": {
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2
     },
     "cSpell.words": [
         "Adesi",
@@ -42,6 +59,7 @@
         "dvol",
         "dvomma",
         "dzeta",
+        "fontsource",
         "gammap",
         "Garman",
         "Haug",
@@ -57,6 +75,7 @@
         "numpy",
         "prob",
         "pylint",
+        "pyodide",
         "Reimer",
         "scipy",
         "Stensland",
@@ -71,5 +90,6 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "svg.preview.background": "transparent"
 }
