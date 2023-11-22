@@ -10,6 +10,7 @@ import Black76 from './Black76'
 import BlackScholesMerton from './BlackScholesMerton'
 import GeneralisedBlackScholes from './GeneralisedBlackScholes'
 import GarmanKolhagen from './GarmanKolhagen'
+import BaroneAdesiWhaley from './BaroneAdesiWhaley'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -66,6 +67,7 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
           <Tab label="Black-Scholes-Merton" {...a11yProps(2)} />
           <Tab label="Generalised Black-Scholes" {...a11yProps(3)} />
           <Tab label="Garman Kolhagen" {...a11yProps(4)} />
+          <Tab label="Barone-Adesi-Whaley" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <TabPanel value={tabIndex} index={0}>
@@ -82,6 +84,9 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
       </TabPanel>
       <TabPanel value={tabIndex} index={4}>
         <GarmanKolhagen />
+      </TabPanel>
+      <TabPanel value={tabIndex} index={5}>
+        <BaroneAdesiWhaley />
       </TabPanel>
     </Container>
   )
