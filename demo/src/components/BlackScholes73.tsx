@@ -90,7 +90,8 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
     <Stack direction="column" spacing={2}>
       <Box>
         <Typography variant="body1">
-          The original Black-Scholes for a non-dividend paying stock.
+          The original Black-Scholes for European options on non-dividend paying
+          stock.
         </Typography>
       </Box>
       <Stack

@@ -94,7 +94,8 @@ const BlackScholesMerton: React.FC<BlackScholesMertonProps> = () => {
     <Stack direction="column" spacing={2}>
       <Box>
         <Typography variant="body1">
-          The Black-Scholes-Merton for a dividend paying stock.
+          The Black-Scholes-Merton Model for European options on dividend paying
+          stock.
         </Typography>
       </Box>
 

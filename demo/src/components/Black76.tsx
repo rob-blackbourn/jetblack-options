@@ -90,7 +90,7 @@ const Black76: React.FC<Black76Props> = () => {
     <Stack direction="column" spacing={2}>
       <Box>
         <Typography variant="body1">
-          The Black model for options on futures, bonds, and rates.
+          The Black model for European options on futures, bonds, and rates.
         </Typography>
       </Box>
 

@@ -96,7 +96,7 @@ const GarmanKolhagen: React.FC<GarmanKolhagenProps> = () => {
     <Stack direction="column" spacing={2}>
       <Box>
         <Typography variant="body1">
-          The Garman Kohlhagen model is used to price FX options.
+          The Garman Kohlhagen model is used to price European FX options.
         </Typography>
       </Box>
 
