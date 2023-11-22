@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
@@ -55,7 +54,7 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ width: '100%' }}>
+    <Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           scrollButtons="auto"
@@ -88,7 +87,7 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
       <TabPanel value={tabIndex} index={5}>
         <BaroneAdesiWhaley />
       </TabPanel>
-    </Container>
+    </Box>
   )
 }
 
