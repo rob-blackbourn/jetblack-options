@@ -56,7 +56,11 @@ const PythonApp: React.FC<OptionValuerProps> = () => {
   return (
     <Container maxWidth="md" sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tabIndex} onChange={handleTabIndexChange}>
+        <Tabs
+          scrollButtons="auto"
+          value={tabIndex}
+          onChange={handleTabIndexChange}
+        >
           <Tab label="Black-Scholes 73" {...a11yProps(0)} />
           <Tab label="Black 76" {...a11yProps(1)} />
           <Tab label="Black-Scholes-Merton" {...a11yProps(2)} />

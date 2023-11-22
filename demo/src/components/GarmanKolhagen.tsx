@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 
+import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
@@ -8,6 +9,7 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 import OptionResultView from './OptionResultView'
 import { runGarmanKolhagen } from './garmanKolhagenRunner'
@@ -92,6 +94,12 @@ const GarmanKolhagen: React.FC<GarmanKolhagenProps> = () => {
 
   return (
     <Stack direction="column" spacing={2}>
+      <Box>
+        <Typography variant="body1">
+          The Garman Kohlhagen model is used to price FX options.
+        </Typography>
+      </Box>
+
       <Stack
         direction="row"
         spacing={1}
