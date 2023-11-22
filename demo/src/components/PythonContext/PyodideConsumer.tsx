@@ -1,5 +1,3 @@
-import React from 'react'
-
 import PyodideContext from './PyodideContext'
 import { PyodideContextProps } from './PyodideContext'
 
