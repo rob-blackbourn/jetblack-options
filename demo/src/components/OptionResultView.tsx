@@ -77,7 +77,7 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
             <TableCell align="right">
               {formatOptionalNumber(
                 calcDiff(
-                  optionResults.numeric.delta,
+                  optionResults.analytic.delta,
                   optionResults.numeric.delta
                 )
               )}

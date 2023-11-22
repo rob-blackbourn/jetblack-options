@@ -1,9 +1,9 @@
 export interface Greeks {
-  delta: number
-  gamma: number
-  theta: number
-  vega: number
-  rho: number
+  delta?: number
+  gamma?: number
+  theta?: number
+  vega?: number
+  rho?: number
 }
 
 export interface OptionResults {
