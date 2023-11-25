@@ -1,14 +1,25 @@
-import Box from '@mui/material/Box'
+import React, { Suspense } from 'react'
+
+import {
+  BrowserRouter,
+  Route,
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+  Routes
+} from 'react-router-dom'
+import { LinkProps } from '@mui/material/Link'
+
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
-import Link from '@mui/material/Link'
-import Typography from '@mui/material/Typography'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 import { PyodideProvider } from './components/PythonContext'
-
+import Loading from './components/Loading'
 import { PyodideInterface } from 'pyodide'
 
-import OptionValuer from './components/OptionValuer'
+import Layout from './pages/Layout'
+
+import { renderNestedRoutes } from './nestedRoutes'
 
 declare global {
   interface Window {
@@ -16,26 +27,48 @@ declare global {
   }
 }
 
+const LinkBehavior = React.forwardRef<
+  HTMLAnchorElement,
+  Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
+>((props, ref) => {
+  const { href, ...other } = props
+  // Map href (Material UI) -> to (react-router)
+  return <RouterLink ref={ref} to={href} {...other} />
+})
+
+const theme = createTheme({
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior
+      } as LinkProps
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        LinkComponent: LinkBehavior
+      }
+    }
+  }
+})
+
 function App() {
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <PyodideProvider requirements={['jetblack-options']}>
         <Container maxWidth="md" sx={{ width: '100%' }}>
-          <Box>
-            <Typography variant="h4">jetblack-options</Typography>
-            <Typography variant="body1">
-              This is a demonstration of option pricing formula implemented in
-              Python.
-            </Typography>
-            <Link href="https://github.com/rob-blackbourn/jetblack-options">
-              See here.
-            </Link>
-          </Box>
-          <OptionValuer />
+          <BrowserRouter>
+            <Suspense fallback={<Loading />}>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  {renderNestedRoutes()}
+                </Route>
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
         </Container>
       </PyodideProvider>
-    </div>
+    </ThemeProvider>
   )
 }
 

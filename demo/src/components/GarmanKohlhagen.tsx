@@ -22,7 +22,7 @@ export interface GarmanKolhagenProps {}
 const toOptionalNumber = (value: string | undefined) =>
   value ? Number.parseFloat(value) : undefined
 
-const GarmanKolhagen: React.FC<GarmanKolhagenProps> = () => {
+const GarmanKohlhagen: React.FC<GarmanKolhagenProps> = () => {
   const [assetPrice, setAssetPrice] = useState<number | undefined>(100)
   const [strikePrice, setStrikePrice] = useState<number | undefined>(100)
   const [timeToExpiry, setTimeToExpiry] = useState<number | undefined>(0.5)
@@ -175,4 +175,4 @@ const GarmanKolhagen: React.FC<GarmanKolhagenProps> = () => {
   )
 }
 
-export default GarmanKolhagen
+export default GarmanKohlhagen

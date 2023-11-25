@@ -8,7 +8,7 @@ import BlackScholes73 from './BlackScholes73'
 import Black76 from './Black76'
 import BlackScholesMerton from './BlackScholesMerton'
 import GeneralisedBlackScholes from './GeneralisedBlackScholes'
-import GarmanKolhagen from './GarmanKolhagen'
+import GarmanKolhagen from './GarmanKohlhagen'
 import BaroneAdesiWhaley from './BaroneAdesiWhaley'
 
 interface TabPanelProps {
