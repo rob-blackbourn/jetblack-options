@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense } from 'react'
 
 import {
   BrowserRouter,
@@ -17,14 +17,9 @@ import { PyodideProvider } from './components/PythonContext'
 import Loading from './components/Loading'
 import { PyodideInterface } from 'pyodide'
 
-import Home from './pages/Home'
 import Layout from './pages/Layout'
-import NotFound from './pages/NotFound'
 
-const Black76 = lazy(() => import('./components/Black76'))
-const BlackScholes73 = lazy(() => import('./components/BlackScholes73'))
-const BlackScholesMerton = lazy(() => import('./components/BlackScholesMerton'))
-const GarmanKohlhagen = lazy(() => import('./components/GarmanKohlhagen'))
+import { renderNestedRoutes } from './nestedRoutes'
 
 declare global {
   interface Window {
@@ -66,21 +61,7 @@ function App() {
             <Suspense fallback={<Loading />}>
               <Routes>
                 <Route path="/" element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path="/black-76" element={<Black76 />} />
-                  <Route
-                    path="/black-scholes-73"
-                    element={<BlackScholes73 />}
-                  />
-                  <Route
-                    path="/black-scholes-merton"
-                    element={<BlackScholesMerton />}
-                  />
-                  <Route
-                    path="/garman-kohlhagen"
-                    element={<GarmanKohlhagen />}
-                  />
-                  <Route path="*" element={<NotFound />} />
+                  {renderNestedRoutes()}
                 </Route>
               </Routes>
             </Suspense>

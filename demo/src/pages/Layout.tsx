@@ -9,6 +9,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
+import { routes } from '../nestedRoutes'
+
 const Layout = () => {
   const [page, setPage] = useState<string>('')
   const navigate = useNavigate()
@@ -39,12 +41,11 @@ const Layout = () => {
             label="Page"
             onChange={handlePageChange}
           >
-            <MenuItem value="/black-scholes-73">Black-Scholes-73</MenuItem>
-            <MenuItem value="/black-76">Black-76</MenuItem>
-            <MenuItem value="/black-scholes-merton">
-              Black-Scholes-Merton
-            </MenuItem>
-            <MenuItem value="/garman-kohlhagen">Garman Kohlhagen</MenuItem>
+            {routes.map(({ path, name }) => (
+              <MenuItem key={path} value={path}>
+                {name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>
