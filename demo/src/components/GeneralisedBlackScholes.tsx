@@ -12,10 +12,9 @@ import DynamicForm, {
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
-import { runGeneralisedBlackScholes } from './generalisedBlackScholesRunner'
-
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
+import { valueOption } from './optionValuer'
 
 export interface GeneralisedBlackScholesProps {}
 
@@ -109,15 +108,27 @@ const GeneralisedBlackScholes: React.FC<GeneralisedBlackScholesProps> = () => {
     }
 
     try {
-      const optionResults = runGeneralisedBlackScholes(
+      const optionResults = valueOption(
         pyodide,
-        optionType === 'call',
-        assetPrice,
-        strikePrice,
-        timeToExpiry,
-        riskFreeRate,
-        costOfCarry,
-        volatility
+        {
+          is_call: optionType === 'call',
+          S: assetPrice,
+          K: strikePrice,
+          T: timeToExpiry,
+          r: riskFreeRate,
+          b: costOfCarry,
+          v: volatility
+        },
+        'jetblack_options.european.generalised_black_scholes',
+        'jetblack_options.numeric_greeks.with_carry',
+        ['is_call', 'S', 'K', 'T', 'r', 'b', 'v'],
+        {
+          delta: ['is_call', 'S', 'K', 'T', 'r', 'b', 'v'],
+          gamma: ['S', 'K', 'T', 'r', 'b', 'v'],
+          theta: ['is_call', 'S', 'K', 'T', 'r', 'b', 'v'],
+          vega: ['S', 'K', 'T', 'r', 'b', 'v'],
+          rho: ['is_call', 'S', 'K', 'T', 'r', 'b', 'v']
+        }
       )
       setGreeks(optionResults)
     } catch (error) {

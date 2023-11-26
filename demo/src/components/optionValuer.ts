@@ -1,7 +1,7 @@
 import { PyodideInterface } from 'pyodide'
 import { OptionResults } from './types'
 
-export function runBlack76(
+export function valueOption(
   pyodide: PyodideInterface,
   args: object,
   analyticImportPath: string,
@@ -11,12 +11,17 @@ export function runBlack76(
 ): OptionResults {
   const locals = pyodide.toPy({ args })
 
-  const analyticImports = ['price', ...Object.keys(analyticGreeks)].join(', ')
+  const analyticImports = [
+    'price',
+    ...Object.entries(analyticGreeks)
+      .filter(([, args]) => args != null)
+      .map(([name]) => name)
+  ].join(', ')
 
   const analyticValuations = `{ ${Object.entries(analyticGreeks)
     .map(([greek, args]) =>
       args == null
-        ? `${greek}: None`
+        ? `'${greek}': None`
         : `'${greek}': ${greek}(${args?.join(', ')})`
     )
     .join(', ')} }`

@@ -12,7 +12,7 @@ import DynamicForm, {
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
-import { runBlackScholesMerton } from './blackScholesMertonRunner'
+import { valueOption } from './optionValuer'
 
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
@@ -109,15 +109,27 @@ const BlackScholesMerton: React.FC<BlackScholesMertonProps> = () => {
     }
 
     try {
-      const optionResults = runBlackScholesMerton(
+      const optionResults = valueOption(
         pyodide,
-        optionType === 'call',
-        assetPrice,
-        strikePrice,
-        timeToExpiry,
-        riskFreeRate,
-        dividendYield,
-        volatility
+        {
+          is_call: optionType === 'call',
+          S: assetPrice,
+          K: strikePrice,
+          T: timeToExpiry,
+          r: riskFreeRate,
+          q: dividendYield,
+          v: volatility
+        },
+        'jetblack_options.european.black_scholes_merton',
+        'jetblack_options.numeric_greeks.with_dividend_yield import',
+        ['is_call', 'S', 'K', 'T', 'r', 'q', 'v'],
+        {
+          delta: ['is_call', 'S', 'K', 'T', 'r', 'q', 'v'],
+          gamma: ['S', 'K', 'T', 'r', 'q', 'v'],
+          theta: ['is_call', 'S', 'K', 'T', 'r', 'q', 'v'],
+          vega: ['S', 'K', 'T', 'r', 'q', 'v'],
+          rho: ['is_call', 'S', 'K', 'T', 'r', 'q', 'v']
+        }
       )
       setGreeks(optionResults)
     } catch (error) {

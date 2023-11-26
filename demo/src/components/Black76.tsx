@@ -12,7 +12,7 @@ import DynamicForm, {
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
-import { runBlack76 } from './black76Runner'
+import { valueOption } from './optionValuer'
 
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
@@ -100,7 +100,7 @@ const Black76: React.FC<Black76Props> = () => {
     }
 
     try {
-      const optionResults = runBlack76(
+      const optionResults = valueOption(
         pyodide,
         {
           is_call: optionType === 'call',

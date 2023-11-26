@@ -12,7 +12,7 @@ import DynamicForm, {
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
-import { runBlackScholes73 } from './blackScholes73Runner'
+import { valueOption } from './optionValuer'
 
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
@@ -100,14 +100,26 @@ const BlackScholes73: React.FC<BlackScholes73Props> = () => {
     }
 
     try {
-      const optionResults = runBlackScholes73(
+      const optionResults = valueOption(
         pyodide,
-        optionType === 'call',
-        assetPrice,
-        strikePrice,
-        timeToExpiry,
-        riskFreeRate,
-        volatility
+        {
+          is_call: optionType === 'call',
+          S: assetPrice,
+          K: strikePrice,
+          T: timeToExpiry,
+          r: riskFreeRate,
+          v: volatility
+        },
+        'jetblack_options.european.black_scholes_73',
+        'jetblack_options.numeric_greeks.without_carry',
+        ['is_call', 'S', 'K', 'T', 'r', 'v'],
+        {
+          delta: ['is_call', 'S', 'K', 'T', 'r', 'v'],
+          gamma: ['S', 'K', 'T', 'r', 'v'],
+          theta: ['is_call', 'S', 'K', 'T', 'r', 'v'],
+          vega: ['S', 'K', 'T', 'r', 'v'],
+          rho: ['is_call', 'S', 'K', 'T', 'r', 'v']
+        }
       )
       setGreeks(optionResults)
     } catch (error) {

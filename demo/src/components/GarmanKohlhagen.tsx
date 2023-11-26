@@ -12,7 +12,7 @@ import DynamicForm, {
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
-import { runGarmanKolhagen } from './garmanKolhagenRunner'
+import { valueOption } from './optionValuer'
 
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
@@ -111,15 +111,27 @@ const GarmanKohlhagen: React.FC<GarmanKolhagenProps> = () => {
     }
 
     try {
-      const optionResults = runGarmanKolhagen(
+      const optionResults = valueOption(
         pyodide,
-        optionType === 'call',
-        assetPrice,
-        strikePrice,
-        timeToExpiry,
-        riskFreeRate,
-        quoteRiskFreeRate,
-        volatility
+        {
+          is_call: optionType === 'call',
+          S: assetPrice,
+          K: strikePrice,
+          T: timeToExpiry,
+          r: riskFreeRate,
+          rf: quoteRiskFreeRate,
+          v: volatility
+        },
+        'jetblack_options.european.garman_kolhagen',
+        'jetblack_options.numeric_greeks.with_dividend_yield',
+        ['is_call', 'S', 'K', 'T', 'r', 'rf', 'v'],
+        {
+          delta: null,
+          gamma: null,
+          theta: null,
+          vega: null,
+          rho: null
+        }
       )
       setGreeks(optionResults)
     } catch (error) {

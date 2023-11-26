@@ -12,7 +12,7 @@ import DynamicForm, {
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
-import { runBaroneAdesiWhaley } from './baroneAdesiWhaleyRunner'
+import { valueOption } from './optionValuer'
 
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
@@ -109,15 +109,27 @@ const BaroneAdesiWhaley: React.FC<BaroneAdesiWhaleyProps> = () => {
     }
 
     try {
-      const optionResults = runBaroneAdesiWhaley(
+      const optionResults = valueOption(
         pyodide,
-        optionType === 'call',
-        assetPrice,
-        strikePrice,
-        timeToExpiry,
-        riskFreeRate,
-        costOfCarry,
-        volatility
+        {
+          is_call: optionType === 'call',
+          S: assetPrice,
+          K: strikePrice,
+          T: timeToExpiry,
+          r: riskFreeRate,
+          b: costOfCarry,
+          v: volatility
+        },
+        'jetblack_options.american.barone_adesi_whaley',
+        'jetblack_options.numeric_greeks.with_carry',
+        ['is_call', 'S', 'K', 'T', 'r', 'b', 'v'],
+        {
+          delta: null,
+          gamma: null,
+          theta: null,
+          vega: null,
+          rho: null
+        }
       )
       setGreeks(optionResults)
     } catch (error) {
