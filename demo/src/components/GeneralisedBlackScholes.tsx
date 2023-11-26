@@ -153,9 +153,7 @@ const GeneralisedBlackScholes: React.FC<GeneralisedBlackScholesProps> = () => {
 
       <DynamicForm fields={fields} direction="row" />
 
-      <Stack direction="column" spacing={2}>
-        {greeks && <OptionResultView optionResults={greeks} />}
-      </Stack>
+      {greeks && <OptionResultView optionResults={greeks} />}
     </Stack>
   )
 }

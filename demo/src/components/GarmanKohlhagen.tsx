@@ -155,9 +155,7 @@ const GarmanKohlhagen: React.FC<GarmanKolhagenProps> = () => {
 
       <DynamicForm fields={fields} direction="row" />
 
-      <Stack direction="column" spacing={2}>
-        {greeks && <OptionResultView optionResults={greeks} />}
-      </Stack>
+      {greeks && <OptionResultView optionResults={greeks} />}
     </Stack>
   )
 }

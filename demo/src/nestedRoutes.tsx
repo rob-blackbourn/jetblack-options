@@ -33,12 +33,12 @@ export const routes: ModelRoute[] = [
   },
   {
     path: '/generalised-black-scholes',
-    name: 'GeneralisedBlackScholes',
+    name: 'Generalised Black-Scholes',
     element: lazy(() => import('./components/GeneralisedBlackScholes'))
   },
   {
     path: '/baron-adesi-whaley',
-    name: 'BaronAdesiWhaley',
+    name: 'Baron-Adesi-Whaley',
     element: lazy(() => import('./components/BaroneAdesiWhaley'))
   }
 ]
