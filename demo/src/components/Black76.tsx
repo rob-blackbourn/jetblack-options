@@ -29,15 +29,11 @@ const Black76: React.FC<Black76Props> = () => {
   const [greeks, setGreeks] = useState<OptionResults>()
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
-  const handleSetIsCall = (value: boolean) => {
-    setIsCall(value)
-  }
-
   const fields: FieldProps[] = [
     {
       label: 'Option Type',
       type: 'radio-switch',
-      onChange: handleSetIsCall,
+      onChange: setIsCall,
       trueOption: 'Call',
       falseOption: 'Put',
       value: isCall,
