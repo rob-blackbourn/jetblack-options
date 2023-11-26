@@ -5,6 +5,8 @@ import { ModelRoute } from './types'
 export const baroneAdesiWhaley: ModelRoute = {
   path: '/barone-adesi-whaley',
   name: 'Barone-Adesi-Whaley',
+  description:
+    'The Barone-Adesi-Whaley model for pricing American options using cost of carry.',
   fields: [
     {
       label: 'Option Type',

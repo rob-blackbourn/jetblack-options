@@ -5,6 +5,7 @@ import { ModelRoute } from './types'
 export const generalisedBlackScholes: ModelRoute = {
   path: '/generalised-black-scholes',
   name: 'Generalised Black-Scholes',
+  description: 'The generalised Black-Scholes model.',
   fields: [
     {
       label: 'Option Type',

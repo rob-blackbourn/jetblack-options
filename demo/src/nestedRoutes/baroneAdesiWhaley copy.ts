@@ -2,11 +2,10 @@ import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
 
 import { ModelRoute } from './types'
 
-const blackScholes73: ModelRoute = {
-  path: '/black-scholes-73',
-  name: 'Black-Scholes 73',
-  description:
-    'The original Black-Scholes for European options on non-dividend paying stock.',
+export const bjerksundStensland1993: ModelRoute = {
+  path: '/bjerksund-stensland-1993',
+  name: 'Bjerksund-Stensland 1993',
+  description: 'Bjerksund-Stensland 1993',
   fields: [
     {
       label: 'Option Type',
@@ -41,62 +40,36 @@ const blackScholes73: ModelRoute = {
       defaultValue: 0.005
     } as NumberFieldDefinition,
     {
+      label: 'Carry RateYield',
+      field: 'costOfCarry',
+      type: 'number',
+      defaultValue: 0.003
+    } as NumberFieldDefinition,
+    {
       label: 'Volatility',
       field: 'volatility',
       type: 'number',
       defaultValue: 0.25
     } as NumberFieldDefinition
   ],
-  analyticImportPath: 'jetblack_options.european.black_scholes_73',
-  numericImportPath: 'jetblack_options.numeric_greeks.without_carry',
+  analyticImportPath: 'jetblack_options.american.bjerksund_stensland_1993',
+  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
     'isCall',
     'assetPrice',
     'strikePrice',
     'timeToExpiry',
     'riskFreeRate',
+    'costOfCarry',
     'volatility'
   ],
   greeksPrototypes: {
-    delta: [
-      'isCall',
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'volatility'
-    ],
-    gamma: [
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'volatility'
-    ],
-    theta: [
-      'isCall',
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'volatility'
-    ],
-    vega: [
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'volatility'
-    ],
-    rho: [
-      'isCall',
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'volatility'
-    ]
+    delta: null,
+    gamma: null,
+    theta: null,
+    vega: null,
+    rho: null
   }
 }
 
-export default blackScholes73
+export default bjerksundStensland1993

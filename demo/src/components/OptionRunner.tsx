@@ -29,6 +29,7 @@ export interface OptionRunnerProps {
   analyticsArgs: Record<string, string[] | null>
   analyticImportPath: string
   numericImportPath: string
+  description: string
 }
 
 const OptionRunner: React.FC<OptionRunnerProps> = ({
@@ -36,7 +37,8 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   priceArgs,
   analyticsArgs,
   analyticImportPath,
-  numericImportPath
+  numericImportPath,
+  description
 }) => {
   const [args, setArgs] = useState<
     Record<string, number | boolean | undefined>
@@ -142,9 +144,7 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   return (
     <Stack direction="column" spacing={2}>
       <Box>
-        <Typography variant="body1">
-          The Black model for European options on futures, bonds, and rates.
-        </Typography>
+        <Typography variant="body1">{description}</Typography>
       </Box>
 
       <DynamicForm fields={fieldProps} direction="row" />

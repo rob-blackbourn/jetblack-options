@@ -5,6 +5,8 @@ import { ModelRoute } from './types'
 const black76: ModelRoute = {
   path: '/black-76',
   name: 'Black 76',
+  description:
+    'The Black model for European options on futures, bonds, and rates.',
   fields: [
     {
       label: 'Option Type',

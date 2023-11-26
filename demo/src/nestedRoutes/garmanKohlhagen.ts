@@ -5,6 +5,8 @@ import { ModelRoute } from './types'
 export const garmanKohlhagen: ModelRoute = {
   path: '/garman-kohlhagen',
   name: 'Garman Kohlhagen',
+  description:
+    'The Garman Kohlhagen model is used to price European FX options.',
   fields: [
     {
       label: 'Option Type',

@@ -33,7 +33,8 @@ export const renderNestedRoutes = () => (
         pricePrototype,
         greeksPrototypes,
         analyticImportPath,
-        numericImportPath
+        numericImportPath,
+        description
       }) => (
         <Route
           key={path}
@@ -45,6 +46,7 @@ export const renderNestedRoutes = () => (
               analyticsArgs={greeksPrototypes}
               analyticImportPath={analyticImportPath}
               numericImportPath={numericImportPath}
+              description={description}
             />
           }
         />

@@ -5,6 +5,8 @@ import { ModelRoute } from './types'
 export const blackScholesMerton: ModelRoute = {
   path: '/black-scholes-merton',
   name: 'Black-Scholes-Merton',
+  description:
+    'The Black-Scholes-Merton Model for European options on dividend paying stock.',
   fields: [
     {
       label: 'Option Type',
