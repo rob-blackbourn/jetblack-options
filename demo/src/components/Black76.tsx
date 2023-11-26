@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import DynamicForm, {
   FieldProps,
   NumberFieldProps,
-  RadioFieldProps
+  RadioSwitchFieldProps
 } from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
@@ -20,31 +20,29 @@ import type { OptionResults } from './types'
 export interface Black76Props {}
 
 const Black76: React.FC<Black76Props> = () => {
+  const [isCall, setIsCall] = React.useState(true)
   const [assetPrice, setAssetPrice] = useState<number | undefined>(100)
   const [strikePrice, setStrikePrice] = useState<number | undefined>(100)
   const [timeToExpiry, setTimeToExpiry] = useState<number | undefined>(0.5)
   const [riskFreeRate, setRiskFreeRate] = useState<number | undefined>(0.05)
   const [volatility, setVolatility] = useState<number | undefined>(0.25)
-  const [optionType, setOptionType] = React.useState<'call' | 'put'>('call')
   const [greeks, setGreeks] = useState<OptionResults>()
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
-  const handleSetOptionType = (value: string) => {
-    setOptionType(value as 'call' | 'put')
+  const handleSetIsCall = (value: boolean) => {
+    setIsCall(value)
   }
 
   const fields: FieldProps[] = [
     {
       label: 'Option Type',
-      type: 'radio',
-      onChange: handleSetOptionType,
-      options: [
-        { label: 'Call', value: 'call' },
-        { label: 'Put', value: 'put' }
-      ],
-      value: optionType,
+      type: 'radio-switch',
+      onChange: handleSetIsCall,
+      trueOption: 'Call',
+      falseOption: 'Put',
+      value: isCall,
       row: true
-    } as RadioFieldProps,
+    } as RadioSwitchFieldProps,
     {
       label: 'Asset Price',
       type: 'number',
@@ -87,7 +85,6 @@ const Black76: React.FC<Black76Props> = () => {
       !(
         pyodide &&
         isRequirementsLoaded &&
-        optionType &&
         assetPrice &&
         strikePrice &&
         timeToExpiry &&
@@ -103,22 +100,62 @@ const Black76: React.FC<Black76Props> = () => {
       const optionResults = valueOption(
         pyodide,
         {
-          is_call: optionType === 'call',
-          S: assetPrice,
-          K: strikePrice,
-          T: timeToExpiry,
-          r: riskFreeRate,
-          v: volatility
+          isCall,
+          assetPrice,
+          strikePrice,
+          timeToExpiry,
+          riskFreeRate,
+          volatility
         },
         'jetblack_options.european.black_76',
         'jetblack_options.numeric_greeks.without_carry',
-        ['is_call', 'S', 'K', 'T', 'r', 'v'],
+        [
+          'isCall',
+          'assetPrice',
+          'strikePrice',
+          'timeToExpiry',
+          'riskFreeRate',
+          'volatility'
+        ],
         {
-          delta: ['is_call', 'S', 'K', 'T', 'r', 'v'],
-          gamma: ['S', 'K', 'T', 'r', 'v'],
-          theta: ['is_call', 'S', 'K', 'T', 'r', 'v'],
-          vega: ['S', 'K', 'T', 'r', 'v'],
-          rho: ['is_call', 'S', 'K', 'T', 'r', 'v']
+          delta: [
+            'isCall',
+            'assetPrice',
+            'strikePrice',
+            'timeToExpiry',
+            'riskFreeRate',
+            'volatility'
+          ],
+          gamma: [
+            'assetPrice',
+            'strikePrice',
+            'timeToExpiry',
+            'riskFreeRate',
+            'volatility'
+          ],
+          theta: [
+            'isCall',
+            'assetPrice',
+            'strikePrice',
+            'timeToExpiry',
+            'riskFreeRate',
+            'volatility'
+          ],
+          vega: [
+            'assetPrice',
+            'strikePrice',
+            'timeToExpiry',
+            'riskFreeRate',
+            'volatility'
+          ],
+          rho: [
+            'isCall',
+            'assetPrice',
+            'strikePrice',
+            'timeToExpiry',
+            'riskFreeRate',
+            'volatility'
+          ]
         }
       )
       setGreeks(optionResults)
@@ -128,7 +165,7 @@ const Black76: React.FC<Black76Props> = () => {
   }, [
     pyodide,
     isRequirementsLoaded,
-    optionType,
+    isCall,
     assetPrice,
     strikePrice,
     timeToExpiry,

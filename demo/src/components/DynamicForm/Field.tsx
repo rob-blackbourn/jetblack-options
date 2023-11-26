@@ -2,14 +2,17 @@ import React from 'react'
 
 import { FieldProps } from './types'
 
-import AutoRadioField, { RadioFieldProps } from './RadioField'
-import AutoTextField, { NumberFieldProps } from './NumberField'
+import RadioField, { RadioFieldProps } from './RadioField'
+import RadioSwitchField, { RadioSwitchFieldProps } from './RadioSwitchField'
+import NumberField, { NumberFieldProps } from './NumberField'
 
-const AutoField: React.FC<FieldProps> = props =>
+const Field: React.FC<FieldProps> = props =>
   props.type === 'number' ? (
-    <AutoTextField {...(props as NumberFieldProps)} />
+    <NumberField {...(props as NumberFieldProps)} />
+  ) : props.type === 'radio' ? (
+    <RadioField {...(props as RadioFieldProps)} />
   ) : (
-    <AutoRadioField {...(props as RadioFieldProps)} />
+    <RadioSwitchField {...(props as RadioSwitchFieldProps)} />
   )
 
-export default AutoField
+export default Field
