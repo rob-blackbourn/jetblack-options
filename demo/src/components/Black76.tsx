@@ -102,12 +102,24 @@ const Black76: React.FC<Black76Props> = () => {
     try {
       const optionResults = runBlack76(
         pyodide,
-        optionType === 'call',
-        assetPrice,
-        strikePrice,
-        timeToExpiry,
-        riskFreeRate,
-        volatility
+        {
+          is_call: optionType === 'call',
+          S: assetPrice,
+          K: strikePrice,
+          T: timeToExpiry,
+          r: riskFreeRate,
+          v: volatility
+        },
+        'jetblack_options.european.black_76',
+        'jetblack_options.numeric_greeks.without_carry',
+        ['is_call', 'S', 'K', 'T', 'r', 'v'],
+        {
+          delta: ['is_call', 'S', 'K', 'T', 'r', 'v'],
+          gamma: ['S', 'K', 'T', 'r', 'v'],
+          theta: ['is_call', 'S', 'K', 'T', 'r', 'v'],
+          vega: ['S', 'K', 'T', 'r', 'v'],
+          rho: ['is_call', 'S', 'K', 'T', 'r', 'v']
+        }
       )
       setGreeks(optionResults)
     } catch (error) {
