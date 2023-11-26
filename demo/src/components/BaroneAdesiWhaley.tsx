@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormControl from '@mui/material/FormControl'
-import FormLabel from '@mui/material/FormLabel'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+
+import DynamicForm, {
+  FieldProps,
+  NumberFieldProps,
+  RadioFieldProps
+} from './DynamicForm'
 
 import OptionResultView from './OptionResultView'
 import { runBaroneAdesiWhaley } from './baroneAdesiWhaleyRunner'
@@ -18,9 +18,6 @@ import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
 
 export interface BaroneAdesiWhaleyProps {}
-
-const toOptionalNumber = (value: string | undefined) =>
-  value ? Number.parseFloat(value) : undefined
 
 const BaroneAdesiWhaley: React.FC<BaroneAdesiWhaleyProps> = () => {
   const [assetPrice, setAssetPrice] = useState<number | undefined>(100)
@@ -33,9 +30,65 @@ const BaroneAdesiWhaley: React.FC<BaroneAdesiWhaleyProps> = () => {
   const [greeks, setGreeks] = useState<OptionResults>()
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
-  const handleSetOptionType = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOptionType((event.target as HTMLInputElement).value as 'call' | 'put')
+  const handleSetOptionType = (value: string) => {
+    setOptionType(value as 'call' | 'put')
   }
+
+  const fields: FieldProps[] = [
+    {
+      label: 'Option Type',
+      type: 'radio',
+      onChange: handleSetOptionType,
+      options: [
+        { label: 'Call', value: 'call' },
+        { label: 'Put', value: 'put' }
+      ],
+      value: optionType,
+      row: true
+    } as RadioFieldProps,
+    {
+      label: 'Asset Price',
+      type: 'number',
+      value: assetPrice,
+      onChange: setAssetPrice,
+      width: 200
+    } as NumberFieldProps,
+    {
+      label: 'Strike Price',
+      type: 'number',
+      value: strikePrice,
+      onChange: setStrikePrice,
+      width: 200
+    } as NumberFieldProps,
+    {
+      label: 'Time To Expiry',
+      type: 'number',
+      value: timeToExpiry,
+      onChange: setTimeToExpiry,
+      width: 200
+    } as NumberFieldProps,
+    {
+      label: 'Risk Free Rate',
+      type: 'number',
+      value: riskFreeRate,
+      onChange: setRiskFreeRate,
+      width: 200
+    } as NumberFieldProps,
+    {
+      label: 'Carry Rate',
+      type: 'number',
+      value: costOfCarry,
+      onChange: setCostOfCarry,
+      width: 200
+    } as NumberFieldProps,
+    {
+      label: 'Volatility',
+      type: 'number',
+      value: volatility,
+      onChange: setVolatility,
+      width: 200
+    } as NumberFieldProps
+  ]
 
   useEffect(() => {
     if (
@@ -99,74 +152,8 @@ const BaroneAdesiWhaley: React.FC<BaroneAdesiWhaleyProps> = () => {
         </Typography>
       </Box>
 
-      <Stack
-        direction="row"
-        spacing={1}
-        alignItems="end"
-        justifyContent="flex-start"
-      >
-        <FormControl>
-          <FormLabel>Option Type</FormLabel>
-          <RadioGroup row value={optionType} onChange={handleSetOptionType}>
-            <FormControlLabel value="call" control={<Radio />} label="Call" />
-            <FormControlLabel value="put" control={<Radio />} label="Put" />
-          </RadioGroup>
-        </FormControl>
-        <TextField
-          label="Asset Price"
-          type="number"
-          value={assetPrice}
-          onChange={event =>
-            setAssetPrice(toOptionalNumber(event.target.value))
-          }
-          sx={{ width: 150 }}
-        />
-        <TextField
-          label="Strike Price"
-          type="number"
-          value={strikePrice}
-          onChange={event =>
-            setStrikePrice(toOptionalNumber(event.target.value))
-          }
-          sx={{ width: 150 }}
-        />
-        <TextField
-          label="Time to Expiry"
-          type="number"
-          value={timeToExpiry}
-          onChange={event =>
-            setTimeToExpiry(toOptionalNumber(event.target.value))
-          }
-          sx={{ width: 150 }}
-        />
-        <TextField
-          label="Risk Free Rate"
-          type="number"
-          value={riskFreeRate}
-          onChange={event =>
-            setRiskFreeRate(toOptionalNumber(event.target.value))
-          }
-          sx={{ width: 150 }}
-        />
-        <TextField
-          label="Carry Rate"
-          type="number"
-          value={costOfCarry}
-          onChange={event =>
-            setCostOfCarry(toOptionalNumber(event.target.value))
-          }
-          sx={{ width: 150 }}
-        />
-        <TextField
-          label="Volatility"
-          type="number"
-          value={volatility}
-          onChange={event =>
-            setVolatility(toOptionalNumber(event.target.value))
-          }
-          sx={{ width: 150 }}
-        />
-      </Stack>
+      <DynamicForm fields={fields} direction="row" />
+
       <Stack direction="column" spacing={2}>
         {greeks && <OptionResultView optionResults={greeks} />}
       </Stack>
