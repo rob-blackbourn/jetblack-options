@@ -42,41 +42,45 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
     Record<string, number | boolean | undefined>
   >({})
   const [greeks, setGreeks] = useState<OptionResults>()
+  const [fieldProps, setFieldProps] = useState<FieldProps[]>([])
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
-  const toNumberFieldProps = ({
-    label,
-    field
-  }: NumberFieldDefinition): NumberFieldProps => ({
-    label,
-    type: 'number',
-    onChange: (value: number | undefined) =>
-      setArgs(state => ({ ...state, [field]: value })),
-    value: args[field] as number | undefined,
-    width: 200
-  })
+  useEffect(() => {
+    const toNumberFieldProps = ({
+      label,
+      field
+    }: NumberFieldDefinition): NumberFieldProps => ({
+      label,
+      type: 'number',
+      onChange: (value: number | undefined) =>
+        setArgs(state => ({ ...state, [field]: value })),
+      value: args[field] as number | undefined,
+      width: 200
+    })
 
-  const toRadioSwitchProps = ({
-    label,
-    field,
-    trueOption,
-    falseOption
-  }: BooleanFieldDefinition): RadioSwitchFieldProps => ({
-    label,
-    type: 'radio-switch',
-    trueOption,
-    falseOption,
-    onChange: (value: boolean | undefined) =>
-      setArgs(state => ({ ...state, [field]: value })),
-    value: args[field] as boolean,
-    row: true
-  })
+    const toRadioSwitchProps = ({
+      label,
+      field,
+      trueOption,
+      falseOption
+    }: BooleanFieldDefinition): RadioSwitchFieldProps => ({
+      label,
+      type: 'radio-switch',
+      trueOption,
+      falseOption,
+      onChange: (value: boolean | undefined) =>
+        setArgs(state => ({ ...state, [field]: value })),
+      value: args[field] as boolean,
+      row: true
+    })
 
-  const fieldProps: FieldProps[] = fields.map(fieldDefinition =>
-    fieldDefinition.type === 'number'
-      ? toNumberFieldProps(fieldDefinition as NumberFieldDefinition)
-      : toRadioSwitchProps(fieldDefinition as BooleanFieldDefinition)
-  )
+    const fieldProps: FieldProps[] = fields.map(fieldDefinition =>
+      fieldDefinition.type === 'number'
+        ? toNumberFieldProps(fieldDefinition as NumberFieldDefinition)
+        : toRadioSwitchProps(fieldDefinition as BooleanFieldDefinition)
+    )
+    setFieldProps(fieldProps)
+  }, [fields, args])
 
   useEffect(() => {
     setArgs(
