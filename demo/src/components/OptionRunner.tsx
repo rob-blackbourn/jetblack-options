@@ -17,128 +17,30 @@ import { valueOption } from './optionValuer'
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
 
-export interface Black76Props {}
+import {
+  FieldDefinition,
+  NumberFieldDefinition,
+  BooleanFieldDefinition
+} from '../types'
 
-interface FieldDefinition {
-  label: string
-  field: string
-  type: 'number' | 'boolean'
-  defaultValue: boolean | number | undefined
+export interface OptionRunnerProps {
+  fields: FieldDefinition[]
+  priceArgs: string[]
+  analyticsArgs: Record<string, string[] | null>
+  analyticImportPath: string
+  numericImportPath: string
 }
 
-interface BooleanFieldDefinition extends FieldDefinition {
-  trueOption: string
-  falseOption: string
-  defaultValue: boolean
-}
-
-interface NumberFieldDefinition extends FieldDefinition {
-  defaultValue: number
-}
-
-const fieldDefinitions: FieldDefinition[] = [
-  {
-    label: 'Option Type',
-    field: 'isCall',
-    type: 'boolean',
-    trueOption: 'Call',
-    falseOption: 'Put',
-    defaultValue: true
-  } as BooleanFieldDefinition,
-  {
-    label: 'Asset Price',
-    field: 'assetPrice',
-    type: 'number',
-    defaultValue: 100
-  } as NumberFieldDefinition,
-  {
-    label: 'Strike Price',
-    field: 'strikePrice',
-    type: 'number',
-    defaultValue: 100
-  } as NumberFieldDefinition,
-  {
-    label: 'Time To Expiry',
-    field: 'timeToExpiry',
-    type: 'number',
-    defaultValue: 0.5
-  } as NumberFieldDefinition,
-  {
-    label: 'Risk Free Rate',
-    field: 'riskFreeRate',
-    type: 'number',
-    defaultValue: 0.005
-  } as NumberFieldDefinition,
-  {
-    label: 'Volatility',
-    field: 'volatility',
-    type: 'number',
-    defaultValue: 0.25
-  } as NumberFieldDefinition
-]
-
-const priceArgs = [
-  'isCall',
-  'assetPrice',
-  'strikePrice',
-  'timeToExpiry',
-  'riskFreeRate',
-  'volatility'
-]
-
-const analyticsArgs = {
-  delta: [
-    'isCall',
-    'assetPrice',
-    'strikePrice',
-    'timeToExpiry',
-    'riskFreeRate',
-    'volatility'
-  ],
-  gamma: [
-    'assetPrice',
-    'strikePrice',
-    'timeToExpiry',
-    'riskFreeRate',
-    'volatility'
-  ],
-  theta: [
-    'isCall',
-    'assetPrice',
-    'strikePrice',
-    'timeToExpiry',
-    'riskFreeRate',
-    'volatility'
-  ],
-  vega: [
-    'assetPrice',
-    'strikePrice',
-    'timeToExpiry',
-    'riskFreeRate',
-    'volatility'
-  ],
-  rho: [
-    'isCall',
-    'assetPrice',
-    'strikePrice',
-    'timeToExpiry',
-    'riskFreeRate',
-    'volatility'
-  ]
-}
-
-const analyticImportPath = 'jetblack_options.european.black_76'
-const numericImportPath = 'jetblack_options.numeric_greeks.without_carry'
-
-const Black76: React.FC<Black76Props> = () => {
+const OptionRunner: React.FC<OptionRunnerProps> = ({
+  fields,
+  priceArgs,
+  analyticsArgs,
+  analyticImportPath,
+  numericImportPath
+}) => {
   const [args, setArgs] = useState<
     Record<string, number | boolean | undefined>
-  >(
-    fieldDefinitions.reduce(
-      (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
-      {}
-    )
-  )
+  >({})
   const [greeks, setGreeks] = useState<OptionResults>()
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
@@ -170,11 +72,20 @@ const Black76: React.FC<Black76Props> = () => {
     row: true
   })
 
-  const fieldProps: FieldProps[] = fieldDefinitions.map(fieldDefinition =>
+  const fieldProps: FieldProps[] = fields.map(fieldDefinition =>
     fieldDefinition.type === 'number'
       ? toNumberFieldProps(fieldDefinition as NumberFieldDefinition)
       : toRadioSwitchProps(fieldDefinition as BooleanFieldDefinition)
   )
+
+  useEffect(() => {
+    setArgs(
+      fields.reduce(
+        (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
+        {}
+      )
+    )
+  }, [fields])
 
   useEffect(() => {
     if (
@@ -206,7 +117,15 @@ const Black76: React.FC<Black76Props> = () => {
     } catch (error) {
       console.log(error)
     }
-  }, [pyodide, isRequirementsLoaded, args])
+  }, [
+    pyodide,
+    isRequirementsLoaded,
+    args,
+    analyticImportPath,
+    numericImportPath,
+    analyticsArgs,
+    priceArgs
+  ])
 
   if (!(pyodide && isRequirementsLoaded)) {
     return (
@@ -231,4 +150,4 @@ const Black76: React.FC<Black76Props> = () => {
   )
 }
 
-export default Black76
+export default OptionRunner
