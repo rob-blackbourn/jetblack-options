@@ -42,7 +42,12 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
 }) => {
   const [args, setArgs] = useState<
     Record<string, number | boolean | undefined>
-  >({})
+  >(
+    fields.reduce(
+      (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
+      {}
+    )
+  )
   const [greeks, setGreeks] = useState<OptionResults>()
   const [fieldProps, setFieldProps] = useState<FieldProps[]>([])
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
@@ -87,15 +92,6 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
     )
     setFieldProps(fieldProps)
   }, [fields, args])
-
-  useEffect(() => {
-    const args = fields.reduce(
-      (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
-      {}
-    )
-    console.log('Setting args', { fields, args })
-    setArgs(args)
-  }, [fields])
 
   useEffect(() => {
     console.log('pyodide', args)
