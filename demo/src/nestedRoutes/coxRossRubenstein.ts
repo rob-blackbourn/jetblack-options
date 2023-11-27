@@ -2,10 +2,10 @@ import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
 
 import { ModelRoute } from './types'
 
-export const bjerksundStensland1993: ModelRoute = {
-  path: '/bjerksund-stensland-1993',
-  name: 'Bjerksund-Stensland 1993',
-  description: 'Bjerksund-Stensland 1993',
+export const coxRossRubenstein: ModelRoute = {
+  path: '/cox-ross-rubenstein',
+  name: 'Cox-Ross-Rubenstein',
+  description: 'Cox-Ross-Rubenstein binomial tree',
   fields: [
     {
       label: 'Option Type',
@@ -40,10 +40,10 @@ export const bjerksundStensland1993: ModelRoute = {
       defaultValue: 0.005
     } as NumberFieldDefinition,
     {
-      label: 'Carry RateYield',
-      field: 'costOfCarry',
+      label: 'Dividend Yield',
+      field: 'dividendYield',
       type: 'number',
-      defaultValue: 0.003
+      defaultValue: 0.002
     } as NumberFieldDefinition,
     {
       label: 'Volatility',
@@ -52,15 +52,15 @@ export const bjerksundStensland1993: ModelRoute = {
       defaultValue: 0.25
     } as NumberFieldDefinition
   ],
-  analyticImportPath: 'jetblack_options.american.bjerksund_stensland_1993',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
+  analyticImportPath: 'jetblack_options.trees.cox_ross_rubinstein',
+  numericImportPath: 'jetblack_options.numeric_greeks.with_dividend_yield',
   pricePrototype: [
     'isCall',
     'assetPrice',
     'strikePrice',
     'timeToExpiry',
     'riskFreeRate',
-    'costOfCarry',
+    'dividendYield',
     'volatility'
   ],
   greeksPrototypes: {
@@ -72,4 +72,4 @@ export const bjerksundStensland1993: ModelRoute = {
   }
 }
 
-export default bjerksundStensland1993
+export default coxRossRubenstein

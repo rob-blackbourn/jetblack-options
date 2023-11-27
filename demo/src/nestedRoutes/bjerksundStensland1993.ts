@@ -2,10 +2,10 @@ import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
 
 import { ModelRoute } from './types'
 
-export const generalisedBlackScholes: ModelRoute = {
-  path: '/generalised-black-scholes',
-  name: 'Generalised Black-Scholes',
-  description: 'The generalised Black-Scholes model.',
+export const bjerksundStensland1993: ModelRoute = {
+  path: '/bjerksund-stensland-1993',
+  name: 'Bjerksund-Stensland 1993',
+  description: 'Bjerksund-Stensland 1993',
   fields: [
     {
       label: 'Option Type',
@@ -52,7 +52,7 @@ export const generalisedBlackScholes: ModelRoute = {
       defaultValue: 0.25
     } as NumberFieldDefinition
   ],
-  analyticImportPath: 'jetblack_options.european.generalised_black_scholes',
+  analyticImportPath: 'jetblack_options.american.bjerksund_stensland_1993',
   numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
     'isCall',
@@ -64,50 +64,12 @@ export const generalisedBlackScholes: ModelRoute = {
     'volatility'
   ],
   greeksPrototypes: {
-    delta: [
-      'isCall',
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'costOfCarry',
-      'volatility'
-    ],
-    gamma: [
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'costOfCarry',
-      'volatility'
-    ],
-    theta: [
-      'isCall',
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'costOfCarry',
-      'volatility'
-    ],
-    vega: [
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'costOfCarry',
-      'volatility'
-    ],
-    rho: [
-      'isCall',
-      'assetPrice',
-      'strikePrice',
-      'timeToExpiry',
-      'riskFreeRate',
-      'costOfCarry',
-      'volatility'
-    ]
+    delta: null,
+    gamma: null,
+    theta: null,
+    vega: null,
+    rho: null
   }
 }
 
-export default generalisedBlackScholes
+export default bjerksundStensland1993

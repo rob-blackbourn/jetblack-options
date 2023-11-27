@@ -1,6 +1,6 @@
 """Tests for Barone-Adesi-Whaley"""
 
-from jetblack_options.trees.leisen_reimer import greeks
+from jetblack_options.trees.leisen_reimer import price
 from jetblack_options.numeric_greeks.with_carry import NumericGreeks
 
 from ..utils import is_close_to
@@ -23,8 +23,7 @@ def test_price():
         (False, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 10.098461348219312),
     ]:
         b = r - q
-        value, delta, gamma, theta = greeks(
-            is_european, is_call, S, K, T, r, b, v, 200)
+        value = price(is_european, is_call, S, K, T, r, b, v, 200)
         assert is_close_to(value, expected, 1e-12)
 
 
@@ -39,8 +38,10 @@ def test_delta():
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.789262083261999),
     ]:
         b = r - q
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
-            is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(
+            lambda is_call, S, K, T, r, b, v:
+                price(is_european, is_call, S, K, T, r, b, v, 100)
+        )
         numeric = ng.delta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
@@ -55,8 +56,10 @@ def test_gamma():
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.028376155452036755),
     ]:
         b = r - q
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
-            is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(
+            lambda is_call, S, K, T, r, b, v:
+                price(is_european, is_call, S, K, T, r, b, v, 100)
+        )
         numeric = ng.gamma(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
@@ -70,8 +73,10 @@ def test_theta():
         (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, -2.481116330041932),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.29609189543283954),
     ]:
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
-            is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(
+            lambda is_call, S, K, T, r, b, v:
+                price(is_european, is_call, S, K, T, r, b, v, 100)
+        )
         b = r - q
         numeric = ng.theta(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
@@ -86,8 +91,10 @@ def test_vega():
         (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 17.734734325637714),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 17.734734326296575),
     ]:
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
-            is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(
+            lambda is_call, S, K, T, r, b, v:
+                price(is_european, is_call, S, K, T, r, b, v, 100)
+        )
         b = r - q
         numeric = ng.vega(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
@@ -102,8 +109,10 @@ def test_rho():
         (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 8.182336548597013),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, -44.13528397923017),
     ]:
-        ng = NumericGreeks(lambda is_call, S, K, T, r, b, v: greeks(
-            is_european, is_call, S, K, T, r, b, v, 100)[0])
+        ng = NumericGreeks(
+            lambda is_call, S, K, T, r, b, v:
+                price(is_european, is_call, S, K, T, r, b, v, 100)
+        )
         b = r - q
         numeric = ng.rho(is_call, S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)

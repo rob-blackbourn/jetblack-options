@@ -3,6 +3,7 @@
 from math import exp, log, nan, sqrt
 from typing import Literal, Tuple, Union
 
+
 def _sign(n: Union[float, int]) -> Literal[-1, 0, 1]:
     if n > 0:
         return 1
@@ -11,13 +12,15 @@ def _sign(n: Union[float, int]) -> Literal[-1, 0, 1]:
     else:
         return 0
 
+
 def _odd(n: int) -> int:
     s = _sign(n)
     n = abs(n)
     if n % 2 == 0:
         n += 1
     return n * s
- 
+
+
 def greeks(
         is_european: bool,
         is_call: bool,
@@ -48,7 +51,7 @@ def greeks(
 
     n = _odd(n)
     z = 1 if is_call else -1
-    
+
     d1 = (log(S / K) + (b + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
 
@@ -61,7 +64,7 @@ def greeks(
         0.25
         - 0.25 * exp(-(d2 / (n + 1 / 3 + 0.1 / (n + 1))) ** 2 * (n + 1 / 6))
     ) ** 0.5
-    
+
     dT = T / n
     p = hd2
     u = exp(b * dT) * hd1 / hd2
@@ -71,7 +74,7 @@ def greeks(
         max(0, z * (S * u ** i * d ** (n - i) - K))
         for i in range(n+1)
     ]
-    
+
     delta = gamma = theta = nan
 
     for j in range(n-1, -1, -1):
@@ -93,13 +96,29 @@ def greeks(
         if j == 2:
             gamma = (
                 (option_value[2] - option_value[1]) / (S * u ** 2 - S * u * d)
-                - (option_value[1] - option_value[0]) / (S * u * d - S * d ** 2)
+                - (option_value[1] - option_value[0]) /
+                (S * u * d - S * d ** 2)
             ) / (0.5 * (S * u ** 2 - S * d ** 2))
             theta = option_value[1]
-            
+
         if j == 1:
             delta = (option_value[1] - option_value[0]) / (S * u - S * d)
 
     theta = (theta - option_value[0]) / (2 * dT) / 365
 
     return option_value[0], delta, gamma, theta
+
+
+def price(
+        is_european: bool,
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        n: int
+) -> float:
+    p, *_ = greeks(is_european, is_call, S, K, T, r, b, v, n)
+    return p

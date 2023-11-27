@@ -3,7 +3,7 @@
 from math import exp, nan, sqrt
 from typing import Tuple
 
-# Cox-Ross-Rubinstein binomial tree
+
 def greeks(
         is_european: bool,
         is_call: bool,
@@ -33,14 +33,14 @@ def greeks(
     """
 
     z = 1 if is_call else -1
-    
+
     dT = T / n
     u = exp(v * sqrt(dT))
     d = 1 / u
     a = exp(b * dT)
     p = (a - d) / (u - d)
     df = exp(-r * dT)
-    
+
     option_value = [
         max(0, z * (S * u ** i * d ** (n - i) - K))
         for i in range(n+1)
@@ -70,10 +70,25 @@ def greeks(
                 - (option_value[1] - option_value[0]) / (S - S * d ** 2)
             ) / (0.5 * (S * u ** 2 - S * d ** 2))
             theta = option_value[1]
-            
+
         if j == 1:
             delta = (option_value[1] - option_value[0]) / (S * u - S * d)
 
     theta = (theta - option_value[0]) / (2 * dT) / 365
 
     return option_value[0], delta, gamma, theta
+
+
+def price(
+        is_european: bool,
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        v: float,
+        n: int
+) -> float:
+    p, *_ = greeks(is_european, is_call, S, K, T, r, b, v, n)
+    return p

@@ -41,7 +41,7 @@ export const baroneAdesiWhaley: ModelRoute = {
       defaultValue: 0.005
     } as NumberFieldDefinition,
     {
-      label: 'Carry RateYield',
+      label: 'Carry Rate',
       field: 'costOfCarry',
       type: 'number',
       defaultValue: 0.003

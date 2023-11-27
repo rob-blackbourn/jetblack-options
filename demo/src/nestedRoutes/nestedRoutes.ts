@@ -6,6 +6,9 @@ import blackScholesMerton from './blackScholesMerton'
 import garmanKohlhagen from './garmanKohlhagen'
 import generalisedBlackScholes from './generalisedBlackScholes'
 import baroneAdesiWhaley from './baroneAdesiWhaley'
+import bjerksundStensland1993 from './bjerksundStensland1993'
+import bjerksundStensland2002 from './bjerksundStensland2002'
+import coxRossRubenstein from './coxRossRubenstein'
 
 export const routes: ModelRoute[] = [
   blackScholes73,
@@ -13,5 +16,8 @@ export const routes: ModelRoute[] = [
   blackScholesMerton,
   garmanKohlhagen,
   generalisedBlackScholes,
-  baroneAdesiWhaley
+  baroneAdesiWhaley,
+  bjerksundStensland1993,
+  bjerksundStensland2002,
+  coxRossRubenstein
 ]
