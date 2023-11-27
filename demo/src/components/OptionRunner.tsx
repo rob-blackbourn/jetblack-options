@@ -42,12 +42,21 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
 }) => {
   const [args, setArgs] = useState<
     Record<string, number | boolean | undefined>
-  >({})
+  >(
+    fields.reduce(
+      (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
+      {}
+    )
+  )
   const [greeks, setGreeks] = useState<OptionResults>()
   const [fieldProps, setFieldProps] = useState<FieldProps[]>([])
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
+  console.log({ fields, args })
+
   useEffect(() => {
+    console.log('Setting field props')
+
     const toNumberFieldProps = ({
       label,
       field
@@ -85,32 +94,21 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   }, [fields, args])
 
   useEffect(() => {
-    setArgs(
-      fields.reduce(
-        (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
-        {}
-      )
-    )
-  }, [fields])
-
-  useEffect(() => {
+    console.log('pyodide', args)
     if (
       !(
         pyodide &&
         isRequirementsLoaded &&
-        args.assetPrice &&
-        args.strikePrice &&
-        args.timeToExpiry &&
-        args.riskFreeRate &&
-        args.volatility &&
-        !Object.values(args).some(x => x === undefined)
+        Object.values(args).every(x => x != null)
       )
     ) {
+      console.log('Clearing greeks')
       setGreeks(undefined)
       return
     }
 
     try {
+      console.log('Setting greeks')
       const optionResults = valueOption(
         pyodide,
         args,

@@ -18,8 +18,11 @@ import Loading from './components/Loading'
 import { PyodideInterface } from 'pyodide'
 
 import Layout from './pages/Layout'
+import Home from './pages/Home'
+import NotFound from './pages/NotFound'
+import OptionRunner from './components/OptionRunner'
 
-import { renderNestedRoutes } from './nestedRoutes'
+import { routes } from './nestedRoutes'
 
 declare global {
   interface Window {
@@ -61,7 +64,34 @@ function App() {
             <Suspense fallback={<Loading />}>
               <Routes>
                 <Route path="/" element={<Layout />}>
-                  {renderNestedRoutes()}
+                  <Route index element={<Home />} />
+                  {routes.map(
+                    ({
+                      path,
+                      fields,
+                      pricePrototype,
+                      greeksPrototypes,
+                      analyticImportPath,
+                      numericImportPath,
+                      description
+                    }) => (
+                      <Route
+                        key={path}
+                        path={path}
+                        element={
+                          <OptionRunner
+                            fields={fields}
+                            priceArgs={pricePrototype}
+                            analyticsArgs={greeksPrototypes}
+                            analyticImportPath={analyticImportPath}
+                            numericImportPath={numericImportPath}
+                            description={description}
+                          />
+                        }
+                      />
+                    )
+                  )}
+                  <Route path="*" element={<NotFound />} />
                 </Route>
               </Routes>
             </Suspense>
