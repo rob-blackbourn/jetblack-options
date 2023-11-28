@@ -3,6 +3,8 @@
 from math import exp, nan, sqrt
 from typing import Tuple
 
+from ..numeric_greeks.with_carry import NumericGreeks
+
 
 def greeks(
         is_european: bool,
@@ -92,3 +94,9 @@ def price(
 ) -> float:
     p, *_ = greeks(is_european, is_call, S, K, T, r, b, v, n)
     return p
+
+
+def make_bumper(is_european: bool, is_call: bool, n: int) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
+        return price(is_european, is_call, S, K, T, r, b, v, n)
+    return NumericGreeks(evaluate)

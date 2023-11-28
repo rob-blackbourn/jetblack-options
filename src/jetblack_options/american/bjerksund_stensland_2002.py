@@ -6,6 +6,7 @@ from typing import Callable
 
 from ..distributions import CBND as cbnd
 from ..european.generalised_black_scholes import price as bs_price
+from ..numeric_greeks.with_carry import NumericGreeks
 
 norm = NormalDist()
 cdf = norm.cdf
@@ -151,3 +152,9 @@ def price(
     else:
         # Use the Bjerksund and Stensland put-call transformation
         return _call_price(K, S, T, r - b, -b, v)
+
+
+def make_bumper(is_call: bool) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
+        return price(is_call, S, K, T, r, b, v)
+    return NumericGreeks(evaluate)

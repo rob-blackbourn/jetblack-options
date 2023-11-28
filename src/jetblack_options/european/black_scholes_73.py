@@ -4,6 +4,7 @@ from math import exp, log, sqrt
 from statistics import NormalDist
 
 from ..implied_volatility import solve_ivol
+from ..numeric_greeks.without_carry import NumericGreeks
 
 norm = NormalDist()
 cdf = norm.cdf
@@ -75,6 +76,12 @@ def ivol(
     )
 
 
+def make_bumper(is_call: bool) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, v: float) -> float:
+        return price(is_call, S, K, T, r, v)
+    return NumericGreeks(evaluate)
+
+
 def delta(
         is_call: bool,
         S: float,
@@ -89,7 +96,8 @@ def delta(
     else:
         return -cdf(-d1)
 
-def gamma (
+
+def gamma(
         S: float,
         K: float,
         T: float,
@@ -99,6 +107,7 @@ def gamma (
     "Calculates option gamma"
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     return pdf(d1) / (S * v * sqrt(T))
+
 
 def theta(
         is_call: bool,
@@ -111,7 +120,7 @@ def theta(
     "Calculates option theta"
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    
+
     if is_call:
         return - (
             (S * pdf(d1) * v) / (2 * sqrt(T))
@@ -123,7 +132,7 @@ def theta(
         ) + r * K * exp(-r * T) * cdf(-d2)
 
 
-def vega (
+def vega(
         S: float,
         K: float,
         T: float,
@@ -144,7 +153,7 @@ def rho(
 ) -> float:
     d1 = (log(S / K) + (r + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    
+
     if is_call:
         return K * T * exp(-r * T) * cdf(d2)
     else:
@@ -162,6 +171,7 @@ def vanna(
     d1 = (log(S / K) + (r + v * v / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     return -d2 * pdf(d1) / v
+
 
 def charm(
         is_call: bool,

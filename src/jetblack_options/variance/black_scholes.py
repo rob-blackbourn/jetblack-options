@@ -2,9 +2,6 @@
 
 from math import exp, log, sqrt
 from statistics import NormalDist
-from typing import Callable
-
-from ..distributions import CDF
 
 norm = NormalDist()
 cdf = norm.cdf

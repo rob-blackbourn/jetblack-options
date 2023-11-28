@@ -15,6 +15,7 @@ from statistics import NormalDist
 from typing import Literal
 
 from ..implied_volatility import solve_ivol
+from ..numeric_greeks.with_carry import NumericGreeks
 
 norm = NormalDist()
 cdf = norm.cdf
@@ -90,6 +91,12 @@ def ivol(
         max_iterations=max_iterations,
         epsilon=epsilon
     )
+
+
+def make_bumper(is_call: bool) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
+        return price(is_call, S, K, T, r, b, v)
+    return NumericGreeks(evaluate)
 
 
 def delta(

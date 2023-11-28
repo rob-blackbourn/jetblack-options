@@ -2,6 +2,9 @@
 
 from math import comb, exp, log, sqrt
 
+from ..numeric_greeks.with_carry import NumericGreeks
+
+
 def price(
         is_call: bool,
         S: float,
@@ -27,7 +30,7 @@ def price(
     Returns:
         float: The price of the option.
     """
-        
+
     dt = T / n
     u = exp(v * sqrt(dt))
     d = 1 / u
@@ -48,3 +51,9 @@ def price(
             )
 
     return exp(-r * T) * sum
+
+
+def make_bumper(is_call: bool, n: int) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
+        return price(is_call, S, K, T, r, b, v, n)
+    return NumericGreeks(evaluate)

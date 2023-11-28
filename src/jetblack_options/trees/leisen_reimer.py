@@ -3,6 +3,8 @@
 from math import exp, log, nan, sqrt
 from typing import Literal, Tuple, Union
 
+from ..numeric_greeks.with_carry import NumericGreeks
+
 
 def _sign(n: Union[float, int]) -> Literal[-1, 0, 1]:
     if n > 0:
@@ -122,3 +124,9 @@ def price(
 ) -> float:
     p, *_ = greeks(is_european, is_call, S, K, T, r, b, v, n)
     return p
+
+
+def make_bumper(is_european: bool, is_call: bool, n: int) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
+        return price(is_european, is_call, S, K, T, r, b, v, n)
+    return NumericGreeks(evaluate)

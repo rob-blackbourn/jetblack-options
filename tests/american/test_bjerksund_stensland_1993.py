@@ -1,9 +1,16 @@
 """Tests for Barone-Adesi-Whaley"""
 
-from jetblack_options.american.bjerksund_stensland_1993 import price
-from jetblack_options.numeric_greeks.with_carry import NumericGreeks
+from jetblack_options.american.bjerksund_stensland_1993 import (
+    price,
+    make_bumper
+)
 
 from ..utils import is_close_to
+
+ng = {
+    is_call: make_bumper(is_call)
+    for is_call in (True, False)
+}
 
 
 def test_price():
@@ -22,8 +29,6 @@ def test_price():
 
 
 def test_delta():
-    ng = NumericGreeks(price)
-
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.8569705161634467),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -0.10549822644847495),
@@ -33,12 +38,11 @@ def test_delta():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.9142855581178999),
     ]:
         b = r - q
-        numeric = ng.delta(is_call, S, K, T, r, b, v)
+        numeric = ng[is_call].delta(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_gamma():
-    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.018450076488818468),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.018827352619155135),
@@ -48,12 +52,11 @@ def test_gamma():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.04419040397607432),
     ]:
         b = r - q
-        numeric = ng.gamma(is_call, S, K, T, r, b, v, dS=0.01)
+        numeric = ng[is_call].gamma(S, K, T, r, b, v, dS=0.01)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_theta():
-    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, -2.5209157014280237),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -1.4877905052248508),
@@ -63,12 +66,11 @@ def test_theta():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.5718287877996886),
     ]:
         b = r - q
-        numeric = ng.theta(is_call, S, K, T, r, b, v)
+        numeric = ng[is_call].theta(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_vega():
-    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 13.922782099005104),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 14.022558056630885),
@@ -78,12 +80,11 @@ def test_vega():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, 8.7106813587727327),
     ]:
         b = r - q
-        numeric = ng.vega(is_call, S, K, T, r, b, v)
+        numeric = ng[is_call].vega(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_rho():
-    ng = NumericGreeks(price)
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 41.357743785999546),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -5.748840884479023),
@@ -93,5 +94,5 @@ def test_rho():
         (False, 100, 110, 0.1, 0.08, 6/12, 0.125, -10.018685692319451),
     ]:
         b = r - q
-        numeric = ng.rho(is_call, S, K, T, r, b, v)
+        numeric = ng[is_call].rho(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)

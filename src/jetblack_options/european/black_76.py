@@ -4,6 +4,7 @@ from math import exp, log, sqrt
 from statistics import NormalDist
 
 from ..implied_volatility import solve_ivol
+from ..numeric_greeks.without_carry import NumericGreeks
 
 norm = NormalDist()
 cdf = norm.cdf
@@ -49,7 +50,7 @@ def ivol(
         p: float,
         *,
         max_iterations: int = 20,
-        epsilon = 1e-8
+        epsilon=1e-8
 ) -> float:
     """Calculate the volatility of a Black 76 option that is implied by the price.
 
@@ -73,6 +74,12 @@ def ivol(
         max_iterations=max_iterations,
         epsilon=epsilon
     )
+
+
+def make_bumper(is_call: bool) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, b: float) -> float:
+        return price(is_call, S, K, T, r, b)
+    return NumericGreeks(evaluate)
 
 
 def delta(
@@ -239,7 +246,7 @@ def vanna(
 ) -> float:
     d1 = (log(F / K) + T * (v ** 2 / 2)) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
-    return -exp(-r * T) * pdf(d1) * d2 / v 
+    return -exp(-r * T) * pdf(d1) * d2 / v
 
 
 def vomma(

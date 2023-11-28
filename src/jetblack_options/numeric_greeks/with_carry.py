@@ -4,7 +4,6 @@ from typing import Callable, Literal
 
 OptionValue = Callable[
     [
-        bool,  # is_call
         float,  # Asset price.
         float,  # Strike.
         float,  # Time to expiry in years.
@@ -27,7 +26,6 @@ class NumericGreeks:
 
     def delta(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -40,25 +38,24 @@ class NumericGreeks:
     ) -> float:
         if method == 'central':
             return (
-                self.price(is_call, S + dS, K, T, r, b, v)
-                - self.price(is_call, S - dS, K, T, r, b, v)
+                self.price(S + dS, K, T, r, b, v)
+                - self.price(S - dS, K, T, r, b, v)
             ) / (2 * dS)
         elif method == 'forward':
             return (
-                self.price(is_call, S + dS, K, T, r, b, v)
-                - self.price(is_call, S, K, T, r, b, v)
+                self.price(S + dS, K, T, r, b, v)
+                - self.price(S, K, T, r, b, v)
             ) / dS
         elif method == 'backward':
             return (
-                self.price(is_call, S, K, T, r, b, v)
-                - self.price(is_call, S - dS, K, T, r, b, v)
+                self.price(S, K, T, r, b, v)
+                - self.price(S - dS, K, T, r, b, v)
             ) / dS
         else:
             raise ValueError("Invalid method")
 
     def gamma(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -71,28 +68,27 @@ class NumericGreeks:
     ) -> float:
         if method == 'central':
             return (
-                self.price(is_call, S + dS, K, T, r, b, v)
-                - 2 * self.price(is_call, S, K, T, r, b, v)
-                + self.price(is_call, S - dS, K, T, r, b, v)
+                self.price(S + dS, K, T, r, b, v)
+                - 2 * self.price(S, K, T, r, b, v)
+                + self.price(S - dS, K, T, r, b, v)
             ) / dS ** 2
         elif method == 'forward':
             return (
-                self.price(is_call, S + 2 * dS, K, T, r, b, v)
-                - 2 * self.price(is_call, S + dS, K, T, r, b, v)
-                + self.price(is_call, S, K, T, r, b, v)
+                self.price(S + 2 * dS, K, T, r, b, v)
+                - 2 * self.price(S + dS, K, T, r, b, v)
+                + self.price(S, K, T, r, b, v)
             ) / dS ** 2
         elif method == 'backward':
             return (
-                self.price(is_call, S, K, T, r, b, v)
-                - 2 * self.price(is_call, S - dS, K, T, r, b, v)
-                + self.price(is_call, S - 2 * dS, K, T, r, b, v)
+                self.price(S, K, T, r, b, v)
+                - 2 * self.price(S - dS, K, T, r, b, v)
+                + self.price(S - 2 * dS, K, T, r, b, v)
             ) / dS ** 2
         else:
             raise ValueError("Invalid method")
 
     def theta(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -105,25 +101,24 @@ class NumericGreeks:
     ) -> float:
         if method == 'central':
             return (
-                self.price(is_call, S, K, T - dT, r, b, v)
-                - self.price(is_call, S, K, T + dT, r, b, v)
+                self.price(S, K, T - dT, r, b, v)
+                - self.price(S, K, T + dT, r, b, v)
             ) / (2 * dT)
         elif method == 'forward':
             return (
-                self.price(is_call, S, K, T, r, b, v)
-                - self.price(is_call, S, K, T + dT, r, b, v)
+                self.price(S, K, T, r, b, v)
+                - self.price(S, K, T + dT, r, b, v)
             ) / dT
         if method == 'backward':
             return (
-                self.price(is_call, S, K, T - dT, r, b, v)
-                - self.price(is_call, S, K, T, r, b, v)
+                self.price(S, K, T - dT, r, b, v)
+                - self.price(S, K, T, r, b, v)
             ) / dT
         else:
             raise ValueError("Invalid method")
 
     def vega(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -136,25 +131,24 @@ class NumericGreeks:
     ) -> float:
         if method == 'central':
             return (
-                self.price(is_call, S, K, T, r, b, v + dv)
-                - self.price(is_call, S, K, T, r, b, v - dv)
+                self.price(S, K, T, r, b, v + dv)
+                - self.price(S, K, T, r, b, v - dv)
             ) / (2 * dv)
         elif method == 'forward':
             return (
-                self.price(is_call, S, K, T, r, b, v + dv)
-                - self.price(is_call, S, K, T, r, b, v)
+                self.price(S, K, T, r, b, v + dv)
+                - self.price(S, K, T, r, b, v)
             ) / dv
         elif method == 'backward':
             return (
-                self.price(is_call, S, K, T, r, b, v)
-                - self.price(is_call, S, K, T, r, b, v - dv)
+                self.price(S, K, T, r, b, v)
+                - self.price(S, K, T, r, b, v - dv)
             ) / dv
         else:
             raise ValueError('Invalid method')
 
     def rho(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -167,25 +161,24 @@ class NumericGreeks:
     ) -> float:
         if method == 'central':
             return (
-                self.price(is_call, S, K, T, r + dr, b + dr, v)
-                - self.price(is_call, S, K, T, r - dr, b - dr, v)
+                self.price(S, K, T, r + dr, b + dr, v)
+                - self.price(S, K, T, r - dr, b - dr, v)
             ) / (2 * dr)
         elif method == 'central':
             return (
-                self.price(is_call, S, K, T, r + dr, b + dr, v)
-                - self.price(is_call, S, K, T, r - dr, b, v)
+                self.price(S, K, T, r + dr, b + dr, v)
+                - self.price(S, K, T, r - dr, b, v)
             ) / dr
         if method == 'backward':
             return (
-                self.price(is_call, S, K, T, r + dr, b, v)
-                - self.price(is_call, S, K, T, r - dr, b - dr, v)
+                self.price(S, K, T, r + dr, b, v)
+                - self.price(S, K, T, r - dr, b - dr, v)
             ) / dr
         else:
             raise ValueError('Invalid method')
 
     def carry(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -198,25 +191,24 @@ class NumericGreeks:
     ) -> float:
         if method == 'central':
             return (
-                self.price(is_call, S, K, T, r, b + db, v)
-                - self.price(is_call, S, K, T, r, b - db, v)
+                self.price(S, K, T, r, b + db, v)
+                - self.price(S, K, T, r, b - db, v)
             ) / (2 * db)
         if method == 'forward':
             return (
-                self.price(is_call, S, K, T, r, b + db, v)
-                - self.price(is_call, S, K, T, r, b, v)
+                self.price(S, K, T, r, b + db, v)
+                - self.price(S, K, T, r, b, v)
             ) / db
         if method == 'central':
             return (
-                self.price(is_call, S, K, T, r, b, v)
-                - self.price(is_call, S, K, T, r, b - db, v)
+                self.price(S, K, T, r, b, v)
+                - self.price(S, K, T, r, b - db, v)
             ) / db
         else:
             raise ValueError('Invalid method')
 
     def elasticity(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -227,13 +219,12 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-            self.delta(is_call, S, K, T, r, b, v, dS=dS) * S
-            / self.price(is_call, S, K, T, r, b, v)
+            self.delta(S, K, T, r, b, v, dS=dS) * S
+            / self.price(S, K, T, r, b, v)
         )
 
     def speed(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -244,15 +235,14 @@ class NumericGreeks:
             dS: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S + 2 * dS, K, T, r, b, v)
-            - 3 * self.price(is_call, S + dS, K, T, r, b, v)
-            + 3 * self.price(is_call, S, K, T, r, b, v)
-            - self.price(is_call, S - dS, K, T, r, b, v)
+            self.price(S + 2 * dS, K, T, r, b, v)
+            - 3 * self.price(S + dS, K, T, r, b, v)
+            + 3 * self.price(S, K, T, r, b, v)
+            - self.price(S - dS, K, T, r, b, v)
         ) / dS ** 3
 
     def deltap(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -263,13 +253,12 @@ class NumericGreeks:
             dS: float = 0.01
     ) -> float:
         return (
-            self.price(is_call, S * (1 + dS), K, T, r, b, v) -
-            self.price(is_call, S * (1 - dS), K, T, r, b, v)
+            self.price(S * (1 + dS), K, T, r, b, v)
+            - self.price(S * (1 - dS), K, T, r, b, v)
         ) * 2 / S
 
     def gammap(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -279,11 +268,10 @@ class NumericGreeks:
             *,
             dS: float = 0.01,
     ) -> float:
-        return S / 100 * self.gamma(is_call, S, K, T, r, b, v, dS=dS)
+        return self.gamma(S, K, T, r, b, v, dS=dS) * S / 100
 
     def vegap(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -293,11 +281,10 @@ class NumericGreeks:
             *,
             dv: float = 0.001,
     ) -> float:
-        return self.vega(is_call, S, K, T, r, b, v, dv=dv) * v * 10
+        return self.vega(S, K, T, r, b, v, dv=dv) * v * 10
 
     def vanna(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -312,7 +299,6 @@ class NumericGreeks:
         price and a change in the volatility.
 
         Args:
-            is_call (bool): True if the option is a call, false for a put.
             S (float): The asset price.
             K (float): The strike price.
             T (float): The time to expiry in years.
@@ -327,15 +313,14 @@ class NumericGreeks:
         """
         # Also known as DdeltaDvol
         return (
-            self.price(is_call, S + dS, K, T, r, b, v + dv) -
-            self.price(is_call, S + dS, K, T, r, b, v - dv) -
-            self.price(is_call, S - dS, K, T, r, b, v + dv) +
-            self.price(is_call, S - dS, K, T, r, b, v - dv)
+            self.price(S + dS, K, T, r, b, v + dv)
+            - self.price(S + dS, K, T, r, b, v - dv)
+            - self.price(S - dS, K, T, r, b, v + dv)
+            + self.price(S - dS, K, T, r, b, v - dv)
         ) / (4 * dS) / dv
 
     def charm(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -352,7 +337,6 @@ class NumericGreeks:
         Also known as DdeltaDtime.
 
         Args:
-            is_call (bool): True if the option is a call, false for a put.
             S (float): The asset price.
             K (float): The strike price.
             T (float): The time to expiry in years.
@@ -367,15 +351,14 @@ class NumericGreeks:
         """
         # Also known as DdeltaDtime
         return (
-            self.price(is_call, S + dS, K, T + dT, r, b, v) -
-            self.price(is_call, S + dS, K, T - dT, r, b, v) -
-            self.price(is_call, S - dS, K, T + dT, r, b, v) +
-            self.price(is_call, S - dS, K, T - dT, r, b, v)
+            self.price(S + dS, K, T + dT, r, b, v)
+            - self.price(S + dS, K, T - dT, r, b, v)
+            - self.price(S - dS, K, T + dT, r, b, v)
+            + self.price(S - dS, K, T - dT, r, b, v)
         ) / (4 * dS) / -dT
 
     def dgamma_dvol(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -387,17 +370,16 @@ class NumericGreeks:
             dv: float = 0.001
     ) -> float:
         return (
-            self.price(is_call, S + dS, K, T, r, b, v + dv) -
-            2 * self.price(is_call, S, K, T, r, b, v + dv) +
-            self.price(is_call, S - dS, K, T, r, b, v + dv) -
-            self.price(is_call, S + dS, K, T, r, b, v - dv) +
-            2 * self.price(is_call, S, K, T, r, b, v - dv) -
-            self.price(is_call, S - dS, K, T, r, b, v - dv)
+            self.price(S + dS, K, T, r, b, v + dv)
+            - 2 * self.price(S, K, T, r, b, v + dv)
+            + self.price(S - dS, K, T, r, b, v + dv)
+            - self.price(S + dS, K, T, r, b, v - dv)
+            + 2 * self.price(S, K, T, r, b, v - dv)
+            - self.price(S - dS, K, T, r, b, v - dv)
         ) / (2 * dv * dS ** 2)
 
     def vomma(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -409,14 +391,13 @@ class NumericGreeks:
     ) -> float:
         # DvegaDvol
         return (
-            self.price(is_call, S, K, T, r, b, v + dv) -
-            2 * self.price(is_call, S, K, T, r, b, v) +
-            self.price(is_call, S, K, T, r, b, v - dv)
+            self.price(S, K, T, r, b, v + dv)
+            - 2 * self.price(S, K, T, r, b, v)
+            + self.price(S, K, T, r, b, v - dv)
         ) / dv ** 2
 
     def time_gamma(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -427,14 +408,13 @@ class NumericGreeks:
             dT: float = 1 / 365,
     ) -> float:
         return (
-            self.price(is_call, S, K, T + dT, r, b, v) -
-            2 * self.price(is_call, S, K, T, r, b, v) +
-            self.price(is_call, S, K, T - dT, r, b, v)
+            self.price(S, K, T + dT, r, b, v)
+            - 2 * self.price(S, K, T, r, b, v)
+            + self.price(S, K, T - dT, r, b, v)
         ) / dT ** 2
 
     def futures_rho(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -445,13 +425,12 @@ class NumericGreeks:
             dr: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S, K, T, r + dr, b, v)
-            - self.price(is_call, S, K, T, r - dr, b, v)
+            self.price(S, K, T, r + dr, b, v)
+            - self.price(S, K, T, r - dr, b, v)
         ) / 2
 
     def rho2(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -462,13 +441,12 @@ class NumericGreeks:
             db: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S, K, T, r, b - db, v)
-            - self.price(is_call, S, K, T, r, b + db, v)
+            self.price(S, K, T, r, b - db, v)
+            - self.price(S, K, T, r, b + db, v)
         ) / 2
 
     def strike_delta(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -476,16 +454,15 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dX: float = 0.01,
+            dK: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S, K + dX, T, r, b, v)
-            - self.price(is_call, S, K - dX, T, r, b, v)
-        ) / (2 * dX)
+            self.price(S, K + dK, T, r, b, v)
+            - self.price(S, K - dK, T, r, b, v)
+        ) / (2 * dK)
 
     def strike_gamma(
             self,
-            is_call: bool,
             S: float,
             K: float,
             T: float,
@@ -493,10 +470,10 @@ class NumericGreeks:
             b: float,
             v: float,
             *,
-            dX: float = 0.01,
+            dK: float = 0.01,
     ) -> float:
         return (
-            self.price(is_call, S, K + dX, T, r, b, v)
-            - 2 * self.price(is_call, S, K, T, r, b, v)
-            + self.price(is_call, S, K - dX, T, r, b, v)
-        ) / dX ** 2
+            self.price(S, K + dK, T, r, b, v)
+            - 2 * self.price(S, K, T, r, b, v)
+            + self.price(S, K - dK, T, r, b, v)
+        ) / dK ** 2

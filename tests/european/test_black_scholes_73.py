@@ -2,6 +2,8 @@
 
 from jetblack_options.european.black_scholes_73 import (
     price,
+    make_bumper,
+    ivol,
     delta,
     gamma,
     theta,
@@ -9,12 +11,16 @@ from jetblack_options.european.black_scholes_73 import (
     rho,
     vanna,
     charm,
-    vomma,
-    ivol
+    vomma
 )
 from jetblack_options.numeric_greeks.without_carry import NumericGreeks
 
 from ..utils import is_close_to
+
+ng = {
+    is_call: make_bumper(is_call)
+    for is_call in (True, False)
+}
 
 
 def test_price():
@@ -46,7 +52,6 @@ def test_ivol():
 
 
 def test_delta():
-    ng = NumericGreeks(price)
 
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 0.9543127330810848),
@@ -59,12 +64,12 @@ def test_delta():
         analytic = delta(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.delta(is_call, S, K, T, r, v)
+        numeric = ng[is_call].delta(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-6)
 
 
 def test_gamma():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 0.009868587816478383),
         (False, 110, 100, 0.1, 6/12, 0.125, 0.009868587816478383),
@@ -76,12 +81,12 @@ def test_gamma():
         analytic = gamma(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.gamma(is_call, S, K, T, r, v)
+        numeric = ng[is_call].gamma(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-6)
 
 
 def test_theta():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, -9.923709143900409),
         (False, 110, 100, 0.1, 6/12, 0.125, -0.41141489889326743),
@@ -93,12 +98,12 @@ def test_theta():
         analytic = theta(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.theta(is_call, S, K, T, r, v)
+        numeric = ng[is_call].theta(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
 def test_vega():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 7.463119536211778),
         (False, 110, 100, 0.1, 6/12, 0.125, 7.463119536211778),
@@ -110,12 +115,12 @@ def test_vega():
         analytic = vega(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vega(is_call, S, K, T, r, v)
+        numeric = ng[is_call].vega(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-3)
 
 
 def test_rho():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, T, v, expected in [
         (True, 110, 100, 0.1, 6/12, 0.125, 44.954096009369676),
         (False, 110, 100, 0.1, 6/12, 0.125, -2.6073752156660236),
@@ -127,12 +132,12 @@ def test_rho():
         analytic = rho(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.rho(is_call, S, K, T, r, v)
+        numeric = ng[is_call].rho(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
 def test_vanna():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, -1.2280022470048304),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, -1.2280022470048304),
@@ -144,12 +149,12 @@ def test_vanna():
         analytic = vanna(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vanna(is_call, S, K, T, r, v)
+        numeric = ng[is_call].vanna(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-4)
 
 
 def test_charm():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.044945814894341574),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 0.044945814894341574),
@@ -161,12 +166,12 @@ def test_charm():
         analytic = charm(is_call, S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.charm(is_call, S, K, T, r, v)
+        numeric = ng[is_call].charm(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-5)
 
 
 def test_vomma():
-    ng = NumericGreeks(price)
+
     for is_call, S, K, r, q, T, v, expected in [
         (True, 110, 100, 0.1, 0.08, 6/12, 0.125, 161.24953775897959),
         (False, 110, 100, 0.1, 0.08, 6/12, 0.125, 161.24953775897959),
@@ -178,5 +183,5 @@ def test_vomma():
         analytic = vomma(S, K, T, r, v)
         assert is_close_to(analytic, expected, 1e-12)
 
-        numeric = ng.vomma(is_call, S, K, T, r, v)
+        numeric = ng[is_call].vomma(S, K, T, r, v)
         assert is_close_to(numeric, analytic, 1e-2)

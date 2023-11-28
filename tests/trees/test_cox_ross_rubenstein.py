@@ -1,9 +1,20 @@
 """Tests for Cox-Ross-Rubenstein"""
 
-from jetblack_options.trees.cox_ross_rubinstein import price
-from jetblack_options.numeric_greeks.with_carry import NumericGreeks
+from jetblack_options.trees.cox_ross_rubinstein import (
+    price,
+    make_bumper
+)
 
 from ..utils import is_close_to
+
+
+ng = {
+    is_european: {
+        is_call: make_bumper(is_european, is_call, 100)
+        for is_call in (True, False)
+    }
+    for is_european in (True, False)
+}
 
 
 def test_price():
@@ -38,15 +49,12 @@ def test_delta():
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, -0.7946365471511285),
     ]:
         b = r - q
-        ng = NumericGreeks(
-            lambda is_call, S, K, T, r, b, v:
-                price(is_european, is_call, S, K, T, r, b, v, 100)
-        )
-        numeric = ng.delta(is_call, S, K, T, r, b, v)
+        numeric = ng[is_european][is_call].delta(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_gamma():
+
     for is_european, is_call, S, K, r, q, T, v, expected in [
         (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, -5.3290705182007514e-11),
         (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, 1.6653345369377348e-11),
@@ -56,15 +64,12 @@ def test_gamma():
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 1.0658141036401503e-10),
     ]:
         b = r - q
-        ng = NumericGreeks(
-            lambda is_call, S, K, T, r, b, v:
-                price(is_european, is_call, S, K, T, r, b, v, 100)
-        )
-        numeric = ng.gamma(is_call, S, K, T, r, b, v)
+        numeric = ng[is_european][is_call].gamma(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_theta():
+
     for is_european, is_call, S, K, r, q, T, v, expected in [
         (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, -2.4761276405278343),
         (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, -1.4187804088872178),
@@ -72,16 +77,13 @@ def test_theta():
         (True, False, 100, 100, 0.1, 0.08, 6/12, 0.125, -2.2064322687333013),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 0.34573941621434123),
     ]:
-        ng = NumericGreeks(
-            lambda is_call, S, K, T, r, b, v:
-                price(is_european, is_call, S, K, T, r, b, v, 100)
-        )
         b = r - q
-        numeric = ng.theta(is_call, S, K, T, r, b, v)
+        numeric = ng[is_european][is_call].theta(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_vega():
+
     for is_european, is_call, S, K, r, q, T, v, expected in [
         (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, 13.589147303977533),
         (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, 13.589147303972009),
@@ -90,16 +92,13 @@ def test_vega():
         (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 17.34480813834477),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, 17.34480813833894),
     ]:
-        ng = NumericGreeks(
-            lambda is_call, S, K, T, r, b, v:
-                price(is_european, is_call, S, K, T, r, b, v, 100)
-        )
         b = r - q
-        numeric = ng.vega(is_call, S, K, T, r, b, v)
+        numeric = ng[is_european][is_call].vega(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
 
 
 def test_rho():
+
     for is_european, is_call, S, K, r, q, T, v, expected in [
         (True, True, 110, 100, 0.1, 0.08, 6/12, 0.125, 41.58039938613545),
         (True, False, 110, 100, 0.1, 0.08, 6/12, 0.125, -5.981073820944649),
@@ -108,10 +107,6 @@ def test_rho():
         (True, True, 100, 110, 0.1, 0.08, 6/12, 0.125, 8.165255681767846),
         (True, False, 100, 110, 0.1, 0.08, 6/12, 0.125, -44.152364845996495),
     ]:
-        ng = NumericGreeks(
-            lambda is_call, S, K, T, r, b, v:
-                price(is_european, is_call, S, K, T, r, b, v, 100)
-        )
         b = r - q
-        numeric = ng.rho(is_call, S, K, T, r, b, v)
+        numeric = ng[is_european][is_call].rho(S, K, T, r, b, v)
         assert is_close_to(numeric, expected, 1e-12)
