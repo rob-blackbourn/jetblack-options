@@ -8,6 +8,14 @@ export const coxRossRubenstein: ModelRoute = {
   description: 'Cox-Ross-Rubenstein binomial tree',
   fields: [
     {
+      label: 'Option Style',
+      field: 'isEuropean',
+      type: 'boolean',
+      trueOption: 'European',
+      falseOption: 'American',
+      defaultValue: true
+    } as BooleanFieldDefinition,
+    {
       label: 'Option Type',
       field: 'isCall',
       type: 'boolean',
@@ -40,8 +48,8 @@ export const coxRossRubenstein: ModelRoute = {
       defaultValue: 0.005
     } as NumberFieldDefinition,
     {
-      label: 'Dividend Yield',
-      field: 'dividendYield',
+      label: 'Cost of Carry',
+      field: 'costOfCarry',
       type: 'number',
       defaultValue: 0.002
     } as NumberFieldDefinition,
@@ -53,14 +61,15 @@ export const coxRossRubenstein: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.trees.cox_ross_rubinstein',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_dividend_yield',
+  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
+    'isEuropean',
     'isCall',
     'assetPrice',
     'strikePrice',
     'timeToExpiry',
     'riskFreeRate',
-    'dividendYield',
+    'costOfCarry',
     'volatility'
   ],
   greeksPrototypes: {
