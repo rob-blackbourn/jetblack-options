@@ -63,7 +63,7 @@ export const garmanKohlhagen: ModelRoute = {
     'quoteRiskFreeRate',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: null,
     gamma: null,
     theta: null,

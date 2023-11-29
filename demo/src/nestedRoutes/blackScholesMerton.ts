@@ -63,7 +63,7 @@ export const blackScholesMerton: ModelRoute = {
     'dividendYield',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: [
       'isCall',
       'assetPrice',

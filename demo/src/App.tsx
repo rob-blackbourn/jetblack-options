@@ -70,7 +70,7 @@ function App() {
                       path,
                       fields,
                       pricePrototype,
-                      greeksPrototypes,
+                      analyticsPrototypes: greeksPrototypes,
                       analyticImportPath,
                       bumpFactoryPrototype,
                       bumpPrototype,
@@ -82,7 +82,7 @@ function App() {
                         element={
                           <OptionRunner
                             fields={fields}
-                            priceArgs={pricePrototype}
+                            pricePrototype={pricePrototype}
                             analyticsArgs={greeksPrototypes}
                             analyticImportPath={analyticImportPath}
                             bumpFactoryPrototype={bumpFactoryPrototype}

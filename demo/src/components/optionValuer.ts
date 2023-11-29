@@ -5,8 +5,8 @@ export function valueOption(
   pyodide: PyodideInterface,
   args: object,
   analyticImportPath: string,
-  priceArgNames: string[],
-  analyticGreeks: Record<string, string[] | null>,
+  pricePrototype: string[],
+  analyticsPrototypes: Record<string, string[] | null>,
   bumpFactoryPrototype: string[],
   bumpPrototype: string[]
 ): OptionResults {
@@ -15,12 +15,12 @@ export function valueOption(
   const analyticImports = [
     'price',
     'make_bumper',
-    ...Object.entries(analyticGreeks)
+    ...Object.entries(analyticsPrototypes)
       .filter(([, args]) => args != null)
       .map(([name]) => name)
   ].join(', ')
 
-  const analyticValuations = `{ ${Object.entries(analyticGreeks)
+  const analyticValuations = `{ ${Object.entries(analyticsPrototypes)
     .map(([greek, args]) =>
       args == null
         ? `'${greek}': None`
@@ -41,12 +41,12 @@ analytics = ${analyticValuations}
 
 ng = make_bumper(${bumpFactoryPrototype.join(', ')})
 
-numerics = { ${Object.keys(analyticGreeks).map(
+numerics = { ${Object.keys(analyticsPrototypes).map(
     greek => `'${greek}': ng.${greek}(${bumpPrototype.join(', ')})`
   )} }
 
 {
-    'price': price(${priceArgNames.join(', ')}),
+    'price': price(${pricePrototype.join(', ')}),
     'analytic': analytics,
     'numeric': numerics,
 }`
@@ -59,11 +59,11 @@ numerics = { ${Object.keys(analyticGreeks).map(
   const numeric = dct.get('numeric')
   const optionResults: OptionResults = {
     price: dct.get('price'),
-    analytic: Object.keys(analyticGreeks).reduce(
+    analytic: Object.keys(analyticsPrototypes).reduce(
       (obj, key) => ({ ...obj, [key]: analytic.get(key) }),
       {}
     ),
-    numeric: Object.keys(analyticGreeks).reduce(
+    numeric: Object.keys(analyticsPrototypes).reduce(
       (obj, key) => ({ ...obj, [key]: numeric.get(key) }),
       {}
     )

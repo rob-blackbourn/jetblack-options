@@ -7,7 +7,7 @@ export interface ModelRoute {
   fields: FieldDefinition[]
   analyticImportPath: string
   pricePrototype: string[]
-  greeksPrototypes: Record<string, string[] | null>
+  analyticsPrototypes: Record<string, string[] | null>
   bumpFactoryPrototype: string[]
   bumpPrototype: string[]
 }

@@ -56,7 +56,7 @@ const blackScholes73: ModelRoute = {
     'riskFreeRate',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: [
       'isCall',
       'assetPrice',

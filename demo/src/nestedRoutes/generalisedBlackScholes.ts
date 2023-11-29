@@ -62,7 +62,7 @@ export const generalisedBlackScholes: ModelRoute = {
     'costOfCarry',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: [
       'isCall',
       'assetPrice',

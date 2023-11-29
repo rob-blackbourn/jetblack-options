@@ -56,7 +56,7 @@ const black76: ModelRoute = {
     'riskFreeRate',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: [
       'isCall',
       'assetPrice',

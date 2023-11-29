@@ -63,7 +63,7 @@ export const baroneAdesiWhaley: ModelRoute = {
     'costOfCarry',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: null,
     gamma: null,
     theta: null,

@@ -62,7 +62,7 @@ export const bjerksundStensland1993: ModelRoute = {
     'costOfCarry',
     'volatility'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: null,
     gamma: null,
     theta: null,

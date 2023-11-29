@@ -25,7 +25,7 @@ import {
 
 export interface OptionRunnerProps {
   fields: FieldDefinition[]
-  priceArgs: string[]
+  pricePrototype: string[]
   analyticsArgs: Record<string, string[] | null>
   analyticImportPath: string
   bumpFactoryPrototype: string[]
@@ -35,7 +35,7 @@ export interface OptionRunnerProps {
 
 const OptionRunner: React.FC<OptionRunnerProps> = ({
   fields,
-  priceArgs,
+  pricePrototype,
   analyticsArgs,
   analyticImportPath,
   bumpFactoryPrototype,
@@ -115,7 +115,7 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
         pyodide,
         args,
         analyticImportPath,
-        priceArgs,
+        pricePrototype,
         analyticsArgs,
         bumpFactoryPrototype,
         bumpPrototype
@@ -132,7 +132,7 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
     analyticsArgs,
     bumpFactoryPrototype,
     bumpPrototype,
-    priceArgs
+    pricePrototype
   ])
 
   if (!(pyodide && isRequirementsLoaded)) {

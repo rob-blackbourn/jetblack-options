@@ -78,7 +78,7 @@ export const coxRossRubenstein: ModelRoute = {
     'volatility',
     'steps'
   ],
-  greeksPrototypes: {
+  analyticsPrototypes: {
     delta: null,
     gamma: null,
     theta: null,
