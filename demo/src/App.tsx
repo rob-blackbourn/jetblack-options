@@ -60,7 +60,7 @@ function App() {
       <CssBaseline />
       <PyodideProvider requirements={['jetblack-options']}>
         <Container maxWidth="md" sx={{ width: '100%' }}>
-          <BrowserRouter>
+          <BrowserRouter basename="/jetblack-options">
             <Suspense fallback={<Loading />}>
               <Routes>
                 <Route path="/" element={<Layout />}>
