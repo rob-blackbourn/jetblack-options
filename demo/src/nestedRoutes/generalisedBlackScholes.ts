@@ -53,7 +53,6 @@ export const generalisedBlackScholes: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.european.generalised_black_scholes',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
     'isCall',
     'assetPrice',
@@ -107,7 +106,16 @@ export const generalisedBlackScholes: ModelRoute = {
       'costOfCarry',
       'volatility'
     ]
-  }
+  },
+  bumpFactoryPrototype: ['isCall'],
+  bumpPrototype: [
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'costOfCarry',
+    'volatility'
+  ]
 }
 
 export default generalisedBlackScholes

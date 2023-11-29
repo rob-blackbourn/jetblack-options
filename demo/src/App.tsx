@@ -72,7 +72,8 @@ function App() {
                       pricePrototype,
                       greeksPrototypes,
                       analyticImportPath,
-                      numericImportPath,
+                      bumpFactoryPrototype,
+                      bumpPrototype,
                       description
                     }) => (
                       <Route
@@ -84,7 +85,8 @@ function App() {
                             priceArgs={pricePrototype}
                             analyticsArgs={greeksPrototypes}
                             analyticImportPath={analyticImportPath}
-                            numericImportPath={numericImportPath}
+                            bumpFactoryPrototype={bumpFactoryPrototype}
+                            bumpPrototype={bumpPrototype}
                             description={description}
                           />
                         }

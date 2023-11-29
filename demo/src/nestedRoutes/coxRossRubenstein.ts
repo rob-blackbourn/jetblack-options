@@ -58,10 +58,15 @@ export const coxRossRubenstein: ModelRoute = {
       field: 'volatility',
       type: 'number',
       defaultValue: 0.25
+    } as NumberFieldDefinition,
+    {
+      label: 'Steps',
+      field: 'steps',
+      type: 'number',
+      defaultValue: 200
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.trees.cox_ross_rubinstein',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
     'isEuropean',
     'isCall',
@@ -70,7 +75,8 @@ export const coxRossRubenstein: ModelRoute = {
     'timeToExpiry',
     'riskFreeRate',
     'costOfCarry',
-    'volatility'
+    'volatility',
+    'steps'
   ],
   greeksPrototypes: {
     delta: null,
@@ -78,7 +84,16 @@ export const coxRossRubenstein: ModelRoute = {
     theta: null,
     vega: null,
     rho: null
-  }
+  },
+  bumpFactoryPrototype: ['isEuropean', 'isCall', 'steps'],
+  bumpPrototype: [
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'costOfCarry',
+    'volatility'
+  ]
 }
 
 export default coxRossRubenstein

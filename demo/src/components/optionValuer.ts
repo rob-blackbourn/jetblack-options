@@ -5,14 +5,16 @@ export function valueOption(
   pyodide: PyodideInterface,
   args: object,
   analyticImportPath: string,
-  numericImportPath: string,
   priceArgNames: string[],
-  analyticGreeks: Record<string, string[] | null>
+  analyticGreeks: Record<string, string[] | null>,
+  bumpFactoryPrototype: string[],
+  bumpPrototype: string[]
 ): OptionResults {
   const locals = pyodide.toPy({ args })
 
   const analyticImports = [
     'price',
+    'make_bumper',
     ...Object.entries(analyticGreeks)
       .filter(([, args]) => args != null)
       .map(([name]) => name)
@@ -32,16 +34,15 @@ export function valueOption(
 
   const script = `
 from ${analyticImportPath} import (${analyticImports})
-from ${numericImportPath} import NumericGreeks
 
 ${extractArgs}
 
 analytics = ${analyticValuations}
 
-ng = NumericGreeks(price)
+ng = make_bumper(${bumpFactoryPrototype.join(', ')})
 
 numerics = { ${Object.keys(analyticGreeks).map(
-    greek => `'${greek}': ng.${greek}(${priceArgNames.join(', ')})`
+    greek => `'${greek}': ng.${greek}(${bumpPrototype.join(', ')})`
   )} }
 
 {

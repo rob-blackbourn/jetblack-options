@@ -54,7 +54,6 @@ export const garmanKohlhagen: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.european.garman_kolhagen',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_dividend_yield',
   pricePrototype: [
     'isCall',
     'assetPrice',
@@ -70,7 +69,16 @@ export const garmanKohlhagen: ModelRoute = {
     theta: null,
     vega: null,
     rho: null
-  }
+  },
+  bumpFactoryPrototype: ['isCall'],
+  bumpPrototype: [
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'quoteRiskFreeRate',
+    'volatility'
+  ]
 }
 
 export default garmanKohlhagen

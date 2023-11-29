@@ -54,7 +54,6 @@ export const blackScholesMerton: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.european.black_scholes_merton',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_dividend_yield',
   pricePrototype: [
     'isCall',
     'assetPrice',
@@ -108,7 +107,16 @@ export const blackScholesMerton: ModelRoute = {
       'dividendYield',
       'volatility'
     ]
-  }
+  },
+  bumpFactoryPrototype: ['isCall'],
+  bumpPrototype: [
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'dividendYield',
+    'volatility'
+  ]
 }
 
 export default blackScholesMerton

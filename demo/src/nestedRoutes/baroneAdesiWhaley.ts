@@ -54,7 +54,6 @@ export const baroneAdesiWhaley: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.american.barone_adesi_whaley',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
     'isCall',
     'assetPrice',
@@ -70,7 +69,16 @@ export const baroneAdesiWhaley: ModelRoute = {
     theta: null,
     vega: null,
     rho: null
-  }
+  },
+  bumpFactoryPrototype: ['isCall'],
+  bumpPrototype: [
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'costOfCarry',
+    'volatility'
+  ]
 }
 
 export default baroneAdesiWhaley

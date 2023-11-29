@@ -28,7 +28,8 @@ export interface OptionRunnerProps {
   priceArgs: string[]
   analyticsArgs: Record<string, string[] | null>
   analyticImportPath: string
-  numericImportPath: string
+  bumpFactoryPrototype: string[]
+  bumpPrototype: string[]
   description: string
 }
 
@@ -37,7 +38,8 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   priceArgs,
   analyticsArgs,
   analyticImportPath,
-  numericImportPath,
+  bumpFactoryPrototype,
+  bumpPrototype,
   description
 }) => {
   const [args, setArgs] = useState<
@@ -113,9 +115,10 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
         pyodide,
         args,
         analyticImportPath,
-        numericImportPath,
         priceArgs,
-        analyticsArgs
+        analyticsArgs,
+        bumpFactoryPrototype,
+        bumpPrototype
       )
       setGreeks(optionResults)
     } catch (error) {
@@ -126,8 +129,9 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
     isRequirementsLoaded,
     args,
     analyticImportPath,
-    numericImportPath,
     analyticsArgs,
+    bumpFactoryPrototype,
+    bumpPrototype,
     priceArgs
   ])
 

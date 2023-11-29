@@ -48,7 +48,6 @@ const blackScholes73: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.european.black_scholes_73',
-  numericImportPath: 'jetblack_options.numeric_greeks.without_carry',
   pricePrototype: [
     'isCall',
     'assetPrice',
@@ -96,7 +95,15 @@ const blackScholes73: ModelRoute = {
       'riskFreeRate',
       'volatility'
     ]
-  }
+  },
+  bumpFactoryPrototype: ['isCall'],
+  bumpPrototype: [
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'volatility'
+  ]
 }
 
 export default blackScholes73

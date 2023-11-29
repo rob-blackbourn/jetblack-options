@@ -3,6 +3,8 @@
 from math import exp, log, sqrt
 from statistics import NormalDist
 
+from ..numeric_greeks.with_dividend_yield import NumericGreeks
+
 norm = NormalDist()
 cdf = norm.cdf
 pdf = norm.pdf
@@ -33,10 +35,16 @@ def price(
         float: _description_
     """
     # Garman and Kolhagen (1983) Currency options
-                
+
     d1 = (log(S / K) + (r - rf + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
     if is_call:
         return S * exp(-rf * T) * cdf(d1) - K * exp(-r * T) * cdf(d2)
     else:
         return K * exp(-r * T) * cdf(-d2) - S * exp(-rf * T) * cdf(-d1)
+
+
+def make_bumper(is_call: bool) -> NumericGreeks:
+    def evaluate(S: float, K: float, T: float, r: float, rf: float, v: float) -> float:
+        return price(is_call, S, K, T, r, rf, v)
+    return NumericGreeks(evaluate)

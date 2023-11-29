@@ -53,7 +53,6 @@ export const bjerksundStensland1993: ModelRoute = {
     } as NumberFieldDefinition
   ],
   analyticImportPath: 'jetblack_options.american.bjerksund_stensland_1993',
-  numericImportPath: 'jetblack_options.numeric_greeks.with_carry',
   pricePrototype: [
     'isCall',
     'assetPrice',
@@ -69,7 +68,17 @@ export const bjerksundStensland1993: ModelRoute = {
     theta: null,
     vega: null,
     rho: null
-  }
+  },
+  bumpFactoryPrototype: ['isCall'],
+  bumpPrototype: [
+    'isCall',
+    'assetPrice',
+    'strikePrice',
+    'timeToExpiry',
+    'riskFreeRate',
+    'costOfCarry',
+    'volatility'
+  ]
 }
 
 export default bjerksundStensland1993
