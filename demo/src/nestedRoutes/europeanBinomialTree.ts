@@ -61,7 +61,8 @@ export const europeanBinomialTree: ModelRoute = {
     'timeToExpiry',
     'riskFreeRate',
     'costOfCarry',
-    'volatility'
+    'volatility',
+    'steps'
   ],
   analyticsPrototypes: {
     delta: null,
@@ -70,7 +71,7 @@ export const europeanBinomialTree: ModelRoute = {
     vega: null,
     rho: null
   },
-  bumpFactoryPrototype: ['isCall'],
+  bumpFactoryPrototype: ['isCall', 'steps'],
   bumpPrototype: [
     'assetPrice',
     'strikePrice',
