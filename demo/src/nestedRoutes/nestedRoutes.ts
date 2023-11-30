@@ -9,6 +9,10 @@ import baroneAdesiWhaley from './baroneAdesiWhaley'
 import bjerksundStensland1993 from './bjerksundStensland1993'
 import bjerksundStensland2002 from './bjerksundStensland2002'
 import coxRossRubenstein from './coxRossRubenstein'
+import europeanBinomialTree from './europeanBinomialTree'
+import jarrowRudd from './jarrowRudd'
+import leisenReimer from './leisenReimer'
+import trinomialTree from './trinomialTree'
 
 export const routes: ModelRoute[] = [
   blackScholes73,
@@ -19,5 +23,9 @@ export const routes: ModelRoute[] = [
   baroneAdesiWhaley,
   bjerksundStensland1993,
   bjerksundStensland2002,
-  coxRossRubenstein
+  coxRossRubenstein,
+  europeanBinomialTree,
+  jarrowRudd,
+  leisenReimer,
+  trinomialTree
 ]
