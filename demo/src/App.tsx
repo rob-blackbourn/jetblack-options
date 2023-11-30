@@ -1,11 +1,8 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 
 import {
-  BrowserRouter,
-  Route,
   Link as RouterLink,
-  LinkProps as RouterLinkProps,
-  Routes
+  LinkProps as RouterLinkProps
 } from 'react-router-dom'
 import { LinkProps } from '@mui/material/Link'
 
@@ -14,15 +11,9 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 import { PyodideProvider } from './components/PythonContext'
-import Loading from './components/Loading'
 import { PyodideInterface } from 'pyodide'
 
-import Layout from './pages/Layout'
-import Home from './pages/Home'
-import NotFound from './pages/NotFound'
-import OptionRunner from './components/OptionRunner'
-
-import { routes } from './nestedRoutes'
+import RoutedApp from './RoutedApp'
 
 declare global {
   interface Window {
@@ -60,44 +51,7 @@ function App() {
       <CssBaseline />
       <PyodideProvider requirements={['jetblack-options']}>
         <Container maxWidth="md" sx={{ width: '100%' }}>
-          <BrowserRouter basename="/jetblack-options">
-            <Suspense fallback={<Loading />}>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Home />} />
-                  {routes.map(
-                    ({
-                      path,
-                      fields,
-                      pricePrototype,
-                      analyticsPrototypes: greeksPrototypes,
-                      analyticImportPath,
-                      bumpFactoryPrototype,
-                      bumpPrototype,
-                      description
-                    }) => (
-                      <Route
-                        key={path}
-                        path={path}
-                        element={
-                          <OptionRunner
-                            fields={fields}
-                            pricePrototype={pricePrototype}
-                            analyticsArgs={greeksPrototypes}
-                            analyticImportPath={analyticImportPath}
-                            bumpFactoryPrototype={bumpFactoryPrototype}
-                            bumpPrototype={bumpPrototype}
-                            description={description}
-                          />
-                        }
-                      />
-                    )
-                  )}
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
+          <RoutedApp />
         </Container>
       </PyodideProvider>
     </ThemeProvider>
