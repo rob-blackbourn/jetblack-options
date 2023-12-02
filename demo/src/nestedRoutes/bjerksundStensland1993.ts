@@ -71,7 +71,6 @@ export const bjerksundStensland1993: ModelRoute = {
   },
   bumpFactoryPrototype: ['isCall'],
   bumpPrototype: [
-    'isCall',
     'assetPrice',
     'strikePrice',
     'timeToExpiry',

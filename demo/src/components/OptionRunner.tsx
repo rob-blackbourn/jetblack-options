@@ -30,6 +30,7 @@ export interface OptionRunnerProps {
   analyticImportPath: string
   bumpFactoryPrototype: string[]
   bumpPrototype: string[]
+  name: string
   description: string
 }
 
@@ -40,6 +41,7 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   analyticImportPath,
   bumpFactoryPrototype,
   bumpPrototype,
+  name,
   description
 }) => {
   const [args, setArgs] = useState<
@@ -57,7 +59,9 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   console.log({ fields, args })
 
   useEffect(() => {
-    console.log('Setting field props')
+    if (!args) {
+      return
+    }
 
     const toNumberFieldProps = ({
       label,
@@ -96,7 +100,10 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   }, [fields, args])
 
   useEffect(() => {
-    console.log('pyodide', args)
+    if (!args) {
+      return
+    }
+
     if (
       !(
         pyodide &&
@@ -146,6 +153,7 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   return (
     <Stack direction="column" spacing={2}>
       <Box>
+        <Typography variant="h4">{name}</Typography>
         <Typography variant="body1">{description}</Typography>
       </Box>
 

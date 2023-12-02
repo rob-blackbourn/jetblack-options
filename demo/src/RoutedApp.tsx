@@ -27,6 +27,7 @@ function RoutedApp() {
                 analyticImportPath,
                 bumpFactoryPrototype,
                 bumpPrototype,
+                name,
                 description
               }) => (
                 <Route
@@ -40,6 +41,7 @@ function RoutedApp() {
                       analyticImportPath={analyticImportPath}
                       bumpFactoryPrototype={bumpFactoryPrototype}
                       bumpPrototype={bumpPrototype}
+                      name={name}
                       description={description}
                     />
                   }
