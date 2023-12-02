@@ -15,13 +15,15 @@ export const generalisedBlackScholes: ModelRoute = {
         component: componentTypes.SWITCH,
         onText: 'Call',
         offText: 'Put',
-        initialValue: true
+        initialValue: true,
+        dataType: 'boolean'
       },
       {
         name: 'assetPrice',
         label: 'Asset Price',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -34,6 +36,7 @@ export const generalisedBlackScholes: ModelRoute = {
         label: 'Strike Price',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -46,6 +49,7 @@ export const generalisedBlackScholes: ModelRoute = {
         label: 'Time To Expiry',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -58,6 +62,7 @@ export const generalisedBlackScholes: ModelRoute = {
         label: 'Risk Free Rate',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -70,6 +75,7 @@ export const generalisedBlackScholes: ModelRoute = {
         label: 'Time To Expiry',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -82,6 +88,7 @@ export const generalisedBlackScholes: ModelRoute = {
         label: 'Volatility',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED

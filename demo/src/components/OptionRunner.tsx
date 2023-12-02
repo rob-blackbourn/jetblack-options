@@ -86,19 +86,18 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   }
 
   return (
-    <Stack direction="column" spacing={2}>
-      <Grid spacing={4} container>
-        <FormRenderer
-          componentMapper={componentMapper}
-          FormTemplate={FormTemplateCanReset}
-          schema={schema}
-          onSubmit={args => handleSubmit(args)}
-          onCancel={() => console.log('Cancel action')}
-        />
-      </Grid>
+    <Grid spacing={4} container>
+      <FormRenderer
+        componentMapper={componentMapper}
+        FormTemplate={FormTemplateCanReset}
+        schema={schema}
+        onSubmit={args => handleSubmit(args)}
+      />
 
-      {greeks && <OptionResultView optionResults={greeks} />}
-    </Stack>
+      {greeks && (
+        <OptionResultView optionResults={greeks} sx={{ marginLeft: 4 }} />
+      )}
+    </Grid>
   )
 }
 

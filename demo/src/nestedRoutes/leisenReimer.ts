@@ -30,6 +30,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Asset Price',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -42,6 +43,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Strike Price',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -54,6 +56,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Time To Expiry',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -66,6 +69,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Risk Free Rate',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -78,6 +82,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Time To Expiry',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -90,6 +95,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Volatility',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED
@@ -102,6 +108,7 @@ export const leisenReimer: ModelRoute = {
         label: 'Steps',
         component: componentTypes.TEXT_FIELD,
         type: 'number',
+        dataType: 'number',
         validate: [
           {
             type: validatorTypes.REQUIRED

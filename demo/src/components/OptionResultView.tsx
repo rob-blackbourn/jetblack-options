@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { OptionResults } from './types'
+import { SxProps, Theme } from '@mui/material'
 
 const formatNumber = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 5,
@@ -37,13 +38,15 @@ const calcPercentageDiff = (
 
 export interface OptionResultViewProps {
   optionResults: OptionResults
+  sx?: SxProps<Theme>
 }
 
 const OptionResultView: React.FC<OptionResultViewProps> = ({
-  optionResults
+  optionResults,
+  sx = {}
 }) => {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={sx}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
         <TableHead>
           <TableRow>
