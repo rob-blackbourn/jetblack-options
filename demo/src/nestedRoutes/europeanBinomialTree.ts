@@ -1,58 +1,97 @@
-import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types'
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types'
 
 import { ModelRoute } from './types'
 
 export const europeanBinomialTree: ModelRoute = {
   path: '/european-binomial-tree',
-  name: 'European Binomial Tree',
-  description:
-    'A binomial tree model for pricing European options using cost of carry.',
-  fields: [
-    {
-      label: 'Option Type',
-      field: 'isCall',
-      type: 'boolean',
-      trueOption: 'Call',
-      falseOption: 'Put',
-      defaultValue: true
-    } as BooleanFieldDefinition,
-    {
-      label: 'Asset Price',
-      field: 'assetPrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Strike Price',
-      field: 'strikePrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Time To Expiry',
-      field: 'timeToExpiry',
-      type: 'number',
-      defaultValue: 0.5
-    } as NumberFieldDefinition,
-    {
-      label: 'Risk Free Rate',
-      field: 'riskFreeRate',
-      type: 'number',
-      defaultValue: 0.005
-    } as NumberFieldDefinition,
-    {
-      label: 'Carry Rate',
-      field: 'costOfCarry',
-      type: 'number',
-      defaultValue: 0.003
-    } as NumberFieldDefinition,
-    {
-      label: 'Volatility',
-      field: 'volatility',
-      type: 'number',
-      defaultValue: 0.25
-    } as NumberFieldDefinition
-  ],
+  schema: {
+    title: 'European Binomial Tree',
+    description:
+      'A binomial tree model for pricing European options using cost of carry.',
+    fields: [
+      {
+        name: 'isCall',
+        label: 'Option Type',
+        component: componentTypes.SWITCH,
+        onText: 'Call',
+        offText: 'Put',
+        initialValue: true
+      },
+      {
+        name: 'assetPrice',
+        label: 'Asset Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'strikePrice',
+        label: 'Strike Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'timeToExpiry',
+        label: 'Time To Expiry',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.5
+      },
+      {
+        name: 'riskFreeRate',
+        label: 'Risk Free Rate',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.005
+      },
+      {
+        name: 'costOfCarry',
+        label: 'Time To Expiry',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.003
+      },
+      {
+        name: 'volatility',
+        label: 'Volatility',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.25
+      }
+    ]
+  },
   analyticImportPath: 'jetblack_options.trees.european_binomial',
   pricePrototype: [
     'isCall',

@@ -41,9 +41,9 @@ const Layout = () => {
             label="Page"
             onChange={handlePageChange}
           >
-            {routes.map(({ path, name }) => (
+            {routes.map(({ path, schema: { title } }) => (
               <MenuItem key={path} value={path}>
-                {name}
+                {title}
               </MenuItem>
             ))}
           </Select>

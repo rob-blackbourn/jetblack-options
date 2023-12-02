@@ -1,58 +1,97 @@
-import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types'
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types'
 
 import { ModelRoute } from './types'
 
 export const garmanKohlhagen: ModelRoute = {
   path: '/garman-kohlhagen',
-  name: 'Garman Kohlhagen',
-  description:
-    'The Garman Kohlhagen model is used to price European FX options.',
-  fields: [
-    {
-      label: 'Option Type',
-      field: 'isCall',
-      type: 'boolean',
-      trueOption: 'Call',
-      falseOption: 'Put',
-      defaultValue: true
-    } as BooleanFieldDefinition,
-    {
-      label: 'Asset Price',
-      field: 'assetPrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Strike Price',
-      field: 'strikePrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Time To Expiry',
-      field: 'timeToExpiry',
-      type: 'number',
-      defaultValue: 0.5
-    } as NumberFieldDefinition,
-    {
-      label: 'Base Yield',
-      field: 'riskFreeRate',
-      type: 'number',
-      defaultValue: 0.005
-    } as NumberFieldDefinition,
-    {
-      label: 'Quote Yield',
-      field: 'quoteRiskFreeRate',
-      type: 'number',
-      defaultValue: 0.002
-    } as NumberFieldDefinition,
-    {
-      label: 'Volatility',
-      field: 'volatility',
-      type: 'number',
-      defaultValue: 0.25
-    } as NumberFieldDefinition
-  ],
+  schema: {
+    title: 'Garman Kohlhagen',
+    description:
+      'The Garman Kohlhagen model is used to price European FX options.',
+    fields: [
+      {
+        name: 'isCall',
+        label: 'Option Type',
+        component: componentTypes.SWITCH,
+        onText: 'Call',
+        offText: 'Put',
+        initialValue: true
+      },
+      {
+        name: 'assetPrice',
+        label: 'Asset Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'strikePrice',
+        label: 'Strike Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'timeToExpiry',
+        label: 'Time To Expiry',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.5
+      },
+      {
+        name: 'riskFreeRate',
+        label: 'Base Yield',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.005
+      },
+      {
+        name: 'quoteRiskFreeRate',
+        label: 'Quote Yield',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.005
+      },
+      {
+        name: 'volatility',
+        label: 'Volatility',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.25
+      }
+    ]
+  },
   analyticImportPath: 'jetblack_options.european.garman_kolhagen',
   pricePrototype: [
     'isCall',

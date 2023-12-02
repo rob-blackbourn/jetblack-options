@@ -21,28 +21,24 @@ function RoutedApp() {
             {routes.map(
               ({
                 path,
-                fields,
+                schema,
                 pricePrototype,
                 analyticsPrototypes: greeksPrototypes,
                 analyticImportPath,
                 bumpFactoryPrototype,
-                bumpPrototype,
-                name,
-                description
+                bumpPrototype
               }) => (
                 <Route
                   key={path}
                   path={path}
                   element={
                     <OptionRunner
-                      fields={fields}
+                      schema={schema}
                       pricePrototype={pricePrototype}
                       analyticsArgs={greeksPrototypes}
                       analyticImportPath={analyticImportPath}
                       bumpFactoryPrototype={bumpFactoryPrototype}
                       bumpPrototype={bumpPrototype}
-                      name={name}
-                      description={description}
                     />
                   }
                 />
