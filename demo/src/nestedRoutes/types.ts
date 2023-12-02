@@ -1,10 +1,8 @@
-import { FieldDefinition } from '../types'
+import { Schema } from '@data-driven-forms/react-form-renderer'
 
 export interface ModelRoute {
   path: string
-  name: string
-  description: string
-  fields: FieldDefinition[]
+  schema: Schema
   analyticImportPath: string
   pricePrototype: string[]
   analyticsPrototypes: Record<string, string[] | null>

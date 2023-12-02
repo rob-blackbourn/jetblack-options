@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 
-import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 
-import DynamicForm, {
-  FieldProps,
-  NumberFieldProps,
-  RadioSwitchFieldProps
-} from './DynamicForm'
+import Grid from '@mui/material/Grid'
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer'
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types'
+import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template'
+import Switch from '@data-driven-forms/mui-component-mapper/switch'
+import TextField from '@data-driven-forms/mui-component-mapper/text-field'
+import { Schema, ComponentMapper } from '@data-driven-forms/react-form-renderer'
+import { FormTemplateCommonProps } from '@data-driven-forms/common/form-template'
 
 import OptionResultView from './OptionResultView'
 import { valueOption } from './optionValuer'
@@ -17,93 +18,36 @@ import { valueOption } from './optionValuer'
 import { PyodideContext } from './PythonContext'
 import type { OptionResults } from './types'
 
-import {
-  FieldDefinition,
-  NumberFieldDefinition,
-  BooleanFieldDefinition
-} from '../types'
-
 export interface OptionRunnerProps {
-  fields: FieldDefinition[]
+  schema: Schema
   pricePrototype: string[]
   analyticsArgs: Record<string, string[] | null>
   analyticImportPath: string
   bumpFactoryPrototype: string[]
   bumpPrototype: string[]
-  name: string
-  description: string
 }
 
+const componentMapper: ComponentMapper = {
+  [componentTypes.TEXT_FIELD]: TextField,
+  [componentTypes.SWITCH]: Switch
+}
+
+const FormTemplateCanReset = (props: FormTemplateCommonProps) => (
+  <FormTemplate {...props} />
+)
+
 const OptionRunner: React.FC<OptionRunnerProps> = ({
-  fields,
+  schema,
   pricePrototype,
   analyticsArgs,
   analyticImportPath,
   bumpFactoryPrototype,
-  bumpPrototype,
-  name,
-  description
+  bumpPrototype
 }) => {
-  const [args, setArgs] = useState<
-    Record<string, number | boolean | undefined>
-  >(
-    fields.reduce(
-      (obj, field) => ({ ...obj, [field.field]: field.defaultValue }),
-      {}
-    )
-  )
   const [greeks, setGreeks] = useState<OptionResults>()
-  const [fieldProps, setFieldProps] = useState<FieldProps[]>([])
   const { pyodide, isRequirementsLoaded } = useContext(PyodideContext)
 
-  console.log({ fields, args })
-
-  useEffect(() => {
-    if (!args) {
-      return
-    }
-
-    const toNumberFieldProps = ({
-      label,
-      field
-    }: NumberFieldDefinition): NumberFieldProps => ({
-      label,
-      type: 'number',
-      onChange: (value: number | undefined) =>
-        setArgs(state => ({ ...state, [field]: value })),
-      value: args[field] as number | undefined,
-      width: 200
-    })
-
-    const toRadioSwitchProps = ({
-      label,
-      field,
-      trueOption,
-      falseOption
-    }: BooleanFieldDefinition): RadioSwitchFieldProps => ({
-      label,
-      type: 'radio-switch',
-      trueOption,
-      falseOption,
-      onChange: (value: boolean | undefined) =>
-        setArgs(state => ({ ...state, [field]: value })),
-      value: args[field] as boolean,
-      row: true
-    })
-
-    const fieldProps: FieldProps[] = fields.map(fieldDefinition =>
-      fieldDefinition.type === 'number'
-        ? toNumberFieldProps(fieldDefinition as NumberFieldDefinition)
-        : toRadioSwitchProps(fieldDefinition as BooleanFieldDefinition)
-    )
-    setFieldProps(fieldProps)
-  }, [fields, args])
-
-  useEffect(() => {
-    if (!args) {
-      return
-    }
-
+  const handleSubmit = (args: object) => {
     if (
       !(
         pyodide &&
@@ -131,16 +75,11 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
     } catch (error) {
       console.log(error)
     }
-  }, [
-    pyodide,
-    isRequirementsLoaded,
-    args,
-    analyticImportPath,
-    analyticsArgs,
-    bumpFactoryPrototype,
-    bumpPrototype,
-    pricePrototype
-  ])
+  }
+
+  useEffect(() => {
+    setGreeks(undefined)
+  }, [schema])
 
   if (!(pyodide && isRequirementsLoaded)) {
     return (
@@ -151,16 +90,18 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
   }
 
   return (
-    <Stack direction="column" spacing={2}>
-      <Box>
-        <Typography variant="h4">{name}</Typography>
-        <Typography variant="body1">{description}</Typography>
-      </Box>
+    <Grid spacing={4} container>
+      <FormRenderer
+        componentMapper={componentMapper}
+        FormTemplate={FormTemplateCanReset}
+        schema={schema}
+        onSubmit={args => handleSubmit(args)}
+      />
 
-      <DynamicForm fields={fieldProps} direction="row" />
-
-      {greeks && <OptionResultView optionResults={greeks} />}
-    </Stack>
+      {greeks && (
+        <OptionResultView optionResults={greeks} sx={{ marginLeft: 4 }} />
+      )}
+    </Grid>
   )
 }
 

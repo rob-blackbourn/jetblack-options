@@ -1,52 +1,91 @@
-import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types'
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types'
 
 import { ModelRoute } from './types'
 
 const black76: ModelRoute = {
   path: '/black-76',
-  name: 'Black 76',
-  description:
-    'The Black model for European options on futures, bonds, and rates.',
-  fields: [
-    {
-      label: 'Option Type',
-      field: 'isCall',
-      type: 'boolean',
-      trueOption: 'Call',
-      falseOption: 'Put',
-      defaultValue: true
-    } as BooleanFieldDefinition,
-    {
-      label: 'Asset Price',
-      field: 'assetPrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Strike Price',
-      field: 'strikePrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Time To Expiry',
-      field: 'timeToExpiry',
-      type: 'number',
-      defaultValue: 0.5
-    } as NumberFieldDefinition,
-    {
-      label: 'Risk Free Rate',
-      field: 'riskFreeRate',
-      type: 'number',
-      defaultValue: 0.005
-    } as NumberFieldDefinition,
-    {
-      label: 'Volatility',
-      field: 'volatility',
-      type: 'number',
-      defaultValue: 0.25
-    } as NumberFieldDefinition
-  ],
+  schema: {
+    title: 'Black 76',
+    description:
+      'The Black model for European options on futures, bonds, and rates.',
+    fields: [
+      {
+        name: 'isCall',
+        label: 'Option Type',
+        component: componentTypes.SWITCH,
+        onText: 'Call',
+        offText: 'Put',
+        initialValue: true,
+        dataType: 'boolean'
+      },
+      {
+        name: 'assetPrice',
+        label: 'Asset Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'strikePrice',
+        label: 'Strike Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'timeToExpiry',
+        label: 'Time To Expiry',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.5
+      },
+      {
+        name: 'riskFreeRate',
+        label: 'Risk Free Rate',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.005
+      },
+      {
+        name: 'volatility',
+        label: 'Volatility',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.25
+      }
+    ]
+  },
   analyticImportPath: 'jetblack_options.european.black_76',
   pricePrototype: [
     'isCall',

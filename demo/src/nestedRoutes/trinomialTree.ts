@@ -1,71 +1,123 @@
-import { NumberFieldDefinition, BooleanFieldDefinition } from '../types'
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types'
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types'
 
 import { ModelRoute } from './types'
 
 export const trinomialTree: ModelRoute = {
   path: '/trinomial-tree',
-  name: 'Trinomial Tree',
-  description: 'Trinomial tree option pricing',
-  fields: [
-    {
-      label: 'Option Style',
-      field: 'isEuropean',
-      type: 'boolean',
-      trueOption: 'European',
-      falseOption: 'American',
-      defaultValue: true
-    } as BooleanFieldDefinition,
-    {
-      label: 'Option Type',
-      field: 'isCall',
-      type: 'boolean',
-      trueOption: 'Call',
-      falseOption: 'Put',
-      defaultValue: true
-    } as BooleanFieldDefinition,
-    {
-      label: 'Asset Price',
-      field: 'assetPrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Strike Price',
-      field: 'strikePrice',
-      type: 'number',
-      defaultValue: 100
-    } as NumberFieldDefinition,
-    {
-      label: 'Time To Expiry',
-      field: 'timeToExpiry',
-      type: 'number',
-      defaultValue: 0.5
-    } as NumberFieldDefinition,
-    {
-      label: 'Risk Free Rate',
-      field: 'riskFreeRate',
-      type: 'number',
-      defaultValue: 0.005
-    } as NumberFieldDefinition,
-    {
-      label: 'Cost of Carry',
-      field: 'costOfCarry',
-      type: 'number',
-      defaultValue: 0.002
-    } as NumberFieldDefinition,
-    {
-      label: 'Volatility',
-      field: 'volatility',
-      type: 'number',
-      defaultValue: 0.25
-    } as NumberFieldDefinition,
-    {
-      label: 'Steps',
-      field: 'steps',
-      type: 'number',
-      defaultValue: 200
-    } as NumberFieldDefinition
-  ],
+  schema: {
+    title: 'Trinomial Tree',
+    description: 'Trinomial tree option pricing',
+    fields: [
+      {
+        name: 'isEuropean',
+        label: 'Option Style',
+        component: componentTypes.SWITCH,
+        onText: 'European',
+        offText: 'American',
+        initialValue: true
+      },
+      {
+        name: 'isCall',
+        label: 'Option Type',
+        component: componentTypes.SWITCH,
+        onText: 'Call',
+        offText: 'Put',
+        initialValue: true
+      },
+      {
+        name: 'assetPrice',
+        label: 'Asset Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'strikePrice',
+        label: 'Strike Price',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 100
+      },
+      {
+        name: 'timeToExpiry',
+        label: 'Time To Expiry',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.5
+      },
+      {
+        name: 'riskFreeRate',
+        label: 'Risk Free Rate',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.005
+      },
+      {
+        name: 'costOfCarry',
+        label: 'Time To Expiry',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.003
+      },
+      {
+        name: 'volatility',
+        label: 'Volatility',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 0.25
+      },
+      {
+        name: 'steps',
+        label: 'Steps',
+        component: componentTypes.TEXT_FIELD,
+        type: 'number',
+        dataType: 'number',
+        validate: [
+          {
+            type: validatorTypes.REQUIRED
+          }
+        ],
+        initialValue: 200
+      }
+    ]
+  },
   analyticImportPath: 'jetblack_options.trees.trinomial',
   pricePrototype: [
     'isEuropean',
