@@ -47,7 +47,7 @@ const OptionResultView: React.FC<OptionResultViewProps> = ({
 }) => {
   return (
     <TableContainer component={Paper} sx={sx}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>

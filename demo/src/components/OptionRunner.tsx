@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
@@ -76,6 +76,10 @@ const OptionRunner: React.FC<OptionRunnerProps> = ({
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    setGreeks(undefined)
+  }, [schema])
 
   if (!(pyodide && isRequirementsLoaded)) {
     return (
