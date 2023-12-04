@@ -1,4 +1,11 @@
 """Black-Scholes-Merton options pricing formulae using dividend yield.
+
+* Stock price $ S $,
+* Strike price $ K $,
+* Risk-free rate $ r $,
+* Annual dividend yield $ q $,
+* Time to maturity $ \tau = T - t $
+* Volatility $ \sigma $.
 """
 
 from math import exp, log, pi, sqrt
@@ -25,6 +32,10 @@ def price(
         v: float,
 ) -> float:
     """The fair value of a European option, using Black-Scholes-Merton.
+
+    Call price: $Se^{-q \tau}\Phi(d_1) - e^{-r \tau} K\Phi(d_2)$
+
+    Put price: $e^{-r \tau} K\Phi(-d_2) -  Se^{-q \tau}\Phi(-d_1)$
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -103,6 +114,10 @@ def delta(
 ) -> float:
     """The sensitivity of the open to a change in the asset price.
 
+    Call $\Delta$  $e^{-q \tau} \Phi(d_1)$
+
+    Put $\Delta$ $-e^{-q \tau} \Phi(-d_1)$
+
     Args:
         is_call (bool): True for a call, false for a put.
         S (float): The current asset price.
@@ -133,6 +148,8 @@ def gamma(
 ) -> float:
     """The second derivative to the change in the asset price.
 
+    $ \Gamma $ $ e^{-q \tau} \frac{\varphi(d_1)}{S\sigma\sqrt{\tau}} = K e^{-r \tau} \frac{\varphi(d_2)}{S^2\sigma\sqrt{\tau}} $
+
     Args:
         S (float): The current asset price.
         K (float): The option strike price
@@ -160,8 +177,9 @@ def theta(
 ) -> float:
     """The theta or time decay of the value of the option.
 
-    This value is typically reported by dividing by 365 (for a one calendar day
-    movement) or 252 (for a 1 trading day movement).
+    $ Call \Theta $ $ - e^{-q \tau} \frac{S \varphi(d_1) \sigma}{2 \sqrt{\tau}} - rKe^{-r \tau}\Phi(d_2) + qSe^{-q \tau}\Phi(d_1) $
+
+    $ Put \Theta $ $ - e^{-q \tau}\frac{S \varphi(d_1) \sigma}{2 \sqrt{\tau}} + rKe^{-r \tau}\Phi(-d_2) - qSe^{-q \tau}\Phi(-d_1) $
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -200,6 +218,8 @@ def vega(
 ) -> float:
     """The sensitivity of the options price or a change in the asset volatility.
 
+    $ \mathcal{V} $ is $ S e^{-q \tau} \varphi(d_1) \sqrt{\tau} = K e^{-r \tau} \varphi(d_2) \sqrt{\tau} $
+
     Args:
         S (float): The current asset price.
         K (float): The option strike price
@@ -225,6 +245,10 @@ def rho(
         v: float,
 ) -> float:
     """The sensitivity of the option price to the risk free rate.
+
+    Call $ \rho $ is $ K \tau e^{-r \tau}\Phi(d_2) $
+
+    Put $ \rho $ is $ -K \tau e^{-r \tau}\Phi(-d_2) $
 
     Useful for all options except futures options which should use
     futures_rho.
@@ -356,6 +380,23 @@ def vanna(
         q: float,
         v: float,
 ) -> float:
+    """The sensitivity to the spot price and volatility.
+
+    $ -e^{-q \tau} \varphi(d_1) \frac{d_2}{\sigma} \, = \frac{\mathcal{V}}{S}\left[1 - \frac{d_1}{\sigma\sqrt{\tau}} \right] $
+
+    Also known as DdeltaDvol.
+
+    Args:
+        S (float): The asset price.
+        K (float): The strike price.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        q (float): The dividend yield.
+        v (float): The asset volatility.
+
+    Returns:
+        float: The vanna.
+    """
     # Also known as DdeltaDvol.
     d1 = (log(S / K) + T * (r - q + v ** 2 / 2)) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
