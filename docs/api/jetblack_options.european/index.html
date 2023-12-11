@@ -1,0 +1,2151 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reference implementations for option pricing in Python">
+      
+      
+      
+      
+        <link rel="prev" href="../jetblack_options.american/">
+      
+      
+        <link rel="next" href="../jetblack_options.trees/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.14">
+    
+    
+      
+        <title>jetblack_options.european - jetblack-options</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.fad675c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-jetblack_optionseuropeanblack_76" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="jetblack-options" class="md-header__button md-logo" aria-label="jetblack-options" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            jetblack-options
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              jetblack_options.european
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rob-blackbourn/jetblack-options" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rob-blackbourn/jetblack-options
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="jetblack-options" class="md-nav__button md-logo" aria-label="jetblack-options" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    jetblack-options
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rob-blackbourn/jetblack-options" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rob-blackbourn/jetblack-options
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/demo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetblack_options.american/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    jetblack_options.american
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    jetblack_options.european
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    jetblack_options.european
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-jetblack_optionseuropeanblack_76" class="md-nav__link">
+    <span class="md-ellipsis">
+      module jetblack_options.european.black_76
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module jetblack_options.european.black_76">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeandelta" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.delta
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.delta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeangamma" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.gamma
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.gamma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanivol" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.ivol
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.ivol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanmake_bumper" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.make_bumper
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.make_bumper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanprice" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.price
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.price">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanrho" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.rho
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.rho">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeantheta" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.theta
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.theta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanvanna" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.vanna
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.vanna">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanvega" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.vega
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.vega">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanvomma" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.vomma
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.vomma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetblack_options.trees/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    jetblack_options.trees
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-jetblack_optionseuropeanblack_76" class="md-nav__link">
+    <span class="md-ellipsis">
+      module jetblack_options.european.black_76
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module jetblack_options.european.black_76">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeandelta" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.delta
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.delta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeangamma" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.gamma
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.gamma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanivol" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.ivol
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.ivol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanmake_bumper" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.make_bumper
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.make_bumper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanprice" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.price
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.price">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanrho" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.rho
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.rho">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeantheta" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.theta
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.theta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanvanna" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.vanna
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.vanna">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanvega" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.vega
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.vega">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_optionseuropeanvomma" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_options.european.vomma
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_options.european.vomma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>jetblack_options.european</h1>
+
+<div class="autodoc-module">
+<h3 class="autodoc-title" id="module-jetblack_optionseuropeanblack_76">
+      <span class="autodoc-title-type">module </span><span class="autodoc-title-name">jetblack_options.european.black_76</span>
+  </h3>
+<h4 class="autodoc-title" id="summary">Summary</h4>
+<div>
+<p>Black (1976) Options on futures/forwards</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description">Description</h4>
+<div>
+<ul>
+<li>The discounted futures price <math class="latex2mathml" display="inline"><mrow><mi>F</mi></mrow></math>,</li>
+<li>Strike price <math class="latex2mathml" display="inline"><mrow><mi>K</mi></mrow></math>,</li>
+<li>Risk-free rate <math class="latex2mathml" display="inline"><mrow><mi>r</mi></mrow></math>,</li>
+<li>Annual dividend yield <math class="latex2mathml" display="inline"><mrow><mi>q</mi></mrow></math>,</li>
+<li>Time to maturity <math class="latex2mathml" display="inline"><mrow><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mi>T</mi><mo>&#x02212;</mo><mi>t</mi></mrow></math>
+</li>
+<li>Volatility <math class="latex2mathml" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>.</li>
+</ul>
+<p>Most of the formula use one or both of the following terms.</p>
+<math class="latex2mathml" display="block"><mrow><msub><mi>d</mi><mn>1</mn></msub><mo>&#x0003D;</mo><mfrac><mrow><mi>ln</mi><mo stretchy="false">&#x00028;</mo><mi>F</mi><mo>&#x0002F;</mo><mi>K</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo>&#x0002F;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mi>T</mi></mrow><mrow><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi></mrow></msqrt></mrow></mfrac></mrow></math>
+<math class="latex2mathml" display="block"><mrow><msub><mi>d</mi><mn>2</mn></msub><mo>&#x0003D;</mo><mfrac><mrow><mi>ln</mi><mo stretchy="false">&#x00028;</mo><mi>F</mi><mo>&#x0002F;</mo><mi>K</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo>&#x0002F;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mi>T</mi></mrow><mrow><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi></mrow></msqrt></mrow></mfrac><mo>&#x0003D;</mo><msub><mi>d</mi><mn>1</mn></msub><mo>&#x02212;</mo><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi></mrow></msqrt></mrow></math>
+<math class="latex2mathml" display="block"><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mi>&amp;</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msqrt><mrow><mn>2</mn><mi>&#x003C0;</mi></mrow></msqrt></mrow></mfrac><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><msup><mi>x</mi><mn>2</mn></msup></mrow></msup></mrow></math>
+<math class="latex2mathml" display="block"><mrow><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mi>&amp;</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msqrt><mrow><mn>2</mn><mi>&#x003C0;</mi></mrow></msqrt></mrow></mfrac><msubsup><mo>&#x0222B;</mo><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow><mi>x</mi></msubsup><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><msup><mi>y</mi><mn>2</mn></msup></mrow></msup><mspace width="0.167em"></mspace><mi>d</mi><mi>y</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msqrt><mrow><mn>2</mn><mi>&#x003C0;</mi></mrow></msqrt></mrow></mfrac><msubsup><mo>&#x0222B;</mo><mi>x</mi><mo>&#x0221E;</mo></msubsup><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><msup><mi>y</mi><mn>2</mn></msup></mrow></msup><mspace width="0.167em"></mspace><mi>d</mi><mi>y</mi></mrow></math>
+<p>where N(.) is the cumulative normal distribution function.</p>
+</div>
+</div>
+<div class="autodoc-examples">
+
+</div>
+<div class="autodoc-attributes">
+
+</div>
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeandelta">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">delta</span>
+</h3>
+<h4 class="autodoc-title" id="summary_1">Summary</h4>
+<div>
+<p>The sensitivity of the option to a change in the asset price</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_1">Description</h4>
+<div>
+<p>using Black 76.</p>
+<p>Call <math class="latex2mathml" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>: <math class="latex2mathml" display="inline"><mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>a</mi><mi>u</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+</p>
+<p>Put <math class="latex2mathml" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>: <math class="latex2mathml" display="inline"><mrow><mo>&#x02212;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>a</mi><mi>u</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+</p>
+</div>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">delta</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters">Parameters</h4>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<p>True for a call, false for a put.</p>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The current futures price.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The delta.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeangamma">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">gamma</span>
+</h3>
+<h4 class="autodoc-title" id="summary_2">Summary</h4>
+<div>
+<p>The second derivative to the change in asset price using Black 76.</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_2">Description</h4>
+<mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mfrac><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><mi>F</mi><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x0003D;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mfrac><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msup><mi>F</mi><mn>2</mn></msup><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac></mrow>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">gamma</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_1">Parameters</h4>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The current futures price.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_1">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The gamma.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanivol">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">ivol</span>
+</h3>
+<h4 class="autodoc-title" id="summary_3">Summary</h4>
+<div>
+<p>Calculate the volatility of a Black 76 option that is implied by the price.</p>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">ivol</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">p</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">*</var><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">max_iterations</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">int, Optional</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">epsilon</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float, Optional</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_2">Parameters</h4>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<p>True for a call, false for a put.</p>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The current asset price.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The option strike price</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to maturity of the option in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">p</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The option price.</p>
+</div>
+<var class="autodoc-varname">max_iterations</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">int, Optional</span><span class="autodoc-punctuation"> (optional)</span><div>
+<p>The maximum number of iterations before
+a price is returned. Defaults to 20.</p>
+</div>
+<var class="autodoc-varname">epsilon</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float, Optional</span><span class="autodoc-punctuation"> (optional)</span><div>
+<p>The largest acceptable error. Defaults to 1e-8.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_2">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The implied volatility.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanmake_bumper">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">make_bumper</span>
+</h3>
+<br />
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">make_bumper</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">NumericGreeks</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_3">Parameters</h4>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><p></p>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_3">Returns</h4>
+<span class="autodoc-vartype">NumericGreeks</span><span class="autodoc-punctuation">: </span>
+
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanprice">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">price</span>
+</h3>
+<h4 class="autodoc-title" id="summary_4">Summary</h4>
+<div>
+<p>Fair value of a futures/forward using Black 76.</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_3">Description</h4>
+<div>
+<p>Call price: <math class="latex2mathml" display="inline"><mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mo stretchy="false">[</mo><mi>F</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>K</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math>
+</p>
+<p>Put price: <math class="latex2mathml" display="inline"><mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mo stretchy="false">[</mo><mi>K</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>F</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math>
+</p>
+</div>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">price</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_4">Parameters</h4>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<p>True for a call, false for a put.</p>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The price of the future.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The asset volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_4">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The option price.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanrho">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">rho</span>
+</h3>
+<h4 class="autodoc-title" id="summary_5">Summary</h4>
+<div>
+<p>The sensitivity of the option price to a change in the risk free rate</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_4">Description</h4>
+<div>
+<p>using Black 76.</p>
+<p>Call <math class="latex2mathml" display="inline"><mrow><mi>&#x003C1;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>&#x003C4;</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mo stretchy="false">[</mo><mi>F</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>K</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math>
+</p>
+<p>Put <math class="latex2mathml" display="inline"><mrow><mi>&#x003C1;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>&#x003C4;</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mo stretchy="false">[</mo><mi>K</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>F</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math>
+</p>
+</div>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">rho</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_5">Parameters</h4>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<p>True for a call, false for a put.</p>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The price of the future.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The asset volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_5">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The rho.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeantheta">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">theta</span>
+</h3>
+<h4 class="autodoc-title" id="summary_6">Summary</h4>
+<div>
+<p>The change in the value of the option with respect to time to expiry</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_5">Description</h4>
+<div>
+<p>using Black 76.</p>
+<math class="latex2mathml" display="block"><mrow><mo>&#x02212;</mo><mfrac><mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mi>&#x003C3;</mi></mrow><mrow><mn>2</mn><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x02212;</mo><mi>r</mi><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>r</mi><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+<math class="latex2mathml" display="block"><mrow><mo>&#x02212;</mo><mfrac><mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mi>&#x003C3;</mi></mrow><mrow><mn>2</mn><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x0002B;</mo><mi>r</mi><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>r</mi><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+</div>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">theta</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_6">Parameters</h4>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<p>True for a call, false for a put.</p>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The current futures price.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_6">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The theta.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanvanna">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">vanna</span>
+</h3>
+<h4 class="autodoc-title" id="summary_7">Summary</h4>
+<div>
+<p>The sensitivity of the option value to the underlying</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_6">Description</h4>
+<div>
+<p>asset price and the volatility.</p>
+<math class="latex2mathml" display="block"><mrow><mfrac><mrow><msup><mo>&#x02202;</mo><mn>2</mn></msup><mi>V</mi></mrow><mrow><mo>&#x02202;</mo><mi>F</mi><mo>&#x02202;</mo><mi>&#x003C3;</mi></mrow></mfrac><mo>&#x0003D;</mo><mo>&#x02212;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mfrac><mrow><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mfrac><mspace width="0.167em"></mspace><mo>&#x0003D;</mo><mfrac><mrow><mi>&#x1D4B1;</mi></mrow><mrow><mi>F</mi></mrow></mfrac><mrow><mo fence="true" form="prefix" stretchy="true">[</mo><mn>1</mn><mo>&#x02212;</mo><mfrac><mrow><msub><mi>d</mi><mn>1</mn></msub></mrow><mrow><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo fence="true" form="postfix" stretchy="true">]</mo></mrow></mrow></math>
+</div>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vanna</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_7">Parameters</h4>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The price of the future.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The asset volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_7">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The vanna.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanvega">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">vega</span>
+</h3>
+<h4 class="autodoc-title" id="summary_8">Summary</h4>
+<div>
+<p>The sensitivity of the options price or a change in the asset volatility</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_7">Description</h4>
+<div>
+<p>using Black 76.</p>
+<math class="latex2mathml" display="block"><mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt><mo>&#x0003D;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></math>
+</div>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vega</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_8">Parameters</h4>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The current futures price.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_8">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The vega.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_optionseuropeanvomma">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">vomma</span>
+</h3>
+<h4 class="autodoc-title" id="summary_9">Summary</h4>
+<div>
+<p>The second order sensitivity to volatility.</p>
+</div>
+<div class="autodoc-description">
+<h4 class="autodoc-title" id="description_8">Description</h4>
+<mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>a</mi><mi>u</mi></mrow></msup><mi>a</mi><mi>r</mi><mi>p</mi><mi>h</mi><mi>i</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>a</mi><mi>u</mi></mrow></msqrt><mi>r</mi><mi>a</mi><mi>c</mi><mrow><msub><mi>d</mi><mn>1</mn></msub><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow><mo>&#x0003D;</mo><mi>&#x1D4B1;</mi><mi>r</mi><mi>a</mi><mi>c</mi><mrow><msub><mi>d</mi><mn>1</mn></msub><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mrow>
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vomma</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-argument">
+        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_9">Parameters</h4>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The price of the future.</p>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The strike price.</p>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The time to expiry in years.</p>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The risk free rate.</p>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<p>The asset volatility.</p>
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_9">Returns</h4>
+<span class="autodoc-vartype">float</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The vomma</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.cd18aaf1.min.js"></script>
+      
+    
+  </body>
+</html>

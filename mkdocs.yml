@@ -1,0 +1,37 @@
+site_name: jetblack-options
+site_description: Reference implementations for option pricing in Python
+site_dir: docs
+
+docs_dir: documentation
+
+repo_name: rob-blackbourn/jetblack-options
+repo_url: https://github.com/rob-blackbourn/jetblack-options
+edit_uri: ""
+
+theme:
+    name: 'material'
+    language: en
+
+nav:
+  - index.md
+  - Demo: /demo/
+  - API:
+    - jetblack_options.american: api/jetblack_options.american.md
+    - jetblack_options.european: api/jetblack_options.european.md
+    - jetblack_options.trees: api/jetblack_options.trees.md
+  
+markdown_extensions:
+  - admonition
+  - codehilite
+  - jetblack_markdown.autodoc:
+      class_from_init: true
+      ignore_dunder: true
+      ignore_private: true
+      ignore_all: false
+      ignore_inherited: true
+      follow_module_tree: false
+      prefer_docstring: true
+  - jetblack_markdown.latex2mathml:
+
+extra_css:
+  - css/custom.css

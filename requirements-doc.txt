@@ -1,0 +1,2 @@
+mkdocs-material==9.4.14
+jetblack-markdown==1.2.0a3
