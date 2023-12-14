@@ -11,6 +11,15 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "mkdocs build",
+            "type": "python",
+            "request": "launch",
+            "args": ["build"],
+            "program": "${workspaceFolder}/.venv/bin/mkdocs",
+            "console": "integratedTerminal",
+            "justMyCode": false
         }
     ]
 }

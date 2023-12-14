@@ -198,6 +198,14 @@ def price(
 
 
 def make_bumper(is_call: bool) -> NumericGreeks:
+    """Make a class to generate greeks using finite difference methods.
+
+    Args:
+        is_call (bool): If true the options is a call.
+
+    Returns:
+        NumericGreeks: A class which can generate Greeks by bumping.
+    """
     def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
         return price(is_call, S, K, T, r, b, v)
     return NumericGreeks(evaluate)
