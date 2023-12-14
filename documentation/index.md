@@ -4,6 +4,7 @@ implemented in Python.
 It has no dependencies.
 
 There is a web UI demonstrating some of the valuations [here](https://rob-blackbourn.github.io/jetblack-options/demo/).
+
 ## Status
 
 This is currently considered alpha.
@@ -134,23 +135,3 @@ def price(df):
 data['b'] = data['r'] - data['q']
 x = price(data)
 ```
-
-## Contributions
-
-Contributions are welcome!
-
-The goals of the project are centred on clarity and accuracy.
-
-Valuable contributions include:
-
-* More tests. Note that tests are code too, and have to be maintained. We should
-    aim for the smallest complete set possible. Requests to delete are as
-    relevant as those to add.
-* More implementations. Pricing models should come with tests, and a numerical
-    bumping framework.
-
-The code is formatted with autopep8, and linted with pylint and mypy. Typing is
-used throughout to help the reader.
-
-Optimisations or integrations with other packages should be included as
-examples only.
