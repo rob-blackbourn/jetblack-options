@@ -14,7 +14,6 @@ theme:
 
 nav:
   - index.md
-  - Demo: /demo/
   - API:
     - jetblack_options.american: api/jetblack_options.american.md
     - jetblack_options.european: api/jetblack_options.european.md

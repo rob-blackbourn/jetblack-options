@@ -3,7 +3,7 @@ implemented in Python.
 
 It has no dependencies.
 
-There is a web UI demonstrating some of the valuations [here](https://rob-blackbourn.github.io/jetblack-options/demo/).
+There is a web UI demonstrating some of the valuations [here](https://rob-blackbourn.github.io/jetblack-options-demo/).
 
 ## Status
 

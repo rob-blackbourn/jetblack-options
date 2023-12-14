@@ -83,7 +83,7 @@ def ivol(
         max_iterations: int = 20,
         epsilon=1e-8
 ) -> float:
-    """Calculate the volatility of a Black 76 option that is implied by the price.
+    r"""Calculate the volatility of a Black 76 option that is implied by the price.
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -121,7 +121,7 @@ def delta(
         r: float,
         v: float,
 ) -> float:
-    """The sensitivity of the option to a change in the asset price
+    r"""The sensitivity of the option to a change in the asset price
     using Black 76.
 
     Call $\Delta$: $e^{-r \tau} \Phi(d_1)$
@@ -319,7 +319,7 @@ def vomma(
         r: float,
         v: float,
 ) -> float:
-    """The second order sensitivity to volatility.
+    r"""The second order sensitivity to volatility.
 
     $$
     F e^{-r \tau} \varphi(d_1) \sqrt{\tau} \frac{d_1 d_2}{\sigma} = \mathcal{V}  \frac{d_1 d_2}{\sigma}
