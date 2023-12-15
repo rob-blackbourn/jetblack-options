@@ -5,7 +5,8 @@ implemented in Python.
 
 It has no dependencies.
 
-There is a web UI demonstrating some of the valuations [here](https://rob-blackbourn.github.io/jetblack-options-demo/).
+There is an online demonstration of some of the valuations [here](https://rob-blackbourn.github.io/jetblack-options-demo/)
+(source code [here](https://github.com/rob-blackbourn/jetblack-options-demo)).
 
 ## Status
 
