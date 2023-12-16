@@ -2,7 +2,7 @@
 
 from jetblack_options.european.black_76 import (
     price,
-    make_bumper,
+    make_numeric_greeks,
     ivol,
     delta,
     gamma,
@@ -17,7 +17,7 @@ from jetblack_options.numeric_greeks.without_carry import NumericGreeks
 from ..utils import is_close_to
 
 ng = {
-    is_call: make_bumper(is_call)
+    is_call: make_numeric_greeks(is_call)
     for is_call in (True, False)
 }
 

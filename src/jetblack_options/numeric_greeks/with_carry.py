@@ -1,4 +1,6 @@
-"""Class for calculating numeric greeks for an option"""
+"""Class for calculating numeric greeks for options using finite difference
+methods for the generalised style using cost of carry.
+"""
 
 from typing import Callable, Literal
 

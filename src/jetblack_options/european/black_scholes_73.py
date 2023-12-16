@@ -76,7 +76,7 @@ def ivol(
     )
 
 
-def make_bumper(is_call: bool) -> NumericGreeks:
+def make_numeric_greeks(is_call: bool) -> NumericGreeks:
     def evaluate(S: float, K: float, T: float, r: float, v: float) -> float:
         return price(is_call, S, K, T, r, v)
     return NumericGreeks(evaluate)
