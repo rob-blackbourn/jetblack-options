@@ -2,14 +2,14 @@
 
 from jetblack_options.trees.trinomial import (
     price,
-    make_bumper
+    make_numeric_greeks
 )
 
 from ..utils import is_close_to
 
 ng = {
     is_european: {
-        is_call: make_bumper(is_european, is_call, 100)
+        is_call: make_numeric_greeks(is_european, is_call, 100)
         for is_call in (True, False)
     }
     for is_european in (True, False)

@@ -2,13 +2,13 @@
 
 from jetblack_options.american.bjerksund_stensland_2002 import (
     price,
-    make_bumper
+    make_numeric_greeks
 )
 
 from ..utils import is_close_to
 
 ng = {
-    is_call: make_bumper(is_call)
+    is_call: make_numeric_greeks(is_call)
     for is_call in (True, False)
 }
 

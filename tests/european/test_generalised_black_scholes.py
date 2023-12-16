@@ -3,7 +3,7 @@
 from jetblack_options.european.generalised_black_scholes import (
     price,
     ivol,
-    make_bumper,
+    make_numeric_greeks,
     delta,
     gamma,
     theta,
@@ -21,7 +21,7 @@ from jetblack_options.european.generalised_black_scholes import (
 from ..utils import is_close_to
 
 ng = {
-    is_call: make_bumper(is_call)
+    is_call: make_numeric_greeks(is_call)
     for is_call in (True, False)
 }
 

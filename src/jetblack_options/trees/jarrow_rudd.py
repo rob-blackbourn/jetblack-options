@@ -3,6 +3,7 @@
 from math import exp, nan, sqrt
 from typing import Tuple
 
+from ..implied_volatility import solve_ivol
 from ..numeric_greeks.with_carry import NumericGreeks
 
 
@@ -96,7 +97,29 @@ def price(
     return p
 
 
-def make_bumper(is_european: bool, is_call: bool, n: int) -> NumericGreeks:
+def ivol(
+        is_european: bool,
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        p: float,
+        n: int,
+        *,
+        max_iterations: int = 20,
+        epsilon=1e-8
+) -> float:
+    return solve_ivol(
+        p,
+        lambda v: price(is_european, is_call, S, K, T, r, b, v, n),
+        max_iterations=max_iterations,
+        epsilon=epsilon
+    )
+
+
+def make_numeric_greeks(is_european: bool, is_call: bool, n: int) -> NumericGreeks:
     def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
         return price(is_european, is_call, S, K, T, r, b, v, n)
     return NumericGreeks(evaluate)

@@ -1,9 +1,12 @@
-"""Barone-Adesi and Whaley"""
+"""Option pricing functions implementing the Barone, Adesi and Whaley (1987)
+American approximation.
+"""
 
 from math import exp, log, sqrt
 from statistics import NormalDist
 
 from ..european.generalised_black_scholes import price as bs_price
+from ..implied_volatility import solve_ivol
 from ..numeric_greeks.with_carry import NumericGreeks
 
 norm = NormalDist()
@@ -105,7 +108,19 @@ def _kp(
         b: float,
         v: float,
 ) -> float:
-    # Newton Raphson algorithm to solve for the critical commodity price for a Put
+    """Newton Raphson algorithm to solve for the critical commodity price for a
+    put.
+
+    Args:
+        K (float): The strike.
+        T (float): The time to expiry in years.
+        r (float): The risk free rate.
+        b (float): The asset growth.
+        v (float): The volatility.
+
+    Returns:
+        float: The price.
+    """
 
     # Calculation of seed value, Si
     n = 2 * b / v ** 2
@@ -197,15 +212,64 @@ def price(
         return _put_price(S, K, T, r, b, v)
 
 
-def make_bumper(is_call: bool) -> NumericGreeks:
-    """Make a class to generate greeks using finite difference methods.
+def ivol(
+        is_call: bool,
+        S: float,
+        K: float,
+        T: float,
+        r: float,
+        b: float,
+        p: float,
+        *,
+        max_iterations: int = 20,
+        epsilon=1e-8
+) -> float:
+    """Calculate the volatility of an option that is implied by the price.
 
     Args:
-        is_call (bool): If true the options is a call.
+        is_call (bool): True for a call, false for a put.
+        S (float): The current asset price.
+        K (float): The option strike price
+        T (float): The time to expiry of the option in years.
+        r (float): The risk free rate.
+        b (float): The cost of carry of the asset.
+        p (float): The option price.
+        max_iterations (int, Optional): The maximum number of iterations before
+            a price is returned. Defaults to 20.
+        epsilon (float, Optional): The largest acceptable error. Defaults to 1e-8.
 
     Returns:
-        NumericGreeks: A class which can generate Greeks by bumping.
+        float: The implied volatility.
     """
-    def evaluate(S: float, K: float, T: float, r: float, b: float, v: float) -> float:
+    return solve_ivol(
+        p,
+        lambda v: price(is_call, S, K, T, r, b, v),
+        max_iterations=max_iterations,
+        epsilon=epsilon
+    )
+
+
+def make_numeric_greeks(is_call: bool) -> NumericGreeks:
+    """Make a class to generate greeks numerically using finite difference
+    methods.
+
+    Args:
+        is_call (bool): If true the options is a call;  otherwise it is a put.
+
+    Returns:
+        NumericGreeks: A class which can generate Greeks using finite difference
+            methods.
+    """
+    # Normalize the price function to match that required by the finite
+    # difference methods.
+    def evaluate(
+            S: float,
+            K: float,
+            T: float,
+            r: float,
+            b: float,
+            v: float
+    ) -> float:
         return price(is_call, S, K, T, r, b, v)
+
     return NumericGreeks(evaluate)

@@ -1,4 +1,6 @@
-"""Class for calculating numeric greeks for an option"""
+"""Class for calculating numeric greeks for options using finite difference
+methods for the dividend yield style.
+"""
 
 from typing import Callable, Literal
 
