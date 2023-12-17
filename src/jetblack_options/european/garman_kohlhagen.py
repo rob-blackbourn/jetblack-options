@@ -1,4 +1,4 @@
-"""Garman and Kolhagen (1983) Currency options"""
+"""Garman and Kohlhagen (1983) Currency options"""
 
 from math import exp, log, sqrt
 from statistics import NormalDist
@@ -21,7 +21,7 @@ def price(
         rf: float,
         v: float,
 ) -> float:
-    """Garman and Kolhagen (1983) Currency options.
+    """Garman and Kohlhagen (1983) Currency options.
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -35,7 +35,7 @@ def price(
     Returns:
         float: _description_
     """
-    # Garman and Kolhagen (1983) Currency options
+    # Garman and Kohlhagen (1983) Currency options
 
     d1 = (log(S / K) + (r - rf + v ** 2 / 2) * T) / (v * sqrt(T))
     d2 = d1 - v * sqrt(T)
