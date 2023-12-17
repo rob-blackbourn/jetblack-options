@@ -25,6 +25,7 @@ nav:
         - black_scholes_73: api/jetblack_options/european/black_scholes_73.md
         - black_scholes_merton: api/jetblack_options/european/black_scholes_merton.md
         - generalised_black_scholes: api/jetblack_options/european/generalised_black_scholes.md
+        - garman_kohlhagen: api/jetblack_options/european/garman_kohlhagen.md
       - american:
         - barone_adesi_whaley: api/jetblack_options/american/barone_adesi_whaley.md
         - bjerksund_stensland_1993: api/jetblack_options/american/bjerksund_stensland_1993.md
@@ -35,6 +36,10 @@ nav:
         - jarrow_rudd: api/jetblack_options/trees/jarrow_rudd.md
         - leisen_reimer: api/jetblack_options/trees/leisen_reimer.md
         - trinomial: api/jetblack_options/trees/trinomial.md
+      - numeric_greeks:
+        - without_carry: api/jetblack_options/numeric_greeks/without_carry.md
+        - with_carry: api/jetblack_options/numeric_greeks/with_carry.md
+        - with_dividend_yield: api/jetblack_options/numeric_greeks/with_dividend_yield.md
   
 markdown_extensions:
   - admonition
