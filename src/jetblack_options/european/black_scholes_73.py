@@ -31,10 +31,10 @@ def price(
         r: float,
         v: float,
 ) -> float:
-    """Black-Scholes for a non-dividend paying stock.
+    r"""Black-Scholes for a non-dividend paying stock.
 
     $$
-    C(S_t, t) &= N(d_1)S_t - N(d_2)Ke^{-r(T - t)}
+    C(S_t, t) = N(d_1)S_t - N(d_2)Ke^{-r(T - t)}
     $$
 
     $$
