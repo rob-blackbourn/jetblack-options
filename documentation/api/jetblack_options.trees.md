@@ -1,1 +1,5 @@
-@[jetblack_options.trees]
+@[jetblack_options.trees.cox_ross_rubinstein]
+@[jetblack_options.trees.european_binomial]
+@[jetblack_options.trees.jarrow_rudd]
+@[jetblack_options.trees.leisen_reimer]
+@[jetblack_options.trees.trinomial]
