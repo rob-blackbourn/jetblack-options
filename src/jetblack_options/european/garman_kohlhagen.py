@@ -1,4 +1,37 @@
-"""Garman and Kohlhagen (1983) Currency options"""
+r"""Garman and Kohlhagen (1983) Currency options.
+
+The value of a call option.
+
+$$
+c = S_0e^{-r_f T}\mathcal{N}(d_1) - Ke^{-r_d T}\mathcal{N}(d_2)
+$$
+
+The value of a put option.
+
+$$
+p = Ke^{-r_d T}\mathcal{N}(-d_2) - S_0e^{-r_f T}\mathcal{N}(-d_1)
+$$
+
+where:
+
+$$
+d_1 = \frac{\ln(S_0/K) + (r_d - r_f + \sigma^2/2)T}{\sigma\sqrt{T}}
+$$
+
+and
+
+$$
+d_2 = d_1 - \sigma\sqrt{T}
+$$
+
+* $S_0$ is the current spot rate
+* $K$ is the strike price
+* $\mathcal{N}(x)$ is the cumulative normal distribution function
+* $r_d$ is domestic risk free [[simple interest]] rate
+* $r_f$ is foreign risk free simple interest rate
+* $T$ is the time to maturity (calculated according to the appropriate day count convention)
+* $\sigma$ is the volatility of the FX rate.
+"""
 
 from math import exp, log, sqrt
 from statistics import NormalDist

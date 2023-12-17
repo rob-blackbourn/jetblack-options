@@ -580,6 +580,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -647,7 +656,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
+  <a href="#description_1" class="md-nav__link">
     <span class="md-ellipsis">
       Description
     </span>
@@ -1161,6 +1170,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1228,7 +1246,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
+  <a href="#description_1" class="md-nav__link">
     <span class="md-ellipsis">
       Description
     </span>
@@ -1324,10 +1342,36 @@
   </h3>
 <h4 class="autodoc-title" id="summary">Summary</h4>
 <div>
-<p>Garman and Kohlhagen (1983) Currency options</p>
+<p>Garman and Kohlhagen (1983) Currency options.</p>
 </div>
 <div class="autodoc-description">
-
+<h4 class="autodoc-title" id="description">Description</h4>
+<div>
+<p>The value of a call option.</p>
+<math class="latex2mathml" display="block"><mrow><mi>c</mi><mo>&#x0003D;</mo><msub><mi>S</mi><mn>0</mn></msub><msup><mi>e</mi><mrow><mo>&#x02212;</mo><msub><mi>r</mi><mi>f</mi></msub><mi>T</mi></mrow></msup><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><msub><mi>r</mi><mi>d</mi></msub><mi>T</mi></mrow></msup><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>The value of a put option.</p>
+<math class="latex2mathml" display="block"><mrow><mi>p</mi><mo>&#x0003D;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><msub><mi>r</mi><mi>d</mi></msub><mi>T</mi></mrow></msup><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><msub><mi>S</mi><mn>0</mn></msub><msup><mi>e</mi><mrow><mo>&#x02212;</mo><msub><mi>r</mi><mi>f</mi></msub><mi>T</mi></mrow></msup><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>where:</p>
+<math class="latex2mathml" display="block"><mrow><msub><mi>d</mi><mn>1</mn></msub><mo>&#x0003D;</mo><mfrac><mrow><mi>ln</mi><mo stretchy="false">&#x00028;</mo><msub><mi>S</mi><mn>0</mn></msub><mo>&#x0002F;</mo><mi>K</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><msub><mi>r</mi><mi>d</mi></msub><mo>&#x02212;</mo><msub><mi>r</mi><mi>f</mi></msub><mo>&#x0002B;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo>&#x0002F;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mi>T</mi></mrow><mrow><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi></mrow></msqrt></mrow></mfrac></mrow></math>
+<p>and</p>
+<math class="latex2mathml" display="block"><mrow><msub><mi>d</mi><mn>2</mn></msub><mo>&#x0003D;</mo><msub><mi>d</mi><mn>1</mn></msub><mo>&#x02212;</mo><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi></mrow></msqrt></mrow></math>
+<ul>
+<li>
+<math class="latex2mathml" display="inline"><mrow><msub><mi>S</mi><mn>0</mn></msub></mrow></math> is the current spot rate</li>
+<li>
+<math class="latex2mathml" display="inline"><mrow><mi>K</mi></mrow></math> is the strike price</li>
+<li>
+<math class="latex2mathml" display="inline"><mrow><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is the cumulative normal distribution function</li>
+<li>
+<math class="latex2mathml" display="inline"><mrow><msub><mi>r</mi><mi>d</mi></msub></mrow></math> is domestic risk free [[simple interest]] rate</li>
+<li>
+<math class="latex2mathml" display="inline"><mrow><msub><mi>r</mi><mi>f</mi></msub></mrow></math> is foreign risk free simple interest rate</li>
+<li>
+<math class="latex2mathml" display="inline"><mrow><mi>T</mi></mrow></math> is the time to maturity (calculated according to the appropriate day count convention)</li>
+<li>
+<math class="latex2mathml" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> is the volatility of the FX rate.</li>
+</ul>
+</div>
 </div>
 <div class="autodoc-examples">
 
@@ -1422,7 +1466,7 @@ a price is returned. Defaults to 20.</p>
 <p>Make a class to generate greeks numerically using finite difference</p>
 </div>
 <div class="autodoc-description">
-<h4 class="autodoc-title" id="description">Description</h4>
+<h4 class="autodoc-title" id="description_1">Description</h4>
 <div>
 <p>methods.</p>
 </div>
