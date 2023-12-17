@@ -22,10 +22,10 @@ $$
 The following is a simplistic python implementation.
 
 ```python
-def delta(S, K, T, r, v, dS):
+def delta(is_call, S, K, T, r, v, dS):
     return (
-        bs_price(S + dS, K, T, r, v)
-        - bs_price(S - dS, K, T, r, v)
+        price(is_call, S + dS, K, T, r, v)
+        - price(is_call, S - dS, K, T, r, v)
     ) / (2 * dS)
 ```
 
