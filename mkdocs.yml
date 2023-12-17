@@ -19,9 +19,22 @@ nav:
   - Numeric Greeks: numeric-greeks.md
   - Pandas: pandas.md
   - API:
-    - jetblack_options.american: api/jetblack_options.american.md
-    - jetblack_options.european: api/jetblack_options.european.md
-    - jetblack_options.trees: api/jetblack_options.trees.md
+    - jetblack_options:
+      - european:
+        - black_76: api/jetblack_options/european/black_76.md
+        - black_scholes_73: api/jetblack_options/european/black_scholes_73.md
+        - black_scholes_merton: api/jetblack_options/european/black_scholes_merton.md
+        - generalised_black_scholes: api/jetblack_options/european/generalised_black_scholes.md
+      - american:
+        - barone_adesi_whaley: api/jetblack_options/american/barone_adesi_whaley.md
+        - bjerksund_stensland_1993: api/jetblack_options/american/bjerksund_stensland_1993.md
+        - bjerksund_stensland_2002: api/jetblack_options/american/bjerksund_stensland_2002.md
+      - trees:
+        - cox_ross_rubinstein: api/jetblack_options/trees/cox_ross_rubinstein.md
+        - european_binomial: api/jetblack_options/trees/european_binomial.md
+        - jarrow_rudd: api/jetblack_options/trees/jarrow_rudd.md
+        - leisen_reimer: api/jetblack_options/trees/leisen_reimer.md
+        - trinomial: api/jetblack_options/trees/trinomial.md
   
 markdown_extensions:
   - admonition
