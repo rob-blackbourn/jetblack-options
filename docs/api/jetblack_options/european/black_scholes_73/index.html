@@ -517,6 +517,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -650,7 +659,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
+  <a href="#description_1" class="md-nav__link">
     <span class="md-ellipsis">
       Description
     </span>
@@ -728,6 +737,15 @@
   <a href="#summary_3" class="md-nav__link">
     <span class="md-ellipsis">
       Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
     </span>
   </a>
   
@@ -1434,6 +1452,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1567,7 +1594,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
+  <a href="#description_1" class="md-nav__link">
     <span class="md-ellipsis">
       Description
     </span>
@@ -1645,6 +1672,15 @@
   <a href="#summary_3" class="md-nav__link">
     <span class="md-ellipsis">
       Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
     </span>
   </a>
   
@@ -1870,10 +1906,16 @@
   </h3>
 <h4 class="autodoc-title" id="summary">Summary</h4>
 <div>
-<p>Black-Scholes 1973</p>
+<p>Black-Scholes 1973.</p>
 </div>
 <div class="autodoc-description">
-
+<h4 class="autodoc-title" id="description">Description</h4>
+<div>
+<p>The original Black-Scholes option formula for an option on a non-dividend
+paying stock option.</p>
+<math class="latex2mathml" display="block"><mrow><msub><mi>d</mi><mn>1</mn></msub><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi><mo>&#x02212;</mo><mi>t</mi></mrow></msqrt></mrow></mfrac><mrow><mo fence="true" form="prefix" stretchy="true">[</mo><mi>ln</mi><mrow><mo fence="true" form="prefix" stretchy="true">&#x00028;</mo><mfrac><mrow><msub><mi>S</mi><mi>t</mi></msub></mrow><mrow><mi>K</mi></mrow></mfrac><mo fence="true" form="postfix" stretchy="true">&#x00029;</mo></mrow><mo>&#x0002B;</mo><mrow><mo fence="true" form="prefix" stretchy="true">&#x00028;</mo><mi>r</mi><mo>&#x0002B;</mo><mfrac><mrow><msup><mi>&#x003C3;</mi><mn>2</mn></msup></mrow><mrow><mn>2</mn></mrow></mfrac><mo fence="true" form="postfix" stretchy="true">&#x00029;</mo></mrow><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo fence="true" form="postfix" stretchy="true">]</mo></mrow></mrow></math>
+<math class="latex2mathml" display="block"><mrow><msub><mi>d</mi><mn>2</mn></msub><mo>&#x0003D;</mo><msub><mi>d</mi><mn>1</mn></msub><mo>&#x02212;</mo><mi>&#x003C3;</mi><msqrt><mrow><mi>T</mi><mo>&#x02212;</mo><mi>t</mi></mrow></msqrt></mrow></math>
+</div>
 </div>
 <div class="autodoc-examples">
 
@@ -2025,7 +2067,7 @@
 <p>Calculate the volatility of a Black-Scholes 73 option that is implied by</p>
 </div>
 <div class="autodoc-description">
-<h4 class="autodoc-title" id="description">Description</h4>
+<h4 class="autodoc-title" id="description_1">Description</h4>
 <div>
 <p>the price.</p>
 </div>
@@ -2131,7 +2173,8 @@ a price is returned. Defaults to 35.</p>
 <p>Black-Scholes for a non-dividend paying stock.</p>
 </div>
 <div class="autodoc-description">
-
+<h4 class="autodoc-title" id="description_2">Description</h4>
+<mrow><mi>C</mi><mo stretchy="false">&#x00028;</mo><msub><mi>S</mi><mi>t</mi></msub><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mi>&amp;</mi><mo>&#x0003D;</mo><mi>N</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><msub><mi>S</mi><mi>t</mi></msub><mo>&#x02212;</mo><mi>N</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow>
 </div>
 <div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_scholes_73</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">price</var><span class="autodoc-punctuation">(</span><br />
 <div class="autodoc-argument">

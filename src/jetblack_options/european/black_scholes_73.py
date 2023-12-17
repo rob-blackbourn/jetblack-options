@@ -1,4 +1,16 @@
-"""Black-Scholes 1973"""
+r"""Black-Scholes 1973.
+
+The original Black-Scholes option formula for an option on a non-dividend
+paying stock option.
+
+$$
+d_1 = \frac{1}{\sigma\sqrt{T - t}}\left[\ln\left(\frac{S_t}{K}\right) + \left(r + \frac{\sigma^2}{2}\right)(T - t)\right]
+$$
+
+$$
+d_2 = d_1 - \sigma\sqrt{T - t}
+$$
+"""
 
 from math import exp, log, sqrt
 from statistics import NormalDist
@@ -20,6 +32,14 @@ def price(
         v: float,
 ) -> float:
     """Black-Scholes for a non-dividend paying stock.
+
+    $$
+    C(S_t, t) &= N(d_1)S_t - N(d_2)Ke^{-r(T - t)}
+    $$
+
+    $$
+    P(S_t, t) = N(-d_2) Ke^{-r(T - t)} - N(-d_1) S_t
+    $$
 
     Args:
         is_call (bool): True for a call, false for a put.
