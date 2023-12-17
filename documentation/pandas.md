@@ -55,3 +55,5 @@ def price(df):
 data['b'] = data['r'] - data['q']
 x = price(data)
 ```
+
+There are some more examples in the `scratch` folder.

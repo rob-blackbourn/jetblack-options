@@ -16,8 +16,8 @@ nav:
   - index.md
   - Installation: installation.md
   - Getting Started: getting-started.md
-  - Pandas: pandas.md
   - Numeric Greeks: numeric-greeks.md
+  - Pandas: pandas.md
   - API:
     - jetblack_options.american: api/jetblack_options.american.md
     - jetblack_options.european: api/jetblack_options.european.md
