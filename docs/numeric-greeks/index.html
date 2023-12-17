@@ -11,18 +11,22 @@
       
       
       
+        <link rel="prev" href="../pandas/">
       
       
-      <link rel="icon" href="/assets/images/favicon.png">
+        <link rel="next" href="../api/jetblack_options.american/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.14">
     
     
       
-        <title>jetblack-options</title>
+        <title>Numeric Greeks - jetblack-options</title>
       
     
     
-      <link rel="stylesheet" href="/assets/stylesheets/main.fad675c6.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.fad675c6.min.css">
       
       
 
@@ -41,9 +45,9 @@
       
     
     
-      <link rel="stylesheet" href="/css/custom.css">
+      <link rel="stylesheet" href="../css/custom.css">
     
-    <script>__md_scope=new URL("/",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -64,6 +68,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#finite-difference-methods" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -76,7 +85,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/." title="jetblack-options" class="md-header__button md-logo" aria-label="jetblack-options" data-md-component="logo">
+    <a href=".." title="jetblack-options" class="md-header__button md-logo" aria-label="jetblack-options" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -96,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Numeric Greeks
             
           </span>
         </div>
@@ -180,7 +189,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/." title="jetblack-options" class="md-nav__button md-logo" aria-label="jetblack-options" data-md-component="logo">
+    <a href=".." title="jetblack-options" class="md-nav__button md-logo" aria-label="jetblack-options" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -210,7 +219,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -230,7 +239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -250,7 +259,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -270,7 +279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/pandas/" class="md-nav__link">
+      <a href="../pandas/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -287,10 +296,28 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/numeric-greeks/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Numeric Greeks
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -299,6 +326,69 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#finite-difference-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finite Difference Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-numericgreeks-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      The NumericGreeks classes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional Arguments
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What next ?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -347,7 +437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/jetblack_options.american/" class="md-nav__link">
+      <a href="../api/jetblack_options.american/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -368,7 +458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/jetblack_options.european/" class="md-nav__link">
+      <a href="../api/jetblack_options.european/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -389,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/jetblack_options.trees/" class="md-nav__link">
+      <a href="../api/jetblack_options.trees/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -428,6 +518,59 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#finite-difference-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finite Difference Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-numericgreeks-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      The NumericGreeks classes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional Arguments
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What next ?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -438,8 +581,69 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  <h1>Numeric Greeks</h1>
+
+<p>The "greeks" are measures of the sensitivity of an attribute (often the price)
+to one or more of the other attributes. So the <em>delta</em> if the sensitivity of
+the price of the option to a change in the asset price.</p>
+<p>Some option models provide analytical solutions for this. In particular the
+Black-Scholes style models have closed form solutions. Many other models, in
+particular tree based formulations, do not.</p>
+<h2 id="finite-difference-methods">Finite Difference Methods</h2>
+<p>The greeks can be calculated numerically by using finite difference methods.
+This means calculating the price of the option multiple times, while perturbing
+the inputs.</p>
+<p>Using the central difference the formula for calculating the delta is given
+below.</p>
+<math class="latex2mathml" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>C</mi></mrow><mrow><mo>&#x02202;</mo><mi>S</mi></mrow></mfrac><mo>&#x0003D;</mo><mfrac><mrow><mi>B</mi><msub><mi>S</mi><mrow><mi>C</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002B;</mo><mi>&#x00394;</mi><mi>S</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>B</mi><msub><mi>S</mi><mrow><mi>C</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x02212;</mo><mi>&#x00394;</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mn>2</mn><mi>&#x00394;</mi><mi>S</mi></mrow></mfrac></mrow></math>
+<p>The following is a simplistic python implementation.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dS</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">bs_price</span><span class="p">(</span><span class="n">S</span> <span class="o">+</span> <span class="n">dS</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">bs_price</span><span class="p">(</span><span class="n">S</span> <span class="o">-</span> <span class="n">dS</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dS</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="the-numericgreeks-classes">The <code>NumericGreeks</code> classes</h2>
+<p>Some classes are provided for calculating the greeks. They differ only in the
+way they handle carry/dividend yield, or the lack of it.</p>
+<ul>
+<li><code>jetblack_options.numeric_greeks.without_carry</code> - for pricing formula with no
+    carry or dividend yield, for example Black 76, or the original Black-Scholes
+    formula for non-dividend paying stock.</li>
+<li><code>jetblack_options.numeric_greeks.with_dividend_yield</code> - for pricing formulae
+    with a continuous dividend yield.</li>
+<li><code>jetblack_options.numeric_greeks.with_carry</code> - for pricing formulae with cost
+    of carry, in the style of the generalised Black Scholes model.</li>
+</ul>
+<p>Each of the option pricing models has a convenience method <code>make_numeric_greeks</code>
+which will choose the appropriate <code>NumericGreeks</code> class.</p>
+<h2 id="optional-arguments">Optional Arguments</h2>
+<p>Some of the methods have an optional <code>method</code> parameter. This controls which finite difference is used. This can be
+one of: <code>'central'</code>, <code>'forward'</code> or <code>'backward'</code>.</p>
+<p>All the methods take as an optional parameter the value of
+the <em>bump</em> being applied. For example the <code>delta</code> method
+takes a <code>dS</code> argument which has the default value of <code>0.01</code>.</p>
+<h2 id="examples">Examples</h2>
+<p>Here we calculate the delta for the Black, Scholes &amp; Merton model with continuous
+dividend yield using the finite difference.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Calculate the delta by bumping the price.</span>
+<span class="kn">from</span> <span class="nn">jetblack_options.european.black_scholes_merton</span> <span class="kn">import</span> <span class="n">make_numeric_greeks</span>
+<span class="n">ng</span> <span class="o">=</span> <span class="n">make_numeric_greeks</span><span class="p">(</span><span class="n">is_call</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">ng</span><span class="o">.</span><span class="n">delta</span><span class="p">(</span><span class="n">is_call</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="what-next">What next ?</h2>
+<p><a href="../pandas/">Using pandas</a></p>
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -472,10 +676,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "/", "features": [], "search": "/assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="/assets/javascripts/bundle.cd18aaf1.min.js"></script>
+      <script src="../assets/javascripts/bundle.cd18aaf1.min.js"></script>
       
     
   </body>
