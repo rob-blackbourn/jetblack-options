@@ -1,5 +1,5 @@
 The "greeks" are measures of the sensitivity of an attribute (often the price)
-to one or more of the other attributes. So the *delta* if the sensitivity of
+to one or more of the other attributes. For example the *delta* is the sensitivity of
 the price of the option to a change in the asset price.
 
 Some option models provide analytical solutions for this. In particular the
@@ -11,6 +11,10 @@ particular tree based formulations, do not.
 The greeks can be calculated numerically by using finite difference methods.
 This means calculating the price of the option multiple times, while perturbing
 the inputs.
+
+This can be very intuitive. To calculate the sensitivity of the price of an
+option to that of the underlying stock we re-price the option by changing the
+underlying stock.
 
 Using the central difference the formula for calculating the delta is given
 below.

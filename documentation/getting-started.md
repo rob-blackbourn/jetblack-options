@@ -24,7 +24,7 @@ d = delta(is_call, S, K, T, r, q, v)
 
 Almost all modules will contain a `price` function.
 
-Given a function to calculate the price an `ivol` function will exists to
+Given a function to calculate the price an `ivol` function will exist to
 calculate the implied volatility. This is done with a solver.
 
 If a `NumericalGreeks` class has been written for the parameters used in the
