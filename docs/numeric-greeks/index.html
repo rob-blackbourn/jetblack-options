@@ -1085,7 +1085,7 @@
   <h1>Numeric Greeks</h1>
 
 <p>The "greeks" are measures of the sensitivity of an attribute (often the price)
-to one or more of the other attributes. So the <em>delta</em> if the sensitivity of
+to one or more of the other attributes. For example the <em>delta</em> is the sensitivity of
 the price of the option to a change in the asset price.</p>
 <p>Some option models provide analytical solutions for this. In particular the
 Black-Scholes style models have closed form solutions. Many other models, in
@@ -1094,6 +1094,9 @@ particular tree based formulations, do not.</p>
 <p>The greeks can be calculated numerically by using finite difference methods.
 This means calculating the price of the option multiple times, while perturbing
 the inputs.</p>
+<p>This can be very intuitive. To calculate the sensitivity of the price of an
+option to that of the underlying stock we re-price the option by changing the
+underlying stock.</p>
 <p>Using the central difference the formula for calculating the delta is given
 below.</p>
 <math class="latex2mathml" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>C</mi></mrow><mrow><mo>&#x02202;</mo><mi>S</mi></mrow></mfrac><mo>&#x0003D;</mo><mfrac><mrow><mi>B</mi><msub><mi>S</mi><mrow><mi>C</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002B;</mo><mi>&#x00394;</mi><mi>S</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>B</mi><msub><mi>S</mi><mrow><mi>C</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x02212;</mo><mi>&#x00394;</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mn>2</mn><mi>&#x00394;</mi><mi>S</mi></mrow></mfrac></mrow></math>
