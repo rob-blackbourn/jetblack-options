@@ -2037,11 +2037,14 @@
       <span class="autodoc-title-type">module </span><span class="autodoc-title-name">jetblack_options.european.black_76</span>
   </h3>
 <h4 class="autodoc-title" id="summary">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>Black (1976) Options on futures/forwards</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description">Description</h4>
+<div class="autodoc-description">
 <div>
 <ul>
 <li>The discounted futures price <math class="latex2mathml" display="inline"><mrow><mi>F</mi></mrow></math>,</li>
@@ -2059,6 +2062,7 @@
 <math class="latex2mathml" display="block"><mrow><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mi>&amp;</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msqrt><mrow><mn>2</mn><mi>&#x003C0;</mi></mrow></msqrt></mrow></mfrac><msubsup><mo>&#x0222B;</mo><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow><mi>x</mi></msubsup><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><msup><mi>y</mi><mn>2</mn></msup></mrow></msup><mspace width="0.167em"></mspace><mi>d</mi><mi>y</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msqrt><mrow><mn>2</mn><mi>&#x003C0;</mi></mrow></msqrt></mrow></mfrac><msubsup><mo>&#x0222B;</mo><mi>x</mi><mo>&#x0221E;</mo></msubsup><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><msup><mi>y</mi><mn>2</mn></msup></mrow></msup><mspace width="0.167em"></mspace><mi>d</mi><mi>y</mi></mrow></math>
 </div>
 </div>
+</div>
 <div class="autodoc-examples">
 
 </div>
@@ -2070,11 +2074,14 @@
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">delta</span>
 </h3>
 <h4 class="autodoc-title" id="summary_1">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The sensitivity of the option to a change in the asset price</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_1">Description</h4>
+<div class="autodoc-description">
 <div>
 <p>using Black 76.</p>
 <p>Call <math class="latex2mathml" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>: <math class="latex2mathml" display="inline"><mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
@@ -2083,40 +2090,60 @@
 </p>
 </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">delta</var><span class="autodoc-punctuation">(</span><br />
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">delta</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters">Parameters</h4>
-<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>True for a call, false for a put.</p>
 </div>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The current futures price.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2137,42 +2164,62 @@
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">gamma</span>
 </h3>
 <h4 class="autodoc-title" id="summary_2">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The second derivative to the change in asset price using Black 76.</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_2">Description</h4>
-<mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mfrac><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><mi>F</mi><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x0003D;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mfrac><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msup><mi>F</mi><mn>2</mn></msup><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac></mrow>
+<div class="autodoc-description">
+      <mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mfrac><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><mi>F</mi><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x0003D;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mfrac><mrow><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msup><mi>F</mi><mn>2</mn></msup><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac></mrow>
+    </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">gamma</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">gamma</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_1">Parameters</h4>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The current futures price.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2193,59 +2240,86 @@
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">ivol</span>
 </h3>
 <h4 class="autodoc-title" id="summary_3">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>Calculate the volatility of a Black 76 option that is implied by the price.</p>
+</div>
 </div>
 <div class="autodoc-description">
 
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">ivol</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">ivol</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">p</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">p</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">*</var><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">*</var><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">max_iterations</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">int, Optional</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">max_iterations</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">int, Optional</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">epsilon</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float, Optional</span></div>
+          <var class="autodoc-varname">epsilon</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float, Optional</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_2">Parameters</h4>
-<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>True for a call, false for a put.</p>
 </div>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The current asset price.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The option strike price</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to maturity of the option in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">p</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">p</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The option price.</p>
 </div>
-<var class="autodoc-varname">max_iterations</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">int, Optional</span><div>
+</div>
+<var class="autodoc-varname">max_iterations</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">int, Optional</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The maximum number of iterations before
 a price is returned. Defaults to 20.</p>
 </div>
-<var class="autodoc-varname">epsilon</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float, Optional</span><span class="autodoc-punctuation"> (optional)</span><div>
+</div>
+<var class="autodoc-varname">epsilon</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float, Optional</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The largest acceptable error. Defaults to 1e-8.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2269,14 +2343,17 @@ a price is returned. Defaults to 20.</p>
 <div class="autodoc-description">
 
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">make_numeric_greeks</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">make_numeric_greeks</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span></div>
+          <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">NumericGreeks</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_3">Parameters</h4>
-<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><p></p>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span>
+      <div class="autodoc-vardesc">
+</div>
 </div>
 <div class="autodoc-returns">
 <h4 class="autodoc-title" id="returns_3">Returns</h4>
@@ -2296,11 +2373,14 @@ a price is returned. Defaults to 20.</p>
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">price</span>
 </h3>
 <h4 class="autodoc-title" id="summary_4">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>Fair value of a futures/forward using Black 76.</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_3">Description</h4>
+<div class="autodoc-description">
 <div>
 <p>Call price: <math class="latex2mathml" display="inline"><mrow><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mo stretchy="false">[</mo><mi>F</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>K</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math>
 </p>
@@ -2308,40 +2388,60 @@ a price is returned. Defaults to 20.</p>
 </p>
 </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">price</var><span class="autodoc-punctuation">(</span><br />
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">price</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_4">Parameters</h4>
-<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>True for a call, false for a put.</p>
 </div>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The price of the future.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The asset volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2362,11 +2462,14 @@ a price is returned. Defaults to 20.</p>
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">rho</span>
 </h3>
 <h4 class="autodoc-title" id="summary_5">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The sensitivity of the option price to a change in the risk free rate</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_4">Description</h4>
+<div class="autodoc-description">
 <div>
 <p>using Black 76.</p>
 <p>Call <math class="latex2mathml" display="inline"><mrow><mi>&#x003C1;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>&#x003C4;</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mo stretchy="false">[</mo><mi>F</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>K</mi><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math>
@@ -2375,40 +2478,60 @@ a price is returned. Defaults to 20.</p>
 </p>
 </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">rho</var><span class="autodoc-punctuation">(</span><br />
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">rho</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_5">Parameters</h4>
-<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>True for a call, false for a put.</p>
 </div>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The price of the future.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The asset volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2429,51 +2552,74 @@ a price is returned. Defaults to 20.</p>
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">theta</span>
 </h3>
 <h4 class="autodoc-title" id="summary_6">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The change in the value of the option with respect to time to expiry</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_5">Description</h4>
+<div class="autodoc-description">
 <div>
 <p>using Black 76.</p>
 <math class="latex2mathml" display="block"><mrow><mo>&#x02212;</mo><mfrac><mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mi>&#x003C3;</mi></mrow><mrow><mn>2</mn><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x02212;</mo><mi>r</mi><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>r</mi><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
 <math class="latex2mathml" display="block"><mrow><mo>&#x02212;</mo><mfrac><mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mi>&#x003C3;</mi></mrow><mrow><mn>2</mn><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo>&#x0002B;</mo><mi>r</mi><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>r</mi><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003A6;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
 </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">theta</var><span class="autodoc-punctuation">(</span><br />
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">theta</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_6">Parameters</h4>
-<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><div>
+<var class="autodoc-varname">is_call</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>True for a call, false for a put.</p>
 </div>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The current futures price.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2494,45 +2640,65 @@ a price is returned. Defaults to 20.</p>
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">vanna</span>
 </h3>
 <h4 class="autodoc-title" id="summary_7">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The sensitivity of the option value to the underlying</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_6">Description</h4>
+<div class="autodoc-description">
 <div>
 <p>asset price and the volatility.</p>
 <math class="latex2mathml" display="block"><mrow><mfrac><mrow><msup><mo>&#x02202;</mo><mn>2</mn></msup><mi>V</mi></mrow><mrow><mo>&#x02202;</mo><mi>F</mi><mo>&#x02202;</mo><mi>&#x003C3;</mi></mrow></mfrac><mo>&#x0003D;</mo><mo>&#x02212;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mfrac><mrow><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mfrac><mspace width="0.167em"></mspace><mo>&#x0003D;</mo><mfrac><mrow><mi>&#x1D4B1;</mi></mrow><mrow><mi>F</mi></mrow></mfrac><mrow><mo fence="true" form="prefix" stretchy="true">[</mo><mn>1</mn><mo>&#x02212;</mo><mfrac><mrow><msub><mi>d</mi><mn>1</mn></msub></mrow><mrow><mi>&#x003C3;</mi><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></mfrac><mo fence="true" form="postfix" stretchy="true">]</mo></mrow></mrow></math>
 </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vanna</var><span class="autodoc-punctuation">(</span><br />
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vanna</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_7">Parameters</h4>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The price of the future.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The asset volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2553,45 +2719,65 @@ a price is returned. Defaults to 20.</p>
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">vega</span>
 </h3>
 <h4 class="autodoc-title" id="summary_8">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The sensitivity of the options price or a change in the asset volatility</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_7">Description</h4>
+<div class="autodoc-description">
 <div>
 <p>using Black 76.</p>
 <math class="latex2mathml" display="block"><mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt><mo>&#x0003D;</mo><mi>K</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt></mrow></math>
 </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vega</var><span class="autodoc-punctuation">(</span><br />
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vega</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_8">Parameters</h4>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The current futures price.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
@@ -2612,42 +2798,62 @@ a price is returned. Defaults to 20.</p>
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">vomma</span>
 </h3>
 <h4 class="autodoc-title" id="summary_9">Summary</h4>
+<div class="autodoc-description">
 <div>
 <p>The second order sensitivity to volatility.</p>
 </div>
+</div>
 <div class="autodoc-description">
 <h4 class="autodoc-title" id="description_8">Description</h4>
-<mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt><mfrac><mrow><msub><mi>d</mi><mn>1</mn></msub><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mfrac><mo>&#x0003D;</mo><mi>&#x1D4B1;</mi><mfrac><mrow><msub><mi>d</mi><mn>1</mn></msub><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mfrac></mrow>
+<div class="autodoc-description">
+      <mrow><mi>F</mi><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>r</mi><mi>&#x003C4;</mi></mrow></msup><mi>&#x003C6;</mi><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><msqrt><mrow><mi>&#x003C4;</mi></mrow></msqrt><mfrac><mrow><msub><mi>d</mi><mn>1</mn></msub><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mfrac><mo>&#x0003D;</mo><mi>&#x1D4B1;</mi><mfrac><mrow><msub><mi>d</mi><mn>1</mn></msub><msub><mi>d</mi><mn>2</mn></msub></mrow><mrow><mi>&#x003C3;</mi></mrow></mfrac></mrow>
+    </div>
 </div>
-<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vomma</var><span class="autodoc-punctuation">(</span><br />
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_options.european.black_76</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">vomma</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
 <div class="autodoc-argument">
-        <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
+          <var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+          <var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span></div>
+</div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">float</span></div>
 <br />
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_9">Parameters</h4>
-<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+<var class="autodoc-varname">F</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The price of the future.</p>
 </div>
-<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">K</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The strike price.</p>
 </div>
-<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">T</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The time to expiry in years.</p>
 </div>
-<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">r</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The risk free rate.</p>
 </div>
-<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span><div>
+</div>
+<var class="autodoc-varname">v</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">float</span>
+      <div class="autodoc-vardesc">
+<div>
 <p>The asset volatility.</p>
+</div>
 </div>
 </div>
 <div class="autodoc-returns">
