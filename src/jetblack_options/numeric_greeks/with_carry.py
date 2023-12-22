@@ -38,6 +38,44 @@ class NumericGreeks:
             dS: float = 0.01,
             method: DifferenceMethod = 'central'
     ) -> float:
+        r"""Calculate the delta on an option using the finite difference.
+
+        The delta is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial V}{\partial S} = \frac{BS_{price}(S + \Delta S, K, T, r, b, \sigma) - BS_{price}(S-\Delta S, K, T, r, b, \sigma)}{2 \Delta S}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial V}{\partial S} = \frac{BS_{price}(S+\Delta S, K, T, r, b, \sigma) - BS_{price}(S, K, T, r, b, \sigma)}{\Delta S}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial V}{\partial S} = \frac{BS_{price}(S, K, T, r, b, \sigma) - BS_{price}(S - \Delta S, K, T, r, b, \sigma)}{\Delta S}
+        $$
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            dS (float, optional): The absolute amount to change the asset price by. Defaults to 0.01.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric delta.
+        """
         if method == 'central':
             return (
                 self.price(S + dS, K, T, r, b, v)
@@ -68,6 +106,45 @@ class NumericGreeks:
             dS: float = 0.01,
             method: DifferenceMethod = 'central'
     ) -> float:
+        r"""Calculate the gamma of an option using finite difference methods.
+
+        The gamma is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial^2 V}{\partial S^2} = \frac{BS_{price}(S + \Delta S, K, T, r, b, \sigma) - 2 BS_{price}(S, K, T, r, b, \sigma) + BS_{price}(S - \Delta S, K, T, r, b, \sigma)}{\Delta S^2}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial^2 V}{\partial S^2} = \frac{BS_{price}(S + 2 \Delta S, K, T, r, b, \sigma) - 2 BS_{price}(S + \Delta S, K, T, r, b, \sigma) + BS_{price}(S, K, T, r, b, \sigma)}{\Delta S^2}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial^2 V}{\partial S^2} = \frac{BS_{price}(S, K, T, r, b, \sigma) - 2 BS_{price}(S - \Delta S, K, T, r, b, \sigma) + BS_{price}(S - 2 \Delta S, K, T, r, b, \sigma)}{\Delta S^2}
+        $$
+
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            dS (float, optional): The absolute amount to change the asset price by. Defaults to 0.01.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric gamma.
+        """
         if method == 'central':
             return (
                 self.price(S + dS, K, T, r, b, v)
@@ -101,6 +178,45 @@ class NumericGreeks:
             dT: float = 1 / 365,
             method: DifferenceMethod = 'central'
     ) -> float:
+        r"""Calculate the theta on an option using the finite difference.
+
+        The theta is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial V}{\partial T} = \frac{BS_{price}(S, K, T - \Delta T, r, b, \sigma) - BS_{price}(S, K, T + \Delta T, r, b, \sigma)}{2 \Delta T}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial V}{\partial T} = \frac{BS_{price}(S, K, T, r, b, \sigma) - BS_{price}(S, K, T + \Delta T, r, b, \sigma)}{\Delta T}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial V}{\partial T} = \frac{BS_{price}(S, K, T - \Delta T, r, b, \sigma) - BS_{price}(S, K, T, r, b, \sigma)}{\Delta T}
+        $$
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            dT (float, optional): The absolute amount to change the asset price by. Defaults to 1/365.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric theta.
+        """
+
         if method == 'central':
             return (
                 self.price(S, K, T - dT, r, b, v)
@@ -131,6 +247,45 @@ class NumericGreeks:
             dv: float = 0.001,
             method: DifferenceMethod = 'central'
     ) -> float:
+        r"""Calculate the vega on an option using the finite difference.
+
+        The vega is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial V}{\partial \sigma} = \frac{BS_{price}(S, K, T, r, b, \sigma + \Delta \sigma) - BS_{price}(S, K, T, r, b, \sigma - \Delta \sigma)}{2 \Delta \sigma}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial V}{\partial \sigma} = \frac{BS_{price}(S, K, T, r, b, \sigma + \Delta \sigma) - BS_{price}(S, K, T, r, b, \sigma)}{\Delta \sigma}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial V}{\partial \sigma} = \frac{BS_{price}(S, K, T, r, b, \sigma) - BS_{price}(S, K, T, r, b, \sigma - \Delta \sigma)}{\Delta \sigma}
+        $$
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            dV (float, optional): The absolute amount to change the volatility by. Defaults to 0.001.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric vega.
+        """
+
         if method == 'central':
             return (
                 self.price(S, K, T, r, b, v + dv)
@@ -161,6 +316,45 @@ class NumericGreeks:
             dr: float = 0.001,
             method: DifferenceMethod = 'central'
     ) -> float:
+        r"""Calculate the rho on an option using the finite difference.
+
+        The rho is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial V}{\partial r} = \frac{BS_{price}(S, K, T, r + \Delta r, b + \Delta r, \sigma) - BS_{price}(S, K, T, r - \Delta r, b - \Delta r, \sigma)}{2 \Delta r}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial V}{\partial r} = \frac{BS_{price}(S, K, T, r + \Delta r, b + \Delta r, \sigma) - BS_{price}(S, K, T, r, b, \sigma)}{\Delta r}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial V}{\partial r} = \frac{BS_{price}(S, K, T, r, b, \sigma) - BS_{price}(S, K, T, r - \Delta r, b - \Delta r, \sigma)}{\Delta r}
+        $$
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            dr (float, optional): The absolute amount to change the rate by. Defaults to 0.001.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric rho.
+        """
+
         if method == 'central':
             return (
                 self.price(S, K, T, r + dr, b + dr, v)
@@ -191,6 +385,45 @@ class NumericGreeks:
             db: float = 0.001,
             method: DifferenceMethod = 'central'
     ) -> float:
+        r"""Calculate the carry on an option using the finite difference.
+
+        The carry is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial V}{\partial b} = \frac{BS_{price}(S, K, T, r, b + \Delta b, \sigma) - BS_{price}(S, K, T, r, b - \Delta b, \sigma)}{2 \Delta b}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial V}{\partial b} = \frac{BS_{price}(S, K, T, r, b + \Delta b, \sigma) - BS_{price}(S, K, T, r, b, \sigma)}{\Delta b}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial V}{\partial r} = \frac{BS_{price}(S, K, T, r, b, \sigma) - BS_{price}(S, K, T, r, b - \Delta b, \sigma)}{\Delta b}
+        $$
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            db (float, optional): The absolute amount to change the carry rate by. Defaults to 0.001.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric carry.
+        """
+
         if method == 'central':
             return (
                 self.price(S, K, T, r, b + db, v)
