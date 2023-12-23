@@ -1094,13 +1094,23 @@ particular tree based formulations, do not.</p>
 <p>The greeks can be calculated numerically by using finite difference methods.
 This means calculating the price of the option multiple times, while perturbing
 the inputs.</p>
-<p>This can be very intuitive. To calculate the sensitivity of the price of an
-option to that of the underlying stock we re-price the option by changing the
-underlying stock.</p>
-<p>Using the central difference the formula for calculating the delta is given
+<p>This can be very intuitive. For example, to find out how the price of the option
+changes to a penny change in the underlying asset price, we simply recalculate
+the option price, adding a penny to the underlying asset price.</p>
+<p>There are three methods that could have been used in the above example. Given
+the change is the difference between option prices where the underlying asset
+price has changed, we could:</p>
+<ul>
+<li>OptionPrice(AssetPrice + penny) - OptionPrice(AssetPrice)</li>
+<li>OptionPrice(AssetPrice + penny) - OptionPrice(AssetPrice - penny)</li>
+<li>OptionPrice(AssetPrice) - OptionPrice(AssetPrice - penny)</li>
+</ul>
+<p>These are the <em>forward</em>, <em>central</em> and <em>backward</em> methods, and each gives a
+slightly different answer.</p>
+<p>Using the <em>central</em> difference, the formula for calculating the delta is given
 below.</p>
-<math class="latex2mathml" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>C</mi></mrow><mrow><mo>&#x02202;</mo><mi>S</mi></mrow></mfrac><mo>&#x0003D;</mo><mfrac><mrow><mi>B</mi><msub><mi>S</mi><mrow><mi>C</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002B;</mo><mi>&#x00394;</mi><mi>S</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>B</mi><msub><mi>S</mi><mrow><mi>C</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x02212;</mo><mi>&#x00394;</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mn>2</mn><mi>&#x00394;</mi><mi>S</mi></mrow></mfrac></mrow></math>
-<p>The following is a simplistic python implementation.</p>
+<math class="latex2mathml" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>V</mi></mrow><mrow><mo>&#x02202;</mo><mi>S</mi></mrow></mfrac><mo>&#x0003D;</mo><mfrac><mrow><mi>B</mi><msub><mi>S</mi><mrow><mi>p</mi><mi>r</mi><mi>i</mi><mi>c</mi><mi>e</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002B;</mo><mi>&#x00394;</mi><mi>S</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>B</mi><msub><mi>S</mi><mrow><mi>p</mi><mi>r</mi><mi>i</mi><mi>c</mi><mi>e</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x02212;</mo><mi>&#x00394;</mi><mi>S</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>T</mi><mo>&#x0002C;</mo><mi>r</mi><mo>&#x0002C;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mn>2</mn><mi>&#x00394;</mi><mi>S</mi></mrow></mfrac></mrow></math>
+<p>The following is a python implementation.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="n">is_call</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dS</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">price</span><span class="p">(</span><span class="n">is_call</span><span class="p">,</span> <span class="n">S</span> <span class="o">+</span> <span class="n">dS</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
@@ -1108,6 +1118,8 @@ below.</p>
     <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dS</span><span class="p">)</span>
 </code></pre></div>
 
+<p>For the higher order greeks (like gamma) the maths gets a little more complicated,
+but it follows the same intuitive reasoning.</p>
 <h2 id="the-numericgreeks-classes">The <code>NumericGreeks</code> classes</h2>
 <p>Some classes are provided for calculating the greeks. They differ only in the
 way they handle carry/dividend yield, or the lack of it.</p>

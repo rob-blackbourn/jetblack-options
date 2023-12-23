@@ -12,18 +12,29 @@ The greeks can be calculated numerically by using finite difference methods.
 This means calculating the price of the option multiple times, while perturbing
 the inputs.
 
-This can be very intuitive. To calculate the sensitivity of the price of an
-option to that of the underlying stock we re-price the option by changing the
-underlying stock.
+This can be very intuitive. For example, to find out how the price of the option
+changes to a penny change in the underlying asset price, we simply recalculate
+the option price, adding a penny to the underlying asset price.
 
-Using the central difference the formula for calculating the delta is given
+There are three methods that could have been used in the above example. Given
+the change is the difference between option prices where the underlying asset
+price has changed, we could:
+
+* OptionPrice(AssetPrice + penny) - OptionPrice(AssetPrice)
+* OptionPrice(AssetPrice + penny) - OptionPrice(AssetPrice - penny)
+* OptionPrice(AssetPrice) - OptionPrice(AssetPrice - penny)
+
+These are the *forward*, *central* and *backward* methods, and each gives a
+slightly different answer.
+
+Using the *central* difference, the formula for calculating the delta is given
 below.
 
 $$
-\frac{\partial C}{\partial S} = \frac{BS_{Call}(S+\Delta S, K, T,r,\sigma) - BS_{Call}(S-\Delta, K, T,r,\sigma)}{2 \Delta S}
+\frac{\partial V}{\partial S} = \frac{BS_{price}(S + \Delta S, K, T, r, \sigma) - BS_{price}(S - \Delta S, K, T, r, \sigma)}{2 \Delta S}
 $$
 
-The following is a simplistic python implementation.
+The following is a python implementation.
 
 ```python
 def delta(is_call, S, K, T, r, v, dS):
@@ -32,6 +43,9 @@ def delta(is_call, S, K, T, r, v, dS):
         - price(is_call, S - dS, K, T, r, v)
     ) / (2 * dS)
 ```
+
+For the higher order greeks (like gamma) the maths gets a little more complicated,
+but it follows the same intuitive reasoning.
 
 ## The `NumericGreeks` classes
 
