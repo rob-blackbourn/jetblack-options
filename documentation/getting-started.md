@@ -22,7 +22,8 @@ d = delta(is_call, S, K, T, r, q, v)
 
 ## Module contents
 
-Almost all modules will contain a `price` function.
+Almost all modules will contain a `price` function, also called the premium or
+fair value.
 
 Given a function to calculate the price an `ivol` function will exist to
 calculate the implied volatility. This is done with a solver.
