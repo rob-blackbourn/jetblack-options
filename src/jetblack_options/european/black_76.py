@@ -48,9 +48,17 @@ def price(
 ) -> float:
     r"""Fair value of a futures/forward using Black 76.
 
-    Call price: $ e^{-r \tau}[F\Phi(d_1) - K\Phi(d_2)] $
+    For a call:
 
-    Put price: $ e^{-r \tau} [K\Phi(-d_2) -  F\Phi(-d_1)] $
+    $$
+    C = e^{-r \tau}[F\Phi(d_1) - K\Phi(d_2)]
+    $$
+
+    For a put:
+
+    $$
+    P = e^{-r \tau} [K\Phi(-d_2) -  F\Phi(-d_1)]
+    $$
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -124,9 +132,17 @@ def delta(
     r"""The sensitivity of the option to a change in the asset price
     using Black 76.
 
-    Call $\Delta$: $e^{-r \tau} \Phi(d_1)$
+    For the call.
 
-    Put $\Delta$: $-e^{-r \tau} \Phi(-d_1)$
+    $$
+    \frac{\partial C}{\partial S} = e^{-r \tau} \Phi(d_1)
+    $$
+
+    For the put.
+
+    $$
+    \frac{\partial P}{\partial S} = -e^{-r \tau} \Phi(-d_1)
+    $$
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -155,8 +171,10 @@ def gamma(
 ) -> float:
     r"""The second derivative to the change in asset price using Black 76.
 
+    The gamma for both calls and puts.
+
     $$
-    e^{-r \tau} \frac{\varphi(d_1)}{F\sigma\sqrt{\tau}} = K e^{-r \tau} \frac{\varphi(d_2)}{F^2\sigma\sqrt{\tau}}
+    \frac{\partial^2 V}{\partial S^2} = e^{-r \tau} \frac{\varphi(d_1)}{F\sigma\sqrt{\tau}} = K e^{-r \tau} \frac{\varphi(d_2)}{F^2\sigma\sqrt{\tau}}
     $$
 
     Args:
@@ -185,12 +203,16 @@ def theta(
     r"""The change in the value of the option with respect to time to expiry
     using Black 76.
 
-    $$
-    - \frac{F e^{-r \tau} \varphi(d_1) \sigma}{2 \sqrt{\tau}} - rKe^{-r \tau}\Phi(d_2) + rFe^{-r \tau}\Phi(d_1)
-    $$
+    For the call.
 
     $$
-    - \frac{F e^{-r \tau} \varphi(d_1) \sigma}{2 \sqrt{\tau}} + rKe^{-r \tau}\Phi(-d_2) - rFe^{-r \tau}\Phi(-d_1)
+    \frac{\partial C}{\partial T} - \frac{F e^{-r \tau} \varphi(d_1) \sigma}{2 \sqrt{\tau}} - rKe^{-r \tau}\Phi(d_2) + rFe^{-r \tau}\Phi(d_1)
+    $$
+
+    For the put.
+
+    $$
+    \frac{\partial P}{\partial T} - \frac{F e^{-r \tau} \varphi(d_1) \sigma}{2 \sqrt{\tau}} + rKe^{-r \tau}\Phi(-d_2) - rFe^{-r \tau}\Phi(-d_1)
     $$
 
     Args:
@@ -231,8 +253,10 @@ def vega(
     r"""The sensitivity of the options price or a change in the asset volatility
     using Black 76.
 
+    For both calls and puts.
+
     $$
-    F e^{-r \tau} \varphi(d_1) \sqrt{\tau} = K e^{-r \tau} \varphi(d_2) \sqrt{\tau}
+    \frac{\partial V}{\partial \sigma} = F e^{-r \tau} \varphi(d_1) \sqrt{\tau} = K e^{-r \tau} \varphi(d_2) \sqrt{\tau}
     $$
 
     Args:
@@ -260,9 +284,17 @@ def rho(
     r"""The sensitivity of the option price to a change in the risk free rate
     using Black 76.
 
-    Call $ \rho = -\tau e^{-r \tau}[F\Phi(d_1) - K\Phi(d_2)] $
+    For a call:
 
-    Put $ \rho = -\tau e^{-r \tau} [K\Phi(-d_2) -  F\Phi(-d_1)] $
+    $$
+    \frac{\partial C}{\partial r} = -\tau e^{-r \tau}[F\Phi(d_1) - K\Phi(d_2)]
+    $$
+
+    For a put:
+
+    $$
+    \frac{\partial P}{\partial r} = -\tau e^{-r \tau} [K\Phi(-d_2) -  F\Phi(-d_1)]
+    $$
 
     Args:
         is_call (bool): True for a call, false for a put.
@@ -293,6 +325,8 @@ def vanna(
     r"""The sensitivity of the option value to the underlying
     asset price and the volatility.
 
+    For both calls and puts.
+
     $$
     \frac{\partial^2 V}{\partial F \partial \sigma} = -e^{-r \tau} \varphi(d_1) \frac{d_2}{\sigma} \, = \frac{\mathcal{V}}{F}\left[1 - \frac{d_1}{\sigma\sqrt{\tau}} \right]
     $$
@@ -321,8 +355,10 @@ def vomma(
 ) -> float:
     r"""The second order sensitivity to volatility.
 
+    For both puts and calls.
+
     $$
-    F e^{-r \tau} \varphi(d_1) \sqrt{\tau} \frac{d_1 d_2}{\sigma} = \mathcal{V}  \frac{d_1 d_2}{\sigma}
+    \frac{\partial^2 V}{\partial \sigma^2} = F e^{-r \tau} \varphi(d_1) \sqrt{\tau} \frac{d_1 d_2}{\sigma} = \mathcal{V}  \frac{d_1 d_2}{\sigma}
     $$
 
     Args:

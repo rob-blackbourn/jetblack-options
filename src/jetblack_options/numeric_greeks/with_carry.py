@@ -624,6 +624,46 @@ class NumericGreeks:
             *,
             dv: float = 0.001,
     ) -> float:
+        r"""Calculate the vomma of an option using finite difference methods.
+
+        The vomma is calculated according to one of the three difference methods.
+
+        Central difference method.
+
+        $$
+        \frac{\partial^2 V}{\partial \sigma^2} = \frac{BS_{price}(S, K, T, r, b, \sigma + \Delta \sigma) - 2 BS_{price}(S, K, T, r, b, \sigma) + BS_{price}(S, K, T, r, b, \sigma - \Delta \sigma)}{\Delta \sigma^2}
+        $$
+
+        Forward difference method.
+
+        $$
+        \frac{\partial^2 V}{\partial \sigma^2} = \frac{BS_{price}(S, K, T, r, b, \sigma + 2 \Delta \sigma) - 2 BS_{price}(S, K, T, r, b, \sigma + \Delta \sigma) + BS_{price}(S, K, T, r, b, \sigma)}{\Delta \sigma^2}
+        $$
+
+        Backward difference method.
+
+        $$
+        \frac{\partial^2 V}{\partial \sigma^2} = \frac{BS_{price}(S, K, T, r, b, \sigma) - 2 BS_{price}(S, K, T, r, b, \sigma - \Delta \sigma) + BS_{price}(S, K, T, r, b, \sigma - 2 \Delta \sigma)}{\Delta \sigma^2}
+        $$
+
+
+        Args:
+            S (float): The asset price.
+            K (float): The strike.
+            T (float): Time to expiry in years.
+            r (float): The risk free rate.
+            b (float): The cost of carry.
+            v (float): The volatility.
+            dv (float, optional): The absolute amount to change the volatility price by. Defaults to 0.001.
+            method (DifferenceMethod, optional): The method to use. Defaults to 'central'.
+
+        Raises:
+            ValueError: For an invalid method.
+
+        Returns:
+            float: The numeric vomma.
+        """
+
         # DvegaDvol
         return (
             self.price(S, K, T, r, b, v + dv)

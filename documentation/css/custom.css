@@ -35,6 +35,12 @@ var.autodoc-property {
 div.autodoc-description p {
     margin: 0 0 0.5em 0;
 }
+
 div.autodoc-vardesc p {
     margin: 0 0 0.2em 0.5em;
+}
+
+math.latex2mathml[display=block] {
+    display: flex;
+    margin: 0 0 0.8em 1em;
 }
