@@ -97,8 +97,21 @@ def ivol(
 
 
 def make_numeric_greeks(is_call: bool) -> NumericGreeks:
+    """Make a class to generate greeks numerically using finite difference
+    methods.
+
+    Args:
+        is_call (bool): If true the options is a call;  otherwise it is a put.
+
+    Returns:
+        NumericGreeks: A class which can generate Greeks using finite difference
+            methods.
+    """
+    # Normalize the price function to match that required by the finite
+    # difference methods.
     def evaluate(S: float, K: float, T: float, r: float, v: float) -> float:
         return price(is_call, S, K, T, r, v)
+
     return NumericGreeks(evaluate)
 
 
