@@ -116,8 +116,7 @@ def ivol(
 
 
 def make_numeric_greeks(is_call: bool) -> NumericGreeks:
-    """Make a class to generate greeks numerically using finite difference
-    methods.
+    """Make a class to generate greeks numerically using finite difference methods.
 
     Args:
         is_call (bool): If true the options is a call;  otherwise it is a put.
