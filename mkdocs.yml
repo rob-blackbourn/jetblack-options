@@ -17,6 +17,7 @@ nav:
   - Installation: installation.md
   - Getting Started: getting-started.md
   - Numeric Greeks: numeric-greeks.md
+  - Generalized Black Scholes: generalized-black-scholes.md
   - Pandas: pandas.md
   - API:
     - jetblack_options:

@@ -84,7 +84,6 @@ ng = make_numeric_greeks(is_call=True)
 d1 = ng.delta(is_call, S, K, T, r, q, v)
 ```
 
-
 ## What next ?
 
-[Using pandas](./pandas.md)
+[Generalized Black Scholes](./generalized-black-scholes.md)
