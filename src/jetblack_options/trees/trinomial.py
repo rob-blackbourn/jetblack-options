@@ -174,8 +174,7 @@ def make_numeric_greeks(
         is_call: bool,
         n: int
 ) -> NumericGreeks:
-    """Make a class to generate greeks numerically using finite difference
-    methods.
+    """Make a class to generate greeks numerically using finite difference methods.
 
     Args:
         is_european (bool): True for European, false for American.

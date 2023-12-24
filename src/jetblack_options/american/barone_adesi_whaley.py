@@ -22,8 +22,7 @@ def _kc(
         b: float,
         v: float,
 ) -> float:
-    """Newton Raphson algorithm to solve for the critical commodity price for a
-    Call.
+    """Newton Raphson algorithm to solve for the critical commodity price for a call.
 
     Args:
         K (float): The strike.
@@ -108,8 +107,7 @@ def _kp(
         b: float,
         v: float,
 ) -> float:
-    """Newton Raphson algorithm to solve for the critical commodity price for a
-    put.
+    """Newton Raphson algorithm to solve for the critical commodity price for a put.
 
     Args:
         K (float): The strike.
@@ -250,8 +248,7 @@ def ivol(
 
 
 def make_numeric_greeks(is_call: bool) -> NumericGreeks:
-    """Make a class to generate greeks numerically using finite difference
-    methods.
+    """Make a class to generate greeks numerically using finite difference methods.
 
     Args:
         is_call (bool): If true the options is a call;  otherwise it is a put.

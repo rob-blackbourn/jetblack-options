@@ -95,7 +95,7 @@ def ivol(
 
 
 def make_numeric_greeks(is_call: bool, n: int) -> NumericGreeks:
-    """_summary_
+    """Make a class to generate greeks numerically using finite difference methods.
 
     Args:
         is_call (bool): True for a call, false for a put.

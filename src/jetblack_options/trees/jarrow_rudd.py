@@ -19,8 +19,7 @@ def greeks(
         v: float,
         n: int
 ) -> Tuple[float, float, float, float]:
-    """Calculate the price and some greeks using a Jarrow-Rudd binomial option
-    pricing tree.
+    """Calculate the price and some greeks using a Jarrow-Rudd binomial option pricing tree.
 
     Args:
         is_european (bool): Tue for European, false for American.
@@ -95,8 +94,7 @@ def price(
         v: float,
         n: int
 ) -> float:
-    """Calculate the price using a Jarrow-Rudd binomial option
-    pricing tree.
+    """Calculate the price using a Jarrow-Rudd binomial option pricing tree.
 
     Args:
         is_european (bool): Tue for European, false for American.
@@ -158,8 +156,7 @@ def ivol(
 
 
 def make_numeric_greeks(is_european: bool, is_call: bool, n: int) -> NumericGreeks:
-    """Make a class to generate greeks numerically using finite difference
-    methods.
+    """Make a class to generate greeks numerically using finite difference methods.
 
     Args:
         is_european (bool): True for European, false for American.

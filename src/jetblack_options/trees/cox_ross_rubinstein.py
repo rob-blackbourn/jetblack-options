@@ -20,8 +20,7 @@ def greeks(
         v: float,
         n: int
 ) -> Tuple[float, float, float, float]:
-    """A Cox-Ross-Rubinstein binomial tree option pricer returning the price
-    and some greeks.
+    """A Cox-Ross-Rubinstein binomial tree option pricer returning the price and some greeks.
 
     Args:
         is_european (bool): True for European, false for American.
@@ -96,8 +95,7 @@ def price(
         v: float,
         n: int
 ) -> float:
-    """Calculate the price of an option using a Cox, Ross & Rubenstein
-    binomial tree.
+    """Calculate the price of an option using a Cox, Ross & Rubenstein binomial tree.
 
     Args:
         is_european (bool): True for European, false for American.
@@ -163,8 +161,7 @@ def make_numeric_greeks(
         is_call: bool,
         n: int
 ) -> NumericGreeks:
-    """Make a class to generate greeks numerically using finite difference
-    methods.
+    """Make a class to generate greeks numerically using finite difference methods.
 
     Args:
         is_european (bool): True for European, false for American.
