@@ -23,7 +23,7 @@
 4. Install the project locally.
 
     ```bash
-    pip install --editable .
+    pip install --editable '.[dev,docs,pandas]'
     ```
 
 ## Publishing
